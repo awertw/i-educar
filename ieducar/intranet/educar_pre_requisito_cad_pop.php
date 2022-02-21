@@ -109,7 +109,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Pré-requisito';
+        $this->title = 'Pre Requisito';
         $this->processoAp = '601';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

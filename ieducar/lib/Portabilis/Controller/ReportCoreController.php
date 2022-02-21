@@ -66,7 +66,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
             $this->beforeValidation();
 
             $this->report->addArg('database', config('legacy.app.database.dbname'));
-            $this->report->addArg('SUBREPORT_DIR', base_path() . config('legacy.report.source_path'));
+            $this->report->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
             $this->report->addArg('data_emissao', (int) config('legacy.report.header.show_data_emissao'));
 
             $this->validatesPresenseOfRequiredArgsInReport();
@@ -292,6 +292,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
         $style = "/modules/$controllerName/Assets/Stylesheets/$actionName.css";
         $script = "/modules/$controllerName/Assets/Javascripts/$actionName.js";
+
         if (file_exists($rootPath . $style)) {
             Portabilis_View_Helper_Application::loadStylesheet($this, $style);
         }

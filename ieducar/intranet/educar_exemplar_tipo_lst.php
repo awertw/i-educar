@@ -63,7 +63,6 @@ return new class extends clsListagem {
         $this->addCabecalhos($lista_busca);
 
         // outros Filtros
-        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->campoTexto('nm_tipo', 'Tipo Exemplar', $this->nm_tipo, 30, 255, false);
 
         // Paginador

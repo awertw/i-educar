@@ -123,7 +123,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->title = 'Pré-requisito';
+        $this->title = 'Pre Requisito';
         $this->processoAp = '601';
     }
 };

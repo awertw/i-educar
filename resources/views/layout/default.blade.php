@@ -6,7 +6,7 @@
     <meta http-equiv="Expires" content="-1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
-    <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif EducaSis</title>
+    <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif {{ html_entity_decode(config('legacy.app.entity.name')) }} - i-Educar</title>
 
     <script>
         dataLayer = [{
@@ -163,7 +163,7 @@
         <td colspan="2">
             <header class="ieducar-header">
                 <div class="ieducar-header-logo">
-                    <h1><a href="{{ url('/') }}">EducaSis</a></h1>
+                    <h1><a href="{{ url('/') }}">i-Educar</a></h1>
                 </div>
                 <div class="ieducar-header-links">
                     <div class="dropdown">

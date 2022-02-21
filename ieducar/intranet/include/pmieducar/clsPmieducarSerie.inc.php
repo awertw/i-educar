@@ -53,7 +53,7 @@ class clsPmieducarSerie extends Model
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
-        $this->_tabela = "{$this->_schema} serie";
+        $this->_tabela = "{$this->_schema}serie";
         $this->_campos_lista = $this->_todos_campos = 's.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep, s.importar_serie_pre_matricula, s.descricao';
 
         if (is_numeric($ref_cod_curso)) {
@@ -834,25 +834,5 @@ class clsPmieducarSerie extends Model
         ];
 
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
-    }
-
-    public function tipoPresencaRegraAvaliacao($cod_serie) {
-        $db = new clsBanco();
-        $sql = "
-            SELECT
-                r.tipo_presenca
-            FROM
-                modules.regra_avaliacao_serie_ano s
-            JOIN modules.regra_avaliacao r
-                ON (s.regra_avaliacao_id = r.id)
-            WHERE s.serie_id = {$cod_serie}
-        ";
-
-        $db->Consulta($sql);
-
-        $db->ProximoRegistro();
-        $tipo_presenca = $db->Campo('tipo_presenca');
-
-        return $tipo_presenca;
     }
 }

@@ -61,7 +61,6 @@ return new class extends clsListagem {
         include('include/pmieducar/educar_campo_lista.php');
 
         // outros Filtros
-        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->campoTexto('nome', 'Nome', $this->nome, 41, 255, false);
         $this->campoTexto('abreviatura', 'Abreviatura', $this->abreviatura, 41, 255, false);
 
