@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ Asset::get('css/vue-multiselect.min.css') }}">
     <link rel="stylesheet" href="{{ Asset::get('intranet/styles/font-awesome.css') }}">
     <link rel="stylesheet" href="{{ Asset::get('css/base.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/base-custom.css') }}">
     @stack('styles')
     @stack('scripts')
     @stack('head')
@@ -18,7 +19,7 @@
 <div class="ieducar-container">
     <header class="ieducar-header">
         <div class="ieducar-header-logo">
-            <h1><a href="{{ url('/') }}">i-Educar</a></h1>
+            <h1><a href="{{ url('/') }}">EducaSis</a></h1>
         </div>
         <div class="ieducar-header-links">
             <div class="dropdown">

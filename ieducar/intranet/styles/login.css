@@ -1,18 +1,20 @@
 body {
-  background-color: white;
+  /* background-color: #F1F1F1; */
+  /* remover attach e size para imagens textures*/
   font-family: "Open Sans", sans-serif;
   color: #646b71;
   font-size: 14px;
+    
 }
 
 h1 {
-  font-size: 16px;
+  font-size: 30px;
   color: #646b71;
   font-weight: normal;
 }
 
 h2 {
-  font-size: 24px;
+  text-align: center;
   color: #596066;
   font-weight: normal;
   margin: 0;
@@ -34,10 +36,9 @@ a {
 }
 
 #login-form {
-  width: 460px;
-  border-radius: 3px;
+  width: 90%;
+  height: 60%;
   background-color: #ffffff;
-  border: solid 1px #dddddd;
   margin: 0 auto;
   padding: 50px;
   box-sizing: border-box;
@@ -84,9 +85,7 @@ button.submit:disabled {
 }
 
 #footer {
-  margin-top: 10px;
-  padding: 10px 0;
-  text-align: center;
+  margin-top: auto;
 }
 
 .footer-social {
@@ -103,11 +102,10 @@ button.submit:disabled {
 }
 
 .social-icons {
-  float: right;
+  /* float: right; */
 }
 
-.error,
-.success {
+.error, .success {
   width: 460px;
   border-radius: 3px;
   margin: 0 auto 20px;
