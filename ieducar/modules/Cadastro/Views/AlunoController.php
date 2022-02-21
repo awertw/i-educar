@@ -186,10 +186,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'desc_plano_saude' => ['label' => 'Qual?'],
 
-        'vacina_covid' => ['label' => 'Aluno Vacinado Covid-19?'],
-
-        'desc_vacina_covid' => ['label' => 'Quantas?'],
-
         'aceita_hospital_proximo' => ['label' => '<b>Em caso de emergência, autorizo levar meu(minha) filho(a) para o Hospital ou Clínica mais próximos:</b>'],
 
         'desc_aceita_hospital_proximo' => ['label' => 'Responsável'],
@@ -464,7 +460,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
-       
+        $options = [
+            'required' => false,
+            'label' => 'NIS (PIS/PASEP)',
+            'placeholder' => '',
+            'value' => $nisPisPasep,
+            'max_length' => 11,
+            'size' => 20
+        ];
+
+        $this->inputsHelper()->integer('nis_pis_pasep', $options);
 
         $escolha_certidao = 'Tipo certidão civil';
         $selectOptions = [
@@ -810,16 +815,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
 
         $this->inputsHelper()->multipleSearchBeneficios('', $options, $helperOptions);
-        $options = [
-            'required' => false,
-            'label' => 'NIS (PIS/PASEP)',
-            'placeholder' => '',
-            'value' => $nisPisPasep,
-            'max_length' => 11,
-            'size' => 20
-        ];
-
-        $this->inputsHelper()->integer('nis_pis_pasep', $options);
 
         $helperOptions = ['objectName' => 'deficiencias'];
         $options = [
@@ -984,12 +979,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $options = ['label' => $this->_getLabel('desc_plano_saude'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->text('desc_plano_saude', $options);
-
-        $options = ['label' => $this->_getLabel('vacina_covid'), 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->checkbox('vacina_covid', $options);
-
-        $options = ['label' => $this->_getLabel('desc_vacina_covid'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->numeric('desc_vacina_covid', $options);
 
         $options = ['label' => $this->_getLabel('aceita_hospital_proximo'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('aceita_hospital_proximo', $options);

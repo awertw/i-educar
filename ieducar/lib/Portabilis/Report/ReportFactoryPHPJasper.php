@@ -24,7 +24,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      */
     public function getReportsPath()
     {
-        return base_path() . config('legacy.report.source_path');
+        return config('legacy.report.source_path');
     }
 
     /**

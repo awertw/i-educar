@@ -42,7 +42,6 @@ class clsPmieducarMatricula extends Model
     public $turno_pre_matricula;
     public $dependencia;
     public $modalidade_ensino;
-    public $nm_turma;
 
     /**
      * caso seja a primeira matricula do aluno
@@ -1045,7 +1044,6 @@ class clsPmieducarMatricula extends Model
 
         return false;
     }
-    
 
     /**
      * Retorna um array com os dados de um registro.

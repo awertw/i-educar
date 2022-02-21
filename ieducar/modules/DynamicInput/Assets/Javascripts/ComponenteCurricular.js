@@ -4,7 +4,7 @@
     var $anoField                  = getElementFor('ano');
     var $turmaField                = getElementFor('turma');
     var $componenteCurricularField = getElementFor('componente_curricular');
-   
+
     var handleGetComponentesCurriculares = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($componenteCurricularField, selectOptions, "Selecione um componente curricular");
@@ -14,7 +14,7 @@
       resetSelect($componenteCurricularField);
 
       if ($anoField.val() && $turmaField.val() && $turmaField.is(':enabled')) {
-        $componenteCurricularField.children().first().html('Aguarde, carregando...');
+        $componenteCurricularField.children().first().html('Aguarde carregando...');
 
         var data = {
           ano      : $anoField.attr('value'),

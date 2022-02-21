@@ -2,7 +2,7 @@
 var arrayOptions = [];
 var defaultChosenOptions = {
   no_results_text: "Sem resultados para ",
-  width: '290px',
+  width: '231px',
   placeholder_text_multiple: "Selecione as opções",
   placeholder_text_single: "Selecione uma opção",
   search_contains: true
