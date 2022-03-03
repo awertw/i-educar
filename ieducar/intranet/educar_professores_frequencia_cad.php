@@ -277,7 +277,6 @@ return new class extends clsCadastro {
         $obj = new clsPmieducarTurma();
         $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
 
-        //dd($this->id, $serie, $this->ref_cod_componente_curricular, $this->data, $this->fase_etapa, $this->justificativa);
         $obj = new clsModulesFrequencia(
             $this->id,
             null,
@@ -393,9 +392,16 @@ return new class extends clsCadastro {
     }
 
     public function loadAssets () {
+        $styles = [
+            '/modules/Cadastro/Assets/Stylesheets/ModalCadastroPais.css',
+        ];
+
+        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
+            '/modules/Cadastro/Assets/Javascripts/ModalCadastroOcorrenciaDisciplinar.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

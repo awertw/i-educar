@@ -31,7 +31,8 @@ function getAluno(xml_aluno) {
         conteudo += '<div style="margin-bottom: 10px; float: left">';
         conteudo += '  <span style="display: block; float: left; width: 400px;">Nome</span>';
         conteudo += '  <span style="display: block; float: left; width: 180px;">Presença?</span>';
-        conteudo += '  <span style="display: block; float: left; width: 300px;">' + "Justificativa (" + maxCaracteresObservacao + " caracteres são permitidos)" + '</span>';
+        conteudo += '  <span style="display: block; float: left; width: 320px;">' + "Justificativa (" + maxCaracteresObservacao + " caracteres são permitidos)" + '</span>';
+        conteudo += '  <span style="display: block; float: left; width: 50px;">' + "OC" + '</span>';
         conteudo += '</div>';
 
         for (var i = 0; i < DOM_array.length; i++) {
@@ -43,6 +44,7 @@ function getAluno(xml_aluno) {
                             <input type="checkbox" onchange="presencaMudou(this)" id="alunos[]" name='alunos[${id}]' Checked> \
                           </label>`;
             conteudo += `<input type='text' name='justificativa[${id}][]' style='width: 300px;' maxlength=${maxCaracteresObservacao} disabled></input>`;
+            conteudo += `  <div class="oc" id='oc[${id}]' style="display: inline; margin-left:20px;"/></div>`;
             conteudo += '</div>';
             conteudo += '<br style="clear: left" />';
         }
