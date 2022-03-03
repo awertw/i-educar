@@ -4,8 +4,6 @@
     var $anoField                  = getElementFor('ano');
     var $turmaField                = getElementFor('ref_cod_turma');
 
-    // var $turmaOcultaField          = document.getElementById("ref_cod_turma");
-
     var handleGetTodasTurmas = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($turmaField, selectOptions, "Selecione uma turma");
@@ -37,18 +35,6 @@
       $turmaField.change();
     };
 
-    // var updateTurmaOculta = function(){
-    //   $turmaOcultaField.value = $turmaField.val();
-    //   console.log($turmaOcultaField.value);
-
-    //   var evt = document.createEvent('HTMLEvents');
-    //   evt.initEvent('change', false, true);
-    //   $turmaOcultaField.dispatchEvent(evt);
-    // };
-
-    // bind onchange event
     $anoField.change(updateTodasTurmas);
-    // $turmaField.change(updateTurmaOculta);
-
-  }); // ready
+  });
 })(jQuery);
