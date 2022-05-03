@@ -11,27 +11,15 @@ use Illuminate\Support\Arr;
 return new class extends clsCadastro {
     public $id;
     public $ref_cod_turma;
-<<<<<<< Updated upstream
     public $ref_cod_componente_curricular;
-=======
-    public $ref_cod_componente_curricular_array;
->>>>>>> Stashed changes
     public $fase_etapa;
     public $data_inicial;
     public $data_final;
     public $ddp;
     public $atividades;
     public $referencias;
-<<<<<<< Updated upstream
     public $bnccs;
     public $conteudo_id;
-=======
-    public $bncc;
-    public $conteudo_id;
-    public $bncc_especificacoes;
-    public $recursos_didaticos;
-    public $registro_adaptacao;
->>>>>>> Stashed changes
 
     public function Inicializar () {
         $this->titulo = 'Plano de aula - Cadastro';
@@ -39,10 +27,6 @@ return new class extends clsCadastro {
         $retorno = 'Novo';
 
         $this->id = $_GET['id'];
-<<<<<<< Updated upstream
-=======
-        $this->copy = $_GET['copy'];
->>>>>>> Stashed changes
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_lst.php');
@@ -51,32 +35,17 @@ return new class extends clsCadastro {
             $tmp_obj = new clsModulesPlanejamentoAula($this->id);
             $registro = $tmp_obj->detalhe();
 
-<<<<<<< Updated upstream
             if ($registro) {
-=======
-            if ($registro['detalhes'] != null) {
->>>>>>> Stashed changes
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro['detalhes'] as $campo => $val) {
                     $this->$campo = $val;
                 }
                 $this->bncc = array_column($registro['bnccs'], 'id');
 
-<<<<<<< Updated upstream
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
 
                 $this->titulo = 'Plano de aula - Edição';
-=======
-                if (!$this->copy) {
-                    $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
-                    $retorno = 'Editar';
-
-                    $this->titulo = 'Plano de aula - Edição';
-                }
-            } else {
-                $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
->>>>>>> Stashed changes
             }
         }
 
@@ -101,10 +70,6 @@ return new class extends clsCadastro {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
         $this->data_inicial = dataToBrasil($this->data_inicial);
         $this->data_final = dataToBrasil($this->data_final);
 
@@ -114,11 +79,7 @@ return new class extends clsCadastro {
             && $this->data_inicial != ''
             && $this->data_final != ''
             && is_numeric($this->ref_cod_turma)
-<<<<<<< Updated upstream
             && is_numeric($this->ref_cod_componente_curricular)
-=======
-            && is_numeric($this->ref_cod_componente_curricular_array)
->>>>>>> Stashed changes
             && is_numeric($this->fase_etapa)
         ) {
             $desabilitado = true;
@@ -129,7 +90,6 @@ return new class extends clsCadastro {
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
-<<<<<<< Updated upstream
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => $obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
@@ -141,28 +101,10 @@ return new class extends clsCadastro {
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
         $this->campoMemo('referencias','Referências', $this->referencias, 100, 5, !$obrigatorio);
 
-=======
-        $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado && !$this->copy]);
-        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado && !$this->copy]);
-
-        $this->adicionarBNCCMultiplaEscolha();
-        $this->adicionarConteudosTabela();
-
-        $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, $obrigatorio);
-        $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
-        $this->campoMemo('recursos_didaticos','Recursos didáticos', $this->recursos_didaticos, 100, 5, !$obrigatorio);
-        $this->campoMemo('registro_adaptacao','Registro de adaptação', $this->registro_adaptacao, 100, 5, !$obrigatorio);
-        $this->campoMemo('referencias','Referências', $this->referencias, 100, 5, !$obrigatorio);
-
-        $this->campoOculto('id', $this->id);
-        $this->campoOculto('copy', $this->copy);
-
->>>>>>> Stashed changes
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
 
     public function Novo() {
-<<<<<<< Updated upstream
         $data_agora = new DateTime('now');
         $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
@@ -239,9 +181,6 @@ return new class extends clsCadastro {
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
-=======
-        // educar-professores-planejamento-de-aula-cad.js
->>>>>>> Stashed changes
     }
 
     public function Editar() {
@@ -286,11 +225,7 @@ return new class extends clsCadastro {
         return false;
     }
  
-<<<<<<< Updated upstream
     private function getBNCCTurma($turma = null, $ref_cod_componente_curricular = null)
-=======
-    private function getBNCCTurma($turma = null, $ref_cod_componente_curricular_array = null)
->>>>>>> Stashed changes
     {
         if (is_numeric($turma)) {
             $obj = new clsPmieducarTurma($turma);
@@ -300,11 +235,7 @@ return new class extends clsCadastro {
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-<<<<<<< Updated upstream
             if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular)) {
-=======
-            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular_array)) {
->>>>>>> Stashed changes
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
@@ -327,21 +258,13 @@ return new class extends clsCadastro {
     public function loadAssets () {
         $scripts = [
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
-<<<<<<< Updated upstream
             '/modules/Cadastro/Assets/Javascripts/BNCC.js',
             '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js',
-=======
-            '/modules/Cadastro/Assets/Javascripts/PlanejamentoAula.js',
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusao.js',
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaEdicao.js',
-            '/modules/Cadastro/Assets/Javascripts/PlanoAulaDuplicacao.js',
->>>>>>> Stashed changes
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
-<<<<<<< Updated upstream
     private function adicionarBNCCMultiplaEscolha($obrigatorio = true) {
         $helperOptions = [
             'objectName' => 'bncc',
@@ -353,63 +276,13 @@ return new class extends clsCadastro {
             'label' => 'Objetivos de aprendizagem/habilidades (BNCC)',
             'required' => $obrigatorio,
             'size' => 50,
-=======
-    public function makeExtra()
-    {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-professores-planejamento-de-aula-cad.js');
-    }
-
-    private function adicionarBNCCMultiplaEscolha() {
-        $this->campoTabelaInicio(
-            'objetivos_aprendizagem',
-            'Objetivo(s) de aprendizagem',
-            ['Componente curricular', "Habilidade(s)", "Especificação(ões)"],
-            // $arr_valores,
-            // '',
-            // $lst_opcoes
-        );
-
-        // Componente curricular
-        $this->campoLista(
-            'ref_cod_componente_curricular_array',
-            'Componente curricular',
-            ['' => 'Componente curricular'],
-            $this->ref_cod_componente_curricular_array,
-        );
-
-        // BNCCs
-        $todos_bncc = [];
-        
-        $options = [
-            'label' => 'Objetivos de aprendizagem/habilidades (BNCC)',
-            'required' => true,
->>>>>>> Stashed changes
             'options' => [
                 'values' => $this->bncc,
                 'all_values' => $todos_bncc
             ]
         ];
-<<<<<<< Updated upstream
 
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-=======
-        $this->inputsHelper()->multipleSearchCustom('bncc', $options);
-
-        // BNCCs Especificações
-        $todos_bncc_especificacoes = [];
-        
-        $options = [
-            'label' => 'Especificações',
-            'required' =>true,
-            'options' => [
-                'values' => $this->bncc_especificacoes,
-                'all_values' => $todos_bncc_especificacoes
-            ]
-        ];
-        $this->inputsHelper()->multipleSearchCustom('bncc_especificacoes', $options);
-
-        $this->campoTabelaFim();
->>>>>>> Stashed changes
     }
 
     protected function adicionarConteudosTabela()
@@ -417,34 +290,20 @@ return new class extends clsCadastro {
         $obj = new clsModulesPlanejamentoAulaConteudo();
         $conteudos = $obj->lista($this->id);
 
-<<<<<<< Updated upstream
         for ($i=0; $i < count($conteudos); $i++) { 
             $rows[$i][] = $conteudos[$i]['conteudo'];
-=======
-        for ($i=0; $i < count($conteudos); $i++) {
-            $conteudo = $conteudos[$i];
-            $rows[$conteudo['id']][] = $conteudo['conteudo'];
->>>>>>> Stashed changes
         }
 
         $this->campoTabelaInicio(
             'conteudos',
             'Objetivo(s) do conhecimento/conteúdo',
             [
-<<<<<<< Updated upstream
                 'Objetivo(s)',
-=======
-                'Conteúdo(s)',
->>>>>>> Stashed changes
             ],
             $rows
         );
 
-<<<<<<< Updated upstream
         $this->campoTexto('conteudos','Conteúdos', $this->conteudo_id, 100, 2048, true);   
-=======
-        $this->campoTexto('conteudos', 'Conteúdos', $this->conteudo_id, 100, 2048, true);
->>>>>>> Stashed changes
 
         $this->campoTabelaFim();
     }

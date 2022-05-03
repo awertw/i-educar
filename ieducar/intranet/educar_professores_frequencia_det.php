@@ -156,17 +156,10 @@ return new class extends clsDetalhe {
         }
 
 
-<<<<<<< Updated upstream
         $this->tabela .= ' </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr>';
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
         $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Justificativa</span></th></tr>';
-=======
-        $this->tabela .= ' </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile">';
-        $this->tabela .= ' <th><span style="display: block; float: left; font-weight: bold">Nome</span></th>';
-        $this->tabela .= ' <th><span style="display: block; float: left; font-weight: bold">Presença</span></th>';
-        $this->tabela .= ' <th><span style="display: block; float: left; font-weight: bold">Justificativa</span></th></tr>';
->>>>>>> Stashed changes
         
              foreach ($alunos as $aluno) {
              $checked = !$aluno['presenca'] ? "checked='true'" : '';
