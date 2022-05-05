@@ -236,10 +236,10 @@ class clsCadastro extends clsCampos
 
         $barra = $titulo;
 
-        $retorno .= "<h2 class='formdktd'>{$barra}</h2>";
+        $retorno .= "<div class='form-title col-sm-12'><h2 class='formdktd grid-box-title'>{$barra}</h2></div>";
 
         if (empty($this->campos)) {
-            $retorno .= '<div class=\'linhaSim\' ><label class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</label></div>';
+            $retorno .= '<label class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</label>';
         } else {
             // Verifica se houve erros no controller
             $retorno .= $this->_getControllerErrors();

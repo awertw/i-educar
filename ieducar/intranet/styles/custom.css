@@ -193,6 +193,29 @@ span.error_notice {
 **************** CORES ****************
 **************************************/
 
+
+/*Text Colors*/
+
+.color-primary {
+    color: #3078EF;
+}
+
+.color-primary.fa {
+    color: #4C94FF;
+}
+
+.color-success {
+    color: #5FBF5F;
+}
+
+.color-warning {
+    color: #FC9700;
+}
+
+.color-danger {
+    color: #ee5037;
+}
+
 .btn {
     display: inline-block;
     font-weight: 200;
@@ -693,7 +716,13 @@ h6,
 .grid {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(1, 1fr));
+    /* grid-template-columns: 20% 1fr; */
+}
+
+.grid-box-title {
+    grid-column: 1;
+    grid-row: 1;
 }
 
 .grid-card {
@@ -777,7 +806,7 @@ h6,
     width: 100%;
     min-height: 1px;
     padding-right: 15px;
-    padding-left: 15px;
+    /* padding-left: 15px; */
 }
 
 .col {
@@ -2131,7 +2160,7 @@ td.area-conhecimento-destaque {
     font-style: normal;
     font-stretch: normal;
     color: var(--font-color);
-    padding-left: 8px;
+    padding: 8px;
 }
 
 #formcadastro input:not(.botaolistagem,
