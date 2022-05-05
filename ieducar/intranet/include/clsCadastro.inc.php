@@ -228,18 +228,18 @@ class clsCadastro extends clsCampos
             app(Breadcrumb::class)->setLegacy($this->locale);
         }
 
-        $retorno .= "\n<div class='tablecadastro' >\n";
+        $retorno .= "\n<div class='tablecadastro grid' >\n";
         $applicationTitle = $this->titulo_aplication ?? '';
-        $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>"; //tíulo
+        $titulo = isset($this->titulo) ? $this->titulo : "{$this->tipoacao} {$applicationTitle}"; //tíulo
 
         View::share('title', $this->getPageTitle());
 
         $barra = $titulo;
 
-        $retorno .= "<div class='formdktd'>{$barra}</div>";
+        $retorno .= "<h2 class='formdktd'>{$barra}</h2>";
 
         if (empty($this->campos)) {
-            $retorno .= '<div class=\'linhaSim\' ><span class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></div>';
+            $retorno .= '<div class=\'linhaSim\' ><label class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</label></div>';
         } else {
             // Verifica se houve erros no controller
             $retorno .= $this->_getControllerErrors();
@@ -248,7 +248,7 @@ class clsCadastro extends clsCampos
 
         $retorno .=
             '<hr></hr>
-    <div class=\'linhaBotoes\'>
+    <div class=\'linhaBotoes offset-5\'>
     <script type="text/javascript">
     var goodIE = (document.all) ? 1:0;
     var netscape6 = (document.getElementById && !document.all) ? 1:0;

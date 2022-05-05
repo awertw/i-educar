@@ -4,17 +4,17 @@ $domain_parts = explode('.', HOST);
 
     $icoTecsis      = "favicon2.ico";
     $headerID       = "style='background-image: linear-gradient(to bottom right, rgba(243, 46, 33, 1) 0%, rgba(243, 135, 42, 1) 75%)'";
-    $menu_lateral   = "style='background-color: rgb(2,115,129)'";
+    $menu_Tecsis   = "style='background-color: rgb(2,115,129)'";
     $rodapeID       = "style='background-color: rgb(243, 135, 42)'";
-    $r3c1Mobile     = "style='background: rgb(2,115,129)'";
     $expandido      = "style='background-color: rgb(2,115,129)'";
     $corTecsis      = "style='color:rgb(243, 135, 42)'";
 
 
 	if($domain_parts[2] != "tec"){
 		$icoTecsis = "favicon.ico"; $headerID = "";
-        $menu_lateral = ""; $rodapeID = "";
-        $r3c1Mobile = ""; $expandido = "";
+        $rodapeID = "";
+        $r3c1Mobile = "";
+        $expandido = "";
         $corTecsis = "";
 	}
 ?>
@@ -216,7 +216,7 @@ $domain_parts = explode('.', HOST);
                 </div>
             </header>
             <div class="main flex">
-                <div id="menu_lateral sidebar" class="r3c1" <?= $menu_lateral?>> 
+                <div id="menu_lateral sidebar" class="r3c1" $menu_Tecsis> 
                     @include('partials.search')
                     @include('layout.menu')
                 </div>
@@ -230,7 +230,7 @@ $domain_parts = explode('.', HOST);
                                     <label for="expandido" class="expandir-btn" <?= $expandido?>><i class="fa fa-ellipsis-v" <?=$corTecsis?> ></i></label>
                                     <div summary="" class='tabelanum2'>
                                         <div>
-                                            <div class="r3c1 Mobile" <?=$r3c1Mobile?> >
+                                            <div class="r3c1 Mobile" $r3c1Mobile? >
                                                 @include('partials.searchMobile')
                                                 @include('layout.menu')
                                             </div>

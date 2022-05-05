@@ -1086,12 +1086,12 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $span = $total_campos + 1;
 
                 if ($titulo) {
-                    $retorno .= "<tr id='tr_{$nome_tabela}_tit'  class='formdktd'><td style='flex: $span fr'>$titulo</td></tr>";
+                    $retorno .= "<div id='tr_{$nome_tabela}_tit'  class='formdktd'><div style='flex: $span fr'><h2 class='b'>$titulo</h2></div></div>";
                 } else {
-                    $retorno .= "<tr id='tr_{$nome_tabela}_tit' style='display:none;visibility:hidden;' ><td style='flex: $span fr'>&nbsp;</td></tr>";
+                    $retorno .= "<div id='tr_{$nome_tabela}_tit' style='display:none;visibility:hidden;' ><div style='flex: $span fr'>&nbsp;</div></div>";
                 }
 
-                $retorno .= "<tr style='font-weight:bold' id='tr_{$nome_tabela}_cab'>";
+                $retorno .= "<div id='tr_{$nome_tabela}_cab'>";
 
                 foreach ($cabecalho as $key => $cab) {
                     $expressao_regular = $componente[$key][2];
@@ -1103,7 +1103,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                     }
                     $cabId = str_replace(' ', '_', strtolower($cab));
 
-                    $retorno .= "<td class='formmdtd' id='td_$cabId' ><span class='form'>$cab</span>{$obrigatorio}</td>";
+                    $retorno .= "<div class='formmdtd' id='td_$cabId' ><span class='form'>$cab</span>{$obrigatorio}</div>";
+                    $retorno .= "<div>". $this->getCampoLista("{$nome}[{$key2}]", "{$nome}[$key2]", $campo_[5], $lista, $valor[$key], $campo_[7], $campo_[8], $class, $campo_[9]) ."</div>";
                 }
 
                 $retorno .= '<td class=\'formmdtd\' id=\'td_acao\'><span class=\'form\'>A&ccedil;&atilde;o</span></td>';
