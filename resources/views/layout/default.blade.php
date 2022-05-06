@@ -224,8 +224,6 @@ $domain_parts = explode('.', HOST);
                     @include('layout.topmenu')
                     <div class="content m1 main grid">
                         <div class='tabelanum1' id="tablenum1">
-                            <div>
-                                <div>
                                     <input type="checkbox" id="expandido">  
                                     <label for="expandido" class="expandir-btn" <?= $expandido?>><i class="fa fa-ellipsis-v" <?=$corTecsis?> ></i></label>
                                     <div summary="" class='tabelanum2'>
@@ -251,8 +249,7 @@ $domain_parts = explode('.', HOST);
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            
                     </div>
                 </div>
             </div>

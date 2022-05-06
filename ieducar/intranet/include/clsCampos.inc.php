@@ -812,6 +812,62 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->num_espaco++;
     }
 
+    public function getCampoLista(
+        $nome,
+        $id,
+        $acao,
+        $valor,
+        $default,
+        $complemento,
+        $desabilitado,
+        $class,
+        $multiple = false
+    ) {
+        $id = $id ? $id : $nome;
+
+        if (is_numeric($multiple)) {
+            $multiple = " multiple='multiple' SIZE='$multiple' ";
+        } else {
+            $multiple = '';
+        }
+
+        $retorno = "<select onchange=\"{$acao}\" class='{$class}' name='{$nome}' id='{$id}' {$desabilitado} $multiple>";
+        $opt_open = false;
+
+        reset($valor);
+
+        $adicionador_indice = null;
+
+        while (list($chave, $texto) = each($valor)) {
+            if (substr($texto, 0, 9) == 'optgroup:') {
+                // optgroup
+                if ($opt_open) {
+                    $retorno .= '</optgroup>';
+                }
+
+                $retorno .= '<optgroup label="' . substr($texto, 9) . '">';
+            } else {
+                // option normal
+                $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
+                $defaultValue = is_array($default) ? $default[$adicionador_indice] : $default;
+
+                if (!is_null($defaultValue) && $defaultValue !== '' && $chave == $defaultValue) {
+                    $retorno .= ' selected';
+                }
+
+                $retorno .= ">$texto</option>";
+            }
+        }
+
+        if ($opt_open) {
+            $retorno .= '</optgroup>';
+        }
+
+        $retorno .= "</select> {$complemento}";
+
+        return $retorno;
+    }
+
     public function MakeCampos(
         $array_campos = null,
         $adicionador_indice = null,
@@ -821,7 +877,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $start_md = null
     ) {
         $retorno = '';
-        $style = '';
+        
 
         if (!$array_campos) {
             $arr_campos = $this->campos;
@@ -1068,7 +1124,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $nome_tabela = $componente['nome'];
                 $valores = $componente['valores'];
                 $titulo = $componente['titulo'];
-                $largura = $componente['largura'] ? " width=\"{$componente['largura']}\" " : '';
+            //    $largura = $componente['largura'] ? " width=\"{$componente['largura']}\" " : '';
                 $valores_lista_tabela = $componente['valores_lista'];
                 $componente = array_shift($componente);
 
@@ -1098,14 +1154,14 @@ class clsCampos extends Core_Controller_Page_Abstract
                     $expressao_regular = $componente[$key][2];
 
                     if ($expressao_regular && substr($expressao_regular, 0, 1) != '*') {
-                        $obrigatorio = '<span class="campo_obrigatorio">*</span>';
+                        $obrigatorio = ' <i class="campo_obrigatorio fa fa-exclamation color-danger"></i>';
                     } else {
                         $obrigatorio = '';
                     }
                     $cabId = str_replace(' ', '_', strtolower($cab));
 
                     $retorno .= "<div class='formmdtd' id='td_$cabId' ><label class='form'>$cab</label>{$obrigatorio}</div>";
-                    $retorno .= "<div>". $this->getCampoLista("{$nome}[{$key2}]", "{$nome}[$key2]", $campo_[5], $lista, $valor[$key], $campo_[7], $campo_[8], $class, $campo_[9]) ."</div>";
+                    $retorno .= "<div class='TA ERRADO!'>". $this->getCampoLista("{$nome}", "{$nome}[$key2]", $campo_[5], $lista, $valor[$key], $campo_[7], $campo_[8], $class, $campo_[9]) ."</div>";
                 }
 
                 $retorno .= '<td class=\'formmdtd\' id=\'td_acao\'><span class=\'form\'>A&ccedil;&atilde;o</span></td>';
@@ -1149,9 +1205,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         } else {
                             $class = 'geral';
                         }
-
-                        $center = (strtolower($campo_[0]) == 'rotulo' || strtolower($campo_[0]) == 'check' || $largura) ?
-                            'align="center"' : '';
 
                         $retorno .= "<td class='$classe2 {$nome}' id='td_{$nome}[{$key2}]' >";
 
@@ -1267,7 +1320,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
             if ($expressao_regular && substr($expressao_regular, 0, 1) != '*') {
                 $class = 'obrigatorio';
-                $obrigatorio = '<i class="fa fa-exclamation color-danger"></i>';
+                $obrigatorio = ' <i class="fa fa-exclamation color-danger"></i>';
             } else {
                 $class = 'geral';
                 $obrigatorio = '';
@@ -1790,61 +1843,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         return "<input {$class} type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" {$tamanhovisivel} {$tamanhomaximo} {$evento} {$disabled}> {$descricao}";
     }
 
-    public function getCampoLista(
-        $nome,
-        $id,
-        $acao,
-        $valor,
-        $default,
-        $complemento,
-        $desabilitado,
-        $class,
-        $multiple = false
-    ) {
-        $id = $id ? $id : $nome;
-
-        if (is_numeric($multiple)) {
-            $multiple = " multiple='multiple' SIZE='$multiple' ";
-        } else {
-            $multiple = '';
-        }
-
-        $retorno = "<select onchange=\"{$acao}\" class='{$class}' name='{$nome}' id='{$id}' {$desabilitado} $multiple>";
-        $opt_open = false;
-
-        reset($valor);
-
-        $adicionador_indice = null;
-
-        while (list($chave, $texto) = each($valor)) {
-            if (substr($texto, 0, 9) == 'optgroup:') {
-                // optgroup
-                if ($opt_open) {
-                    $retorno .= '</optgroup>';
-                }
-
-                $retorno .= '<optgroup label="' . substr($texto, 9) . '">';
-            } else {
-                // option normal
-                $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
-                $defaultValue = is_array($default) ? $default[$adicionador_indice] : $default;
-
-                if (!is_null($defaultValue) && $defaultValue !== '' && $chave == $defaultValue) {
-                    $retorno .= ' selected';
-                }
-
-                $retorno .= ">$texto</option>";
-            }
-        }
-
-        if ($opt_open) {
-            $retorno .= '</optgroup>';
-        }
-
-        $retorno .= "</select> {$complemento}";
-
-        return $retorno;
-    }
 
     public function getCampoMonetario(
         $nome,
