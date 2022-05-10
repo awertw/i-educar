@@ -240,7 +240,7 @@ if (isset($domain_parts[2]) != 'tec') {
             @include('partials.search')
             @include('layout.menu')
         </div>
-        <div class="content">
+        <div class="content z-10">
             @include('layout.topmenu')
             <div class="content m1 main grid">
                 <div class='tabelanum1' id="tablenum1">

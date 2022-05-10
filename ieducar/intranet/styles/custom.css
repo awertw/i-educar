@@ -570,84 +570,102 @@ label {
     margin-bottom: 0.5rem;
 }
 
-
+.page-first,
+.page-back,
+.page-n,
+.page-forward,
+.page-last {
+    cursor: pointer;
+    border-radius: 5px;
+    width: 1.4rem;
 }
+
 .text-xs {
     font-size: 0.75rem;
     /* 12px */
-    
     line-height: 1rem;
     /* 16px */
 }
 
-}
 .text-sm {
     font-size: 0.875rem;
     /* 14px */
     line-height: 1.25rem;
     /* 20px */
 }
+
 .text-base {
     font-size: var(--f-size-xs);
     /* 16px */
     line-height: 1.5rem;
     /* 24px */
 }
+
 .text-lg {
     font-size: 1.125rem;
     /* 18px */
     line-height: 1.75rem;
     /* 28px */
 }
+
 .text-xl {
     font-size: 1.25rem;
     /* 20px */
     line-height: 1.75rem;
     /* 28px */
 }
+
 .text-2xl {
     font-size: 1.5rem;
     /* 24px */
     line-height: 2rem;
     /* 32px */
 }
+
 .text-3xl {
     font-size: 1.875rem;
     /* 30px */
     line-height: 2.25rem;
     /* 36px */
 }
+
 .text-4xl {
     font-size: 2.25rem;
     /* 36px */
     line-height: 2.5rem;
     /* 40px */
 }
+
 .text-5xl {
     font-size: 3rem;
     /* 48px */
     line-height: 1;
 }
+
 .text-6xl {
     font-size: 3.75rem;
     /* 60px */
     line-height: 1;
 }
+
 .text-7xl {
     font-size: 4.5rem;
     /* 72px */
     line-height: 1;
 }
+
 .text-8xl {
     font-size: 6rem;
     /* 96px */
     line-height: 1;
 }
+
 .text-9xl {
     font-size: 8rem;
     /* 128px */
     line-height: 1;
 }
+
 h1,
 h2,
 h3,
@@ -666,33 +684,41 @@ h6,
     line-height: 1.2;
     color: inherit;
 }
+
 span {
     font-size: 1rem;
 }
+
 h1,
 .h1 {
     font-size: 1.2rem;
 }
+
 h2,
 .h2 {
     font-size: 1.5rem;
 }
+
 h3,
 .h3 {
     font-size: 1.75rem;
 }
+
 h4,
 .h4 {
     font-size: 1.5rem;
 }
+
 h5,
 .h5 {
     font-size: 1.25rem;
 }
+
 h6,
 .h6 {
     font-size: 1rem;
 }
+
 @media only screen and (max-width: 1023px) {
     #localizacao span {
         font-size: 3.5rem;
@@ -705,22 +731,28 @@ h6,
     }
 }
 
+
 /**************************************
 ***** LINHA / COLUNA / CONTAINER ******
 **************************************/
+
 .main {
     align-items: unset;
 }
+
 .sidebar {
     flex: 1;
 }
+
 .content {
     min-height: 100vh;
     flex: 3;
 }
+
 .content .m1 {
     margin: 1em;
 }
+
 .container {
     width: 100%;
     padding-right: 15px;
@@ -728,9 +760,11 @@ h6,
     margin-right: auto;
     margin-left: auto;
 }
+
 .c-content {
     display: contents;
 }
+
 .container-fluid {
     width: 100%;
     padding-right: 15px;
@@ -738,36 +772,45 @@ h6,
     margin-right: auto;
     margin-left: auto;
 }
+
 .row {
     flex: 1fr;
     flex-wrap: wrap;
     margin-right: -15px;
     margin-left: -15px;
 }
+
 .flex {
     display: flex;
     margin: auto;
 }
+
 .grid {
     display: grid;
 }
 
+
 /* gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(1, 1fr));
     grid-template-columns: 20% 1fr; */
+
 .grid-box-title {
     grid-column: 1;
     grid-row: 1;
 }
+
 .flex-col {
     flex-direction: column;
 }
+
 .justity-items-center {
     justify-content: center;
 }
+
 .items-center {
     align-items: center;
 }
+
 .col-1,
 .col-2,
 .col-3,
@@ -844,142 +887,183 @@ h6,
     padding-right: 15px;
     /* padding-left: 15px; */
 }
+
 .col {
     flex-basis: 0;
     flex-grow: 1;
     max-width: 100%;
 }
+
 .col-auto {
     flex: 0 0 auto;
     width: auto;
     max-width: none;
 }
+
 .col-1 {
     flex: 0 0 8.33333%;
     max-width: 8.33333%;
 }
+
 .col-2 {
     flex: 0 0 16.66667%;
     max-width: 16.66667%;
 }
+
 .col-3 {
     flex: 0 0 25%;
     max-width: 25%;
 }
+
 .col-4 {
     flex: 0 0 33.33333%;
     max-width: 33.33333%;
 }
+
 .col-5 {
     flex: 0 0 41.66667%;
     max-width: 41.66667%;
 }
+
 .col-6 {
     flex: 0 0 50%;
     max-width: 50%;
 }
+
 .col-7 {
     flex: 0 0 58.33333%;
     max-width: 58.33333%;
 }
+
 .col-8 {
     flex: 0 0 66.66667%;
     max-width: 66.66667%;
 }
+
 .col-9 {
     flex: 0 0 75%;
     max-width: 75%;
 }
+
 .col-10 {
     flex: 0 0 83.33333%;
     max-width: 83.33333%;
 }
+
 .col-11 {
     flex: 0 0 91.66667%;
     max-width: 91.66667%;
 }
+
 .col-12 {
     flex: 0 0 100%;
     max-width: 100%;
 }
+
 .order-first {
     order: -1;
 }
+
 .order-last {
     order: 13;
 }
+
 .order-0 {
     order: 0;
 }
+
 .order-1 {
     order: 1;
 }
+
 .order-2 {
     order: 2;
 }
+
 .order-3 {
     order: 3;
 }
+
 .order-4 {
     order: 4;
 }
+
 .order-5 {
     order: 5;
 }
+
 .order-6 {
     order: 6;
 }
+
 .order-7 {
     order: 7;
 }
+
 .order-8 {
     order: 8;
 }
+
 .order-9 {
     order: 9;
 }
+
 .order-10 {
     order: 10;
 }
+
 .order-11 {
     order: 11;
 }
+
 .order-12 {
     order: 12;
 }
+
 .offset-1 {
     margin-left: 8.33333%;
 }
+
 .offset-2 {
     margin-left: 16.66667%;
 }
+
 .offset-3 {
     margin-left: 25%;
 }
+
 .offset-4 {
     margin-left: 33.33333%;
 }
+
 .offset-5 {
     margin-left: 41.66667%;
 }
+
 .offset-6 {
     margin-left: 50%;
 }
+
 .offset-7 {
     margin-left: 58.33333%;
 }
+
 .offset-8 {
     margin-left: 66.66667%;
 }
+
 .offset-9 {
     margin-left: 75%;
 }
+
 .offset-10 {
     margin-left: 83.33333%;
 }
+
 .offset-11 {
     margin-left: 91.66667%;
 }
+
 @media (min-width: 1023px) {
     .col-xl {
         flex-basis: 0;
@@ -1122,27 +1206,33 @@ h6,
     }
 }
 
+
 /**************************************
 ************ TOPO / RODAPÉ ************
 **************************************/
+
 .topo {
     height: 50px;
     background: var(--font-color);
     color: #FFF;
 }
+
 header {
     display: flex;
     flex: 1;
 }
+
 .topo td.logo {
     font-size: 2.4rem;
     font-weight: bold;
     padding-left: 23px;
 }
+
 .topo td.perfil-user {
     font-size: 1.4rem;
     padding-right: 23px;
 }
+
 .topo .dropbtn {
     color: white;
     padding: 6px;
@@ -1155,29 +1245,30 @@ header {
     background-position: center right;
     background-size: 12px;
 }
+
 .topo .dropbtn:hover,
 .dropdown:hover .dropbtn {
     background-image: url('../imagens/arrow-up.png');
     background-repeat: no-repeat;
     background-position: center right;
 }
+
 .topo .dropdown {
     position: relative;
     display: inline-block;
     margin-left: 40px;
 }
+
 .topo .dropdown-content {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
     min-width: 150px;
-    box-shadow: 0px 8px 16px 0px rgba(0,
-    0,
-    0,
-    0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     right: 0;
 }
+
 .topo .dropdown-content a {
     color: #646b71;
     padding: 12px 16px;
@@ -1185,14 +1276,17 @@ header {
     display: block;
     text-align: left;
 }
+
 .topo .dropdown-content a:hover {
     color: var(--font-color-a)
 }
+
 .ieducar-header-links .dropdown.notifications {
     float: right;
     margin: 0;
     z-index: 1;
 }
+
 .ieducar-header-links .dropbtn.notifications {
     color: #ffffff;
     display: flex;
@@ -1202,24 +1296,24 @@ header {
     cursor: pointer;
     background-image: none;
 }
+
 .ieducar-header-links .dropbtn.notifications:hover,
 .dropdown:hover .dropbtn.notifications {
     background-image: none;
     background-repeat: no-repeat;
     background-position: center right;
 }
+
 .topo .dropdown:hover .dropdown-content.menu {
     display: block;
 }
+
 .ieducar-header-links .dropdown-content-notifications {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
     min-width: 150px;
-    box-shadow: 0 8px 16px 0 rgba(0,
-    0,
-    0,
-    0.2);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     z-index: 1;
     right: 19px;
     top: 41px;
@@ -1227,6 +1321,7 @@ header {
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
 .ieducar-header-links .dropdown-content-notifications a {
     color: #646b71;
     padding: 12px 16px;
@@ -1236,18 +1331,23 @@ header {
     font-size: 1.4rem;
     border-bottom: 1px solid var(--bg-color-title);
 }
+
 .ieducar-header-links .dropdown-content-notifications a:hover {
     color: var(--font-color-a)
 }
+
 .dropdown-content-notifications a {
     font-size: 1.2rem !important;
 }
+
 .dropdown-content-notifications {
     width: 400px !important;
 }
+
 .btn-all-notifications {
     text-align: center !important;
 }
+
 span.notification-balloon {
     background-color: red;
     padding: 5px;
@@ -1259,15 +1359,18 @@ span.notification-balloon {
     margin-left: -12px;
     display: none;
 }
+
 .dropdown-content-notifications a.unread {
     font-weight: bold;
     background-color: #e9f0f8;
 }
+
 .dropdown-content-notifications p.date-notification {
     text-align: right;
     font-size: 1rem;
     color: var(--font-color-grey);
 }
+
 .notifications-bar {
     display: flow-root;
     color: #646b71;
@@ -1276,6 +1379,7 @@ span.notification-balloon {
     background: #eee !important;
     font-weight: bold !important;
 }
+
 .notifications-bar a.btn-all-notifications,
 .notifications-bar a.btn-mark-all-read {
     padding: 0 !important;
@@ -1284,34 +1388,41 @@ span.notification-balloon {
     border: 0 !important;
     color: #646b71 !important;
 }
+
 .notifications-bar a.btn-all-notifications:hover,
 .notifications-bar a.btn-mark-all-read:hover {
     color: var(--font-color-a) !important;
 }
+
 .notifications-bar a.btn-mark-all-read {
     padding-right: 7px !important;
     margin-right: 7px;
     border-right: 1px solid var(--bg-color-title) !important;
     cursor: pointer;
 }
+
 tr.unread td {
     font-weight: bold;
 }
+
 img#help {
     position: relative;
     top: 7px;
     margin-right: 15px;
     width: 20px;
 }
+
 img#notificacao {
     position: relative;
     top: 7px;
     margin-right: 15px;
     width: 20px;
 }
+
 a.icons-top {
     text-decoration: none !important;
 }
+
 .topo .foto-user {
     width: 35px;
     height: 35px;
@@ -1321,50 +1432,48 @@ a.icons-top {
     border-radius: 50%;
     display: inline-block;
 }
+
 .rodape {
     height: 3.2rem;
     background-color: #2497c6;
     color: #FFF;
     font-size: 1rem;
 }
+
 .rodape a {
     color: #FFF;
     text-decoration: underline;
 }
+
 .flashMessages {
     width: 66%;
 }
 
+
 /**************************************
 **************** MENUS ****************
 **************************************/
+
 .r3c1 {
-    background: rgba(54,
-    54,
-    54,
-    1) !important;
-    box-shadow: 2px 3px 6px rgba(65,
-    69,
-    88,
-    0.6);
+    box-shadow: 2px 3px 6px rgba(65, 69, 88, 0.6);
     border: 0;
     z-index: 10;
     /* border-radius: 10px; */
 }
+
+.z-10 {
+    z-index: 10;
+}
+
 .r3c1:hover {
-    background: rgba(54,
-    54,
-    54,
-    1) !important;
+    background: rgba(54, 54, 54, 1) !important;
     transition: background .2s ease-in-out;
 }
+
 .Mobile {
     width: 75%;
     height: -webkit-fill-available;
-    background: rgba(54,
-    54,
-    54,
-    1);
+    background: rgba(54, 54, 54, 1);
     /*display:none; */
     border: 0;
     position: absolute;
@@ -1372,34 +1481,38 @@ a.icons-top {
     z-index: 2;
     transition: left .5s ease-in-out;
 }
+
 .nvp_tabelaMenu {
     background: #e9f0f8;
 }
+
 .nvp_tabelaMenu .title-busca-rapida a {
     font-size: 1.2rem !important;
     text-transform: uppercase;
     font-weight: bold !important;
 }
+
 .ui-autocomplete.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
-    box-shadow: 0 2px 9px 0 rgba(0,
-    0,
-    0,
-    0.15);
+    box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.15);
 }
+
 .nvp_tabelaMenu .title-busca-rapida .title:hover {
     background: transparent;
 }
+
 .nvp_tabelaMenu input#busca-menu-input {
     width: 100% !important;
     font-size: 1.2rem;
     padding: 11px;
     margin-bottom: 10px;
 }
+
 @-moz-document url-prefix() {
     .nvp_tabelaMenu input#busca-menu-input {
         width: 88% !important;
     }
 }
+
 .nvp_tabelaMenu .title {
     background: transparent;
     width: 210px;
@@ -1407,38 +1520,47 @@ a.icons-top {
     margin: 0 10px;
     border-radius: 3px;
 }
+
 .nvp_tabelaMenu .title:hover {
     background: #cddce6;
 }
+
 .nvp_tabelaMenu .title a {
     color: var(--font-color);
     font-size: 1.6rem;
     font-weight: normal;
     text-decoration: none;
 }
+
 .title .img {
     width: 13px;
     height: 13px;
 }
+
 sub {
     color: var(--font-color-grey);
     font-size: var(--f-size-sub);
 }
+
 .nvp_tabelaMenu .nvp_sub {
     padding: 3px 40px !important;
     width: 190px;
 }
+
 .nvp_tabelaMenu .nvp_sub a {
     color: var(--font-color);
     font-size: var(--f-size-sub);
 }
+
 .nvp_tabelaMenu ul.menu {
     width: 100%;
 }
+
 .nvp_tabelaMenu ul.menu li {
     padding: 0 20px;
     display: flex;
 }
+
 .clLevel0border {
     margin-top: 0;
     background: #FFF;
@@ -1446,13 +1568,12 @@ sub {
     width: auto !important;
     clip: auto !important;
 }
+
 .clLevel1border,
 .clLevel2border {
-    box-shadow: 0 2px 9px 0 rgba(0,
-    0,
-    0,
-    0.15);
+    box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.15);
 }
+
 .clLevel0 {
     background: #e9eff7;
     border: 0;
@@ -1461,6 +1582,7 @@ sub {
     width: auto !important;
     clip: auto !important;
 }
+
 .clLevel0over {
     background: var(--bg-color-title);
     border: 0;
@@ -1469,14 +1591,17 @@ sub {
     width: auto !important;
     clip: auto !important;
 }
+
 .clLevel1,
 .clLevel2 {
     background: #FFF;
 }
+
 .clLevel1over,
 .clLevel2over {
     background: var(--bg-color-title);
 }
+
 .clLevel1 a,
 .clLevel2 a,
 .clLevel1over a,
@@ -1485,12 +1610,14 @@ sub {
     font-size: 1.4rem;
     text-decoration: none;
 }
+
 .menu_susp_root {
     color: var(--font-color) !important;
     font-size: 1.6rem;
     padding: 10px 0;
     width: 100%;
 }
+
 a.menu_susp_root:after {
     float: right;
     display: inline-block;
@@ -1502,17 +1629,21 @@ a.menu_susp_root:after {
     background-image: url('../imagens/arrow-down2.png');
     background-size: 100%;
 }
+
 @-moz-document url-prefix() {
     a.menu_susp_root:after {
         margin-top: 8px;
     }
 }
+
 .clLevel1border {
     background: #f3f3f3;
 }
+
 .clLevel2border {
     background: #f3f3f3;
 }
+
 div#fa-icons {
     float: left;
     padding: 1px 0px;
@@ -1522,14 +1653,10 @@ div#fa-icons {
     font-size: 2rem;
     margin-right: 8px;
 }
+
 .expandir-btn {
-    background-color: rgba(54,
-    54,
-    54);
-    box-shadow: 2px 3px 3px rgba(50,
-    50,
-    50,
-    0.5);
+    background-color: rgba(54, 54, 54);
+    box-shadow: 2px 3px 3px rgba(50, 50, 50, 0.5);
     border-radius: 0 30px 30px 0;
     position: absolute;
     display: none;
@@ -1541,24 +1668,30 @@ div#fa-icons {
     transition: margin-left .5s ease-in-out;
     z-index: 2;
 }
+
 #expandido {
     display: none;
 }
 
+
 /**************************************
 ************* BREADCRUMB **************
 **************************************/
+
 td.fundoLocalizacao {
     background-color: #FFF;
 }
+
 #localizacao {
     margin-top: 15px;
 }
+
 #localizacao a,
 #localizacao span {
     font-weight: bold !important;
     color: var(--font-color);
 }
+
 #localizacao .pagina_atual,
 #localizacao .pagina_atual:hover,
 #localizacao .flechinha,
@@ -1566,17 +1699,21 @@ td.fundoLocalizacao {
     color: var(--font-color-grey) !important;
 }
 
+
 /**************************************
 *********CALENDÁRIO ANO LETIVO*********
 **************************************/
+
 .input_calendario_letivo td,
 .input_calendario_letivo td select {
     font-size: 1.4rem !important;
 }
+
 table.calendar {
     margin-top: 20px;
     width: 100%;
 }
+
 table.calendar .cal_dir,
 .cal_esq {
     background-image: none;
@@ -1586,16 +1723,19 @@ table.calendar .cal_dir,
     font-size: 4rem;
     padding: 0 10px;
 }
+
 table.calendar .header {
     background: #fff;
     color: var(--font-color);
     border: 0;
 }
+
 table.calendar .header td {
     background: var(--bg-color-title);
     width: 45px;
     padding: 10px;
 }
+
 table.calendar .dayLastMonth,
 .day {
     border: 0;
@@ -1603,57 +1743,66 @@ table.calendar .dayLastMonth,
     width: 45px !important;
     color: var(--font-color);
 }
+
 table.calendar .day {
     background-color: #e9f0f8;
     cursor: pointer;
 }
+
 table.calendar .day:hover {
     opacity: .7;
 }
+
 table.calendar .anotacao {
     float: right;
     font-size: 1.6rem;
 }
+
 table.calendar .legenda {
     border: 0;
     color: var(--font-color);
     font-size: 1.2rem;
 }
+
 table.calendar .legenda .fa {
     font-size: 1.4rem;
 }
+
 table.calendar .cor {
     border: 0;
 }
 
+
 /**************************************
 **************CALENDÁRIO***************
 **************************************/
+
 .fundoCalendarioTopo {
     background-color: var(--font-color);
     padding: 7px !important;
     border: 0;
 }
+
 .fundoCalendario {
     background-color: #cddce6;
     border: 0;
     color: var(--font-color);
 }
+
 .fundoCalendarioUrgente,
 .fundoCalendarioProximo {
     border: 0;
     color: var(--font-color) !important;
 }
+
 .fundoCalendario .dia_agenda,
 .fundoCalendarioUrgente .dia_agenda,
 .fundoCalendarioProximo .dia_agenda {
     position: absolute !important;
     font-size: 2.4rem;
-    color: rgba(147,
-    147,
-    147,
-    1);
+    color: rgba(147, 147, 147, 1);
 }
+
 .fundoCalendario span,
 .fundoCalendarioUrgente span,
 .fundoCalendarioProximo span {
@@ -1662,38 +1811,43 @@ table.calendar .cor {
     font-weight: bold;
     position: relative;
 }
+
 .fundoCalendarioMesDiferente {
     background-color: #e9f0f8;
     border: 0;
     color: var(--font-color);
 }
+
 .fundoCalendarioMesDiferente span {
     font-weight: bold;
     font-size: 2.4rem;
-    color: rgba(154,
-    154,
-    154,
-    .5);
+    color: rgba(154, 154, 154, .5);
 }
+
 .fundoCalendarioUrgente,
 .fundoCalendarioProximo {
     padding: 5px;
 }
+
 a.agenda-ver-todos b {
     color: var(--font-color-a);
     font-size: 1.2rem;
 }
+
 a.nav_agenda {
     color: #FFF;
 }
+
 a.nav_agenda:hover {
     text-decoration: none;
     opacity: .9;
 }
 
+
 /**************************************
 ********** QUADRO DE HORARIO **********
 **************************************/
+
 table.calendar .cal_esq_qh {
     background: none !important;
     color: var(--font-color);
@@ -1702,49 +1856,61 @@ table.calendar .cal_esq_qh {
     font-size: 4.0rem;
     padding: 0 10px;
 }
+
 table.calendar .mes {
     color: var(--font-color);
     padding: 10px;
     font-size: 1.6rem;
 }
+
 table.calendar .horario {
     background: #e9f0f8;
     margin-bottom: 2px;
     padding: 10px;
 }
+
 .input_quadro_horario td,
 .input_quadro_horario td select {
     font-size: 1.4rem !important;
 }
 
+
 /**************************************
 ****************AGENDA*****************
 **************************************/
+
 .escuro {
     background-color: #f5f9fd !important;
 }
+
 .titulo,
 .comp_tit_antigo {
     color: var(--font-color) !important;
 }
+
 td.arrow-dia a {
     color: var(--font-color);
 }
+
 td.arrow-dia {
     font-size: 2.5rem;
     padding: 0 5px;
     background: var(--bg-color-title);
 }
+
 td.data-info {
     background: var(--bg-color-title);
     padding: 11px 0;
 }
+
 td.data-info span {
     color: var(--font-color);
 }
+
 .small:hover {
     text-decoration: none;
 }
+
 .small div {
     background: #e9f0f8;
     border: 1px solid #cddce6;
@@ -1756,57 +1922,67 @@ td.data-info span {
     text-align: center;
     font-size: 1.2rem;
 }
+
 .small div.important {
     background-color: #ffdbdb;
     border: solid 1px #ffb2b2;
 }
+
 .small div.history {
     background-color: #fff9db;
     border: solid 1px #fff3b3;
 }
+
 .compromisso input,
 textarea.agenda_conteudo {
     margin: 5px !important;
     font-size: 1.2rem;
 }
+
 table.calendario {
     border: 0;
     background-color: #FFF;
 }
+
 table.calendario td {
     padding: 5px;
 }
+
 table.calendario td a {
     color: var(--font-color);
 }
+
 .calendario_dias_t {
     background: var(--bg-color-title);
     color: var(--font-color);
     border: 0;
 }
+
 .calendario_outromes {
     background: #FFF;
     border: 0;
     color: #CCC !important;
 }
+
 .calendario_dias {
     border: 0;
     background: #e9f0f8;
 }
+
 .calendario_dia_sel {
     background: var(--bg-color-title);
     border: 0;
 }
 
+
 /**************************************
 ****************MODAIS*****************
 **************************************/
+
 .ui-dialog {
-    box-shadow: 0 12px 24px 0 rgba(0,
-    0,
-    0,
-    0.3);
+    box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.3);
 }
+
 .ui-dialog h2 {
     color: #FFF;
     background: var(--font-color);
@@ -1815,6 +1991,7 @@ table.calendario td a {
     font-size: 1.8rem;
     text-align: center;
 }
+
 .ui-dialog fieldset legend {
     font-size: 1.6rem;
     font-weight: bold;
@@ -1823,6 +2000,7 @@ table.calendario td a {
     line-height: 1.31;
     color: var(--font-color);
 }
+
 .ui-dialog input {
     border-radius: 3px;
     background-color: #ffffff;
@@ -1835,6 +2013,7 @@ table.calendario td a {
     padding: 8px;
     margin: 4px 10px 4px 0px !important;
 }
+
 .ui-dialog select {
     border-radius: 3px;
     background-color: #ffffff;
@@ -1847,6 +2026,7 @@ table.calendario td a {
     padding: 8px !important;
     margin-right: 4px;
 }
+
 .ui-dialog label {
     font-size: 1.4rem;
     font-weight: normal;
@@ -1856,6 +2036,7 @@ table.calendario td a {
     color: var(--font-color);
     margin-right: 5px;
 }
+
 .ui-dialog a,
 .ui-dialog .decorated {
     font-size: 1.4rem !important;
@@ -1865,17 +2046,20 @@ table.calendario td a {
     line-height: 1.5;
     color: var(--font-color-a) !important;
 }
+
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
     float: none !important;
     text-align: center !important;
     border-top: 1px solid var(--bg-color-title);
     padding: 10px 0px;
 }
+
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
     border: 0 !important;
 }
+
 .ui-button span {
     border-radius: 3px;
     border: solid 1px #cddce6 !important;
@@ -1888,32 +2072,39 @@ table.calendario td a {
     background: #FFF;
     padding: 9px 35px !important;
 }
+
 .ui-widget-content {
     border-radius: 3px;
     border: 0;
 }
+
 .ui-dialog-titlebar-close:hover {
     background: transparent !important;
     border: 0 !important;
 }
+
 .ui-icon:hover {
     background-image: url('../scripts/jquery/jquery-ui.min-1.9.2/css/custom/images/ui-icons_ffffff_256x240.png') !important;
 }
+
 .atualizacao-dados .ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix {
     background: var(--font-color);
     color: #FFF;
     text-align: center;
 }
+
 .atualizacao-dados span.ui-button-text {
     border-radius: 3px;
     background-color: #0ac336;
     color: #FFF !important;
     border: 0 !important;
 }
+
 .atualizacao-dados .ui-dialog-content {
     height: 58px !important;
     font-size: 1.4rem !important;
 }
+
 #modal-title {
     background: var(--font-color);
     color: #FFF;
@@ -1922,13 +2113,16 @@ table.calendario td a {
     font-size: 1.8rem;
     font-weight: bold;
 }
+
 #modal-close {
     background: var(--font-color);
     text-align: right;
     padding: 20px;
 }
 
+
 /* The Modal (background) */
+
 .modal {
     display: none;
     /* Hidden by default */
@@ -1946,26 +2140,21 @@ table.calendario td a {
     /* Full height */
     overflow: auto;
     /* Enable scroll if needed */
-    background-color: rgb(0,
-    0,
-    0);
+    background-color: rgb(0, 0, 0);
     /* Fallback color */
-    background-color: rgba(0,
-    0,
-    0,
-    0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     /* Black w/ opacity */
 }
+
 .modal-domjs-conteudo {
-    box-shadow: 0 12px 24px 0 rgba(0,
-    0,
-    0,
-    0.3);
+    box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.3);
 }
+
 
 /**************************************
 ***************TABELAS*****************
 **************************************/
+
 .table,
 .div {
     color: var(--font-color);
@@ -1973,15 +2162,19 @@ table.calendario td a {
     margin-left: auto;
     margin-right: auto;
 }
+
 .d-flex {
     display: flex !important;
 }
+
 .align-items-center {
     align-items: center !important;
 }
+
 td#corpo {
     padding: 0 20px;
 }
+
 .tabelanum1 {
     display: flex;
     width: 100%;
@@ -1989,12 +2182,15 @@ td#corpo {
     justify-content: center;
     align-items: baseline;
 }
+
 td.tableDetalheLinhaSeparador {
     background-color: var(--bg-color-title) !important;
 }
+
 tr.tableHeader {
     background-color: var(--bg-color-title) !important;
 }
+
 .tabelanum2 {
     display: flex;
     flex-direction: column;
@@ -2002,6 +2198,7 @@ tr.tableHeader {
     align-items: center;
     /* border: 0 !important; */
 }
+
 table.cellcolor th,
 table tr.cellcolor th,
 .cellcolor,
@@ -2009,10 +2206,12 @@ tr.even {
     background-color: #f5f9fd;
     font-size: 1.2rem;
 }
+
 table.styled tr td,
 table.styled tr th {
     font-size: 1.2rem;
 }
+
 table.strong th,
 tr.strong th,
 tr.strong td,
@@ -2021,14 +2220,17 @@ table.styled th {
     color: var(--font-color) !important;
     font-size: 1.2rem;
 }
+
 td.area-conhecimento-destaque {
     background-color: var(--font-color) !important;
     color: #FFF !important;
     font-size: 1.2rem;
 }
+
 .linhaBotoes {
     background-color: #FFF;
 }
+
 #formcadastro .formdktd,
 .tableDetalhe .formdktd,
 .titulo-tabela-listagem {
@@ -2039,6 +2241,7 @@ td.area-conhecimento-destaque {
     color: var(--font-color);
     padding: 8px;
 }
+
 #formcadastro input:not(.botaolistagem,
 .chosen-search input),
 #formcadastro textarea {
@@ -2052,30 +2255,37 @@ td.area-conhecimento-destaque {
     color: var(--font-color);
     box-sizing: border-box;
 }
+
 #formcadastro textarea {
     max-width: 75% !important;
 }
+
 .tablecadastro,
 .tableDetalhe tr td:first-child {
     font-weight: bold;
     /* background-color: red; */
 }
+
 .tablecadastro tr td:last-child {
     /* background-color: blue; */
 }
+
 .chosen-choices {
     border-radius: 3px;
     border: solid 1px #cddce6 !important;
     padding: 5px !important;
 }
+
 #estado_civil_id_aluno,
 #estado_civil_id_responsavel {
     width: 225px !important;
 }
+
 #sexo_id_aluno,
 #sexo_responsavel {
     width: 205px !important;
 }
+
 #formcadastro select {
     border-radius: 3px;
     background-color: #ffffff;
@@ -2084,6 +2294,7 @@ td.area-conhecimento-destaque {
     font-size: var(--f-size-xs);
     color: var(--font-color);
 }
+
 #formcadastro .formmdtd,
 #formcadastro .formlttd {
     color: var(--font-color);
@@ -2093,22 +2304,27 @@ td.area-conhecimento-destaque {
     max-width: 50%;
     width: auto;
 }
+
 .formmdtd sub,
 .formlttd sub {
     color: var(--font-color-grey);
     font-size: var(--f-size-sub);
 }
+
 .formmdtd {
     background-color: #f5f9fd;
 }
+
 .formlttd {
     background-color: #FFF;
 }
+
 .tablelistagem,
 .tablecadastro,
 .tableDetalhe {
     padding: 10px 0;
 }
+
 .tablelistagem .formdktd {
     background-color: #f5f9fd !important;
     font-size: var(--f-size-s);
@@ -2119,6 +2335,7 @@ td.area-conhecimento-destaque {
     color: var(--font-color);
     padding: 17px 13px;
 }
+
 .tablelistagem .formmdtd,
 .tablelistagem .formlttd,
 .tablelistagem .formmdtd a,
@@ -2128,11 +2345,13 @@ td.area-conhecimento-destaque {
     padding: 8px;
     vertical-align: top;
 }
+
 .tablelistagem .formmdtd a,
 .tablelistagem .formlttd a {
     display: inline-block;
     padding: 0 8px;
 }
+
 .tableDetalhe .formmdtd,
 .tableDetalhe .formlttd {
     color: var(--font-color);
@@ -2140,6 +2359,7 @@ td.area-conhecimento-destaque {
     padding: 12px;
     vertical-align: top;
 }
+
 .tableDetalhe th {
     background-color: #f5f9fd !important;
     font-size: 1.75rem;
@@ -2150,85 +2370,102 @@ td.area-conhecimento-destaque {
     color: var(--font-color) !important;
     padding: 17px 13px;
 }
+
 table#matriculas select {
     background-color: #e9f0f8;
     color: var(--font-color);
     border-color: var(--bg-color-title);
 }
+
 table.tablelistagem.auditoria-tab .formdktd {
     background-color: var(--bg-color-title) !important;
     font-size: 1.4rem;
     padding: 5px;
 }
+
 table.tablelistagem.auditoria-tab tr td.formlttd {
     padding: 4px;
     font-size: 1.2rem;
 }
+
 table.tablelistagem.auditoria-tab tr:nth-child(2n+1) td.formlttd {
-    background-color: rgb(233,
-    239,
-    247) !important;
+    background-color: rgb(233, 239, 247) !important;
 }
+
 .area_conhecimento_title td {
     padding: 13px 0;
 }
+
 .area_conhecimento_title {
     font-size: 1.4rem;
     margin: 10px;
     text-transform: uppercase;
     font-weight: bold;
 }
+
 a.clone-values {
     color: var(--font-color);
     font-size: 1.5rem;
     cursor: pointer;
 }
 
+
 /**************************************
 **********TABELAS DE ADIÇÃO************
 **************************************/
+
 table.tabela-adicao {
     width: 100%;
     border: 0 !important;
 }
+
 table.tabela-adicao td {
     text-align: left;
     padding: 8px 15px !important;
     border: 0 !important;
 }
+
 table.tabela-adicao .formdktd td {
     padding: 8px 15px !important;
 }
+
 table.tabela-adicao .formmdtd,
 table.tabela-adicao .formlttd {
     background-color: #f5f9fd;
 }
+
 table.tabela-adicao td .geral,
 table.tabela-adicao .obrigatorio,
 table.tabela-adicao td .btn-detalhes {
     width: 100% !important;
 }
+
 div.paginacao {
     border-collapse: collapse;
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
 div.paginacao label {
     border: 1px solid var(--bg-color-title);
     padding: 10px !important;
     text-align: center;
 }
+
 div.paginacao label a {
     color: var(--font-color-a)
 }
+
 div.paginacao label a.nvp_paginador {
     font-size: var(--f-size-xs);
 }
+
 #tabela_arredondamento_numerica tr:last-child,
 #tabela_arredondamento_numerica tr.tr_tabela_arredondamento_numerica td:last-child,
 #tabela_arredondamento_numerica tr#tr_tabela_arredondamento_numerica_cab td:last-child {
     display: none !important;
 }
+
 #tabela_arredondamento tr.tr_tabela_arredondamento td:first-child,
 #tabela_arredondamento #td_id,
 #tabela_arredondamento_numerica tr.tr_tabela_arredondamento_numerica td:first-child,
@@ -2238,9 +2475,11 @@ div.paginacao label a.nvp_paginador {
     display: none;
 }
 
+
 /**************************************
 ********MATRÍCULAS DET ALUNO***********
 **************************************/
+
 p.title-table-matricula {
     background-color: var(--bg-color-title) !important;
     font-size: 1.6rem;
@@ -2252,17 +2491,21 @@ p.title-table-matricula {
     margin-bottom: 0;
 }
 
+
 /**************************************
 **************TABS/ABAS****************
 **************************************/
+
 #tabControl {
     margin: -12px -8px !important;
     background: #FFF;
     min-height: 50px;
 }
+
 #tabControl ul li {
     padding: 0 !important;
 }
+
 .alunoTab,
 .alunoTab-active,
 .alunoTab2,
@@ -2284,34 +2527,27 @@ p.title-table-matricula {
     border: 0 !important;
     color: var(--font-color);
 }
+
 .alunoTab,
 .alunoTab2,
 .turmaTab,
 .servidorTab {
-    background-image: linear-gradient(to bottom,
-    rgba(233,
-    239,
-    247,
-    0) 34%,
-    rgba(71,
-    114,
-    143,
-    0.16)),
-    linear-gradient(#e9eff7,
-    #e9eff7);
+    background-image: linear-gradient(to bottom, rgba(233, 239, 247, 0) 34%, rgba(71, 114, 143, 0.16)), linear-gradient(#e9eff7, #e9eff7);
     box-shadow: inset -1px 0 0 0 #ffffff;
 }
+
 .alunoTab-active,
 .alunoTab-active2,
 .turmaTab-active,
 .servidorTab-active {
     width: auto !important;
     background: #FFF !important;
-    box-shadow: inset 1px 1px 0 0 #cddce6,
-    inset -1px 0 0 0 #cddce6;
+    box-shadow: inset 1px 1px 0 0 #cddce6, inset -1px 0 0 0 #cddce6;
 }
 
+
 /*******BOTÕES******/
+
 .btn-green,
 input.btn-green,
 .ui-button span.btn-green,
@@ -2320,27 +2556,33 @@ input.btn-green,
     border: 0 !important;
     color: #FFF !important;
 }
+
 btn-danger,
 input.btn-danger {
     color: #fff !important;
     background-color: #aa2e28 !important;
     border-color: #aa2e28
 }
+
 input.continuar-processo {
     margin: 10px 5px 10px 0;
 }
+
 span.qnt-matriculas {
     font-size: 1.5rem !important;
 }
+
 input.proximo-matricula {
     margin: 10px 10px;
 }
+
 input.btn_small {
     margin: 4px 0;
     padding: 7px 7px !important;
     color: var(--font-color-a) !important;
     font-size: 1.2rem !important;
 }
+
 .js .inputfile {
     width: 0.1px;
     height: 0.1px;
@@ -2349,6 +2591,7 @@ input.btn_small {
     position: absolute;
     z-index: -1;
 }
+
 .inputfile+label {
     max-width: 80%;
     font-size: 1.4rem;
@@ -2359,26 +2602,32 @@ input.btn_small {
     overflow: hidden;
     /* 10px 20px */
 }
+
 .no-js .inputfile+label {
     display: none;
 }
+
 .inputfile+label * {
     /* pointer-events: none; */
     /* in case of FastClick lib use */
 }
+
 .inputfile-buttom+label {
     color: var(--font-color);
 }
+
 .inputfile-buttom+label {
     border: 1px solid #cddce6;
     background-color: #fff;
     padding: 0;
     border-radius: 3px;
 }
+
 .inputfile-buttom+label span,
 .inputfile-buttom+label strong {
     padding: 8px;
 }
+
 .inputfile-buttom+label span {
     width: 200px;
     display: inline-block;
@@ -2387,21 +2636,25 @@ input.btn_small {
     overflow: hidden;
     vertical-align: top;
 }
+
 .inputfile-buttom+label strong {
     height: 100% !important;
     color: #FFF !important;
     background-color: #0ac336 !important;
     display: inline-block !important;
 }
+
 .inputfile-buttom:disabled+label {
     background-color: #e9f0f8;
     cursor: not-allowed;
 }
+
 @media screen and (max-width: 50em) {
     .inputfile-buttom+label strong {
         display: block;
     }
 }
+
 @media only screen and (max-width: 1023px) {
     select {
         width: 100vh;
@@ -2659,10 +2912,13 @@ input.btn_small {
     }
 }
 
+
 /****WIDGET SUPORTE****/
+
 .freshwidget-button {
     left: 30px !important;
 }
+
 a.btn-detalhes {
     background: var(--bg-color-title) !important;
     padding: 8px 17px;
@@ -2671,9 +2927,11 @@ a.btn-detalhes {
     cursor: pointer;
     white-space: nowrap;
 }
+
 .matricula-situacao-deslocamento {
     color: #FF6600;
 }
+
 #ref_cod_escola_chosen a.chosen-single,
 #escola_chosen a.chosen-single {
     text-decoration: none !important;
@@ -2681,17 +2939,18 @@ a.btn-detalhes {
     font-size: 1.4rem !important;
     width: 100% !important;
 }
+
 #componentes_turma_cad td {
     padding: 5px;
 }
+
 .button_center {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
 }
+
 .btn-disabled#btn_enviar {
-    background: rgb(233,
-    240,
-    248) !important;
+    background: rgb(233, 240, 248) !important;
     cursor: not-allowed;
 }
