@@ -40,6 +40,7 @@ class clsCadastro extends clsCampos
     public $array_botao_id;
     public $array_botao_url_script;
     public $controle;
+    public $classe;
     public $acao_enviar = 'acao()';
     public $botao_enviar = true;
     public $sucesso;
@@ -227,8 +228,10 @@ class clsCadastro extends clsCampos
         if ($this->locale) {
             app(Breadcrumb::class)->setLegacy($this->locale);
         }
+        $classe = $md ? 'formlttd' : 'formmdtd';
+        $md = $md ? false : true;
 
-        $retorno .= "\n<div class='tablecadastro grid' >\n";
+        $retorno .= "\n<div class=' tablecadastro flex flex-col' >\n";
         $applicationTitle = $this->titulo_aplication ?? '';
         $titulo = isset($this->titulo) ? $this->titulo : "{$this->tipoacao} {$applicationTitle}"; //tíulo
 
@@ -236,10 +239,10 @@ class clsCadastro extends clsCampos
 
         $barra = $titulo;
 
-        $retorno .= "<div class='form-title col-sm-12'><h2 class='formdktd grid-box-title'>{$barra}</h2></div>";
+        $retorno .= "<div class=' form-title '><h5 class='formdktd grid-box-title'>{$barra}</h5></div>";
 
         if (empty($this->campos)) {
-            $retorno .= '<label class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</label>';
+            $retorno .= '<label class=\' form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</label>';
         } else {
             // Verifica se houve erros no controller
             $retorno .= $this->_getControllerErrors();
@@ -247,7 +250,7 @@ class clsCadastro extends clsCampos
         }
 
         $retorno .=
-            '<hr></hr>
+            '<hr>
     <div class=\'linhaBotoes offset-5\'>
     <script type="text/javascript">
     var goodIE = (document.all) ? 1:0;
@@ -635,7 +638,7 @@ class clsCadastro extends clsCampos
 
         return $this->_inputsHelper;
     }
- 
+
     protected function currentUserId()
     {
         return Portabilis_Utils_User::currentUserId();

@@ -126,9 +126,9 @@ class clsListagem extends clsCampos
                 $intPaginaAtual = 1;
             }
 
-            if(!isset($_GET['pagina_formulario']) & !isset($_GET['pagina_'])) {
+            if (!isset($_GET['pagina_formulario']) & !isset($_GET['pagina_'])) {
                 $pagina_formulario = 1;
-            }else{
+            } else {
                 $pagina_formulario = (isset($_GET['pagina_formulario'])) ? $_GET['pagina_formulario'] : $_GET['pagina_'];
             }
 
@@ -150,7 +150,7 @@ class clsListagem extends clsCampos
             if (is_array($mixVariaveisMantidas)) {
                 foreach ($mixVariaveisMantidas as $key => $value) {
                     if ($key != $getVar) {
-                        if (! ($add_iniciolimi && $key == 'iniciolimit')) {
+                        if (!($add_iniciolimi && $key == 'iniciolimit')) {
                             $linkFixo .= "$key=$value&";
                         }
                     }
@@ -162,20 +162,18 @@ class clsListagem extends clsCampos
             }
 
             $strReturn = <<<HTML
-<table class="paginacao">
-  <tr>
-    <td>Total de registros: {$intTotalRegistros}</td>
-  </tr>
-</table>
+<div class='paginacao flex justity-items-center' >
+      <label>Total de registros: {$intTotalRegistros}</label>
+        </div>
 HTML;
 
-            $strReturn .= '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
+            $strReturn .= '<div class=\'paginacao flex justity-items-center  \' >';
 
             // Setas de início e anterior
-            $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . (1 + $pag_modifier): '';
-            $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"> &laquo; </a></td> ";
+            $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . (1 + $pag_modifier) : '';
+            $strReturn .= "<label for='page-first' ><a  id='page-first' href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"> &laquo; </a></label> ";
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . max(1 + $pag_modifier, $intPaginaAtual - 1) : '';
-            $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"> &lsaquo; </a></td> ";
+            $strReturn .= "<label for='page-back' ><a id='page-back' href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"> &lsaquo; </a></label> ";
 
             // Meio
             $strReturn .= '';
@@ -185,16 +183,16 @@ HTML;
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
                 $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
-                $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
+                $strReturn .= "<label class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) . '</a></label>';
             }
 
             // Setas de fim e próxima
             $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
-            $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"> &rsaquo; </a></td> ";
-            $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($totalPaginas + $pag_modifier): '';
-            $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"> &raquo; </a></td> ";
+            $strReturn .= "<label width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"> &rsaquo; </a></label> ";
+            $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($totalPaginas + $pag_modifier) : '';
+            $strReturn .= "<label width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"> &raquo; </a></label> ";
 
-            $strReturn .= '</tr></table>';
+            $strReturn .= '</div>';
 
             $this->paginador2 = $strReturn;
         }
@@ -261,7 +259,7 @@ HTML;
 
                 foreach ($this->campos as $nome => $componente) {
                     if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
-                        $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3]).'\'>';
+                        $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='" . urlencode($componente[3]) . '\'>';
                     }
                 }
             }
@@ -433,7 +431,7 @@ HTML;
             <tr>
                 <td class='formdktd' colspan=\"{$ncols}\">&nbsp;</td>
             </tr></table>";
-            
+
 
         if (!empty($this->paginador2)) {
             $retorno .= "
@@ -605,7 +603,7 @@ HTML;
                     }
                 }
 
-                $retorno .= '&nbsp;<input type=\'button\' class=\''. $extraCssClass . '\' onclick=\'javascript:go( "'.$url.'" );\' value=\''.$value."'>&nbsp;\n";
+                $retorno .= '&nbsp;<input type=\'button\' class=\'' . $extraCssClass . '\' onclick=\'javascript:go( "' . $url . '" );\' value=\'' . $value . "'>&nbsp;\n";
             }
         }
 
@@ -632,7 +630,7 @@ HTML;
 
     public function inputsHelper()
     {
-        if (! isset($this->_inputsHelper)) {
+        if (!isset($this->_inputsHelper)) {
             $this->_inputsHelper = new Portabilis_View_Helper_Inputs($this);
         }
 
