@@ -39,6 +39,8 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_professores_frequencia_lst.php');
         }
 
+        $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
+        $resultado = $obj->getGrau();
 
         if ($registro['detalhes']['data']) {
             $this->addDetalhe(
@@ -61,14 +63,14 @@ return new class extends clsDetalhe {
         if ($registro['detalhes']['componente_curricular']) {
             $this->addDetalhe(
                 [
-                    'Componente curricular',
+                    $resultado == 0 ? 'Componente curricular' : 'Campo de experiência',
                     $registro['detalhes']['componente_curricular']
                 ]
             );
         } else {
             $this->addDetalhe(
                 [
-                    'Componente curricular',
+                    $resultado == 0 ? 'Componente curricular' : 'Campo de experiência',
                     '—'
                 ]
             );
@@ -153,31 +155,24 @@ return new class extends clsDetalhe {
             }
         }
 
-        $this->tabela .= ' <div style="margin-bottom: 10px;">';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Nome</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Justificativa</span>';
-        $this->tabela .= ' </div>';
-        $this->tabela .= ' <br style="clear: left" />';
 
-        foreach ($alunos as $aluno) {
-            $checked = !$aluno['presenca'] ? "checked='true'" : '';
-
-            $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['nome']}</span>";
-
-            $this->tabela .= "  <label style='display: block; float: left; width: 100px;'>
-                                    <input type='checkbox' disabled {$checked}>
-                                </label>";
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['justificativa']}</span>";
-
-            $this->tabela .= '  </div>';
-            $this->tabela .= '  <br style="clear: left" />';
-        }
-
-        $disciplinas  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $this->tabela .= ' </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%">';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Justificativa</span></th></tr>';
+        
+             foreach ($alunos as $aluno) {
+             $checked = !$aluno['presenca'] ? "checked='true'" : '';
+            
+             $this->tabela .= "  <tr><td class='formlttd'><p>{$aluno['nome']}</p></td>";
+             $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
+             $this->tabela .= "  <td class='formlttd'><p>{$aluno['justificativa']}</p></td></tr>";
+         }
+        $this->tabela .= '</table></div></td></tr>';
+        $disciplinas  = '</table><table cellspacing="0" cellpadding="0" border="0" width="100%">';
         $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
         $disciplinas .= '</table>';
+
 
         $this->addDetalhe(
             [

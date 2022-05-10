@@ -47,6 +47,7 @@ return new class extends clsListagem {
     public $ref_cod_serie;
     public $cpf_aluno;
     public $rg_aluno;
+    public $ref_cod_turma;
 
     public function Gerar()
     {
@@ -66,7 +67,7 @@ return new class extends clsListagem {
         }
 
         $this->campoRA('aluno_estado_id', 'Código rede estadual do aluno (RA)', $this->aluno_estado_id, false);
-        $this->campoTexto('nome_aluno', 'Nome do aluno', $this->nome_aluno, 50, 255, false);
+        $this->campoTexto('nome_aluno', '<b>Nome do aluno</b>', $this->nome_aluno, 50, 255, false);
         $this->campoData('data_nascimento', 'Data de Nascimento', $this->data_nascimento);
         $this->campoCpf('cpf_aluno', 'CPF', $this->cpf_aluno);
         $this->campoTexto('rg_aluno', 'RG', $this->rg_aluno);
@@ -78,7 +79,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola]);
-        $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['curso', 'serie', 'turma'],['required' => false]);
 
         $obj_permissoes = new clsPermissoes();
         $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
@@ -143,7 +144,7 @@ return new class extends clsListagem {
             $this->cod_inep,
             $this->aluno_estado_id,
             $this->ano,
-            $this->ref_cod_instituicao,
+            null,
             $this->ref_cod_escola,
             $this->ref_cod_curso,
             $this->ref_cod_serie,
@@ -159,7 +160,8 @@ return new class extends clsListagem {
             null,
             null,
             idFederal2int($this->cpf_aluno),
-            idFederal2int($this->rg_aluno)
+            idFederal2int($this->rg_aluno),
+            $this->ref_cod_turma,
         );
 
         $total = $aluno->_total;

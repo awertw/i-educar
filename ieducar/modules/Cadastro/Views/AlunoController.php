@@ -354,9 +354,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         if ($foto) {
             $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto)  . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
-            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 2MB</span>');
+            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <h5 class="i">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 2MB</h5>');
         } else {
-            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 2MB</span>');
+            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <h5 class="i">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 2MB</h5>');
         }
 
 
@@ -464,16 +464,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->campoCpf('id_federal', 'CPF', $valorCpf);
 
-        $options = [
-            'required' => false,
-            'label' => 'NIS (PIS/PASEP)',
-            'placeholder' => '',
-            'value' => $nisPisPasep,
-            'max_length' => 11,
-            'size' => 20
-        ];
-
-        $this->inputsHelper()->integer('nis_pis_pasep', $options);
+       
 
         $escolha_certidao = 'Tipo certidão civil';
         $selectOptions = [
@@ -819,6 +810,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
 
         $this->inputsHelper()->multipleSearchBeneficios('', $options, $helperOptions);
+        $options = [
+            'required' => false,
+            'label' => 'NIS (PIS/PASEP)',
+            'placeholder' => '',
+            'value' => $nisPisPasep,
+            'max_length' => 11,
+            'size' => 20
+        ];
+
+        $this->inputsHelper()->integer('nis_pis_pasep', $options);
 
         $helperOptions = ['objectName' => 'deficiencias'];
         $options = [
@@ -988,7 +989,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->checkbox('vacina_covid', $options);
 
         $options = ['label' => $this->_getLabel('desc_vacina_covid'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => ''];
-        $this->inputsHelper()->text('desc_vacina_covid', $options);
+        $this->inputsHelper()->numeric('desc_vacina_covid', $options);
 
         $options = ['label' => $this->_getLabel('aceita_hospital_proximo'), 'required' => false, 'placeholder' => ''];
         $this->inputsHelper()->checkbox('aceita_hospital_proximo', $options);

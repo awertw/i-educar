@@ -1,11 +1,33 @@
+<?php 
+define('HOST', isset($_SERVER['HTTP_HOST']) === true ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_ADDR']) === true ? $_SERVER['SERVER_ADDR'] : $_SERVER['SERVER_NAME']));
+$domain_parts = explode('.', HOST); 
+
+    $icoTecsis      = "favicon2.ico";
+    $headerID       = "style='background-image: linear-gradient(to bottom right, rgba(243, 46, 33, 1) 0%, rgba(243, 135, 42, 1) 75%)'";
+    $menu_lateral   = "style='background-color: rgb(2,115,129)'";
+    $rodapeID       = "style='background-color: rgb(243, 135, 42)'";
+    $r3c1Mobile     = "style='background: rgb(2,115,129)'";
+    $expandido      = "style='background-color: rgb(2,115,129)'";
+    $corTecsis      = "style='color:rgb(243, 135, 42)'";
+
+
+	if($domain_parts[2] != "tec"){
+		$icoTecsis = "favicon.ico"; $headerID = "";
+        $menu_lateral = ""; $rodapeID = "";
+        $r3c1Mobile = ""; $expandido = "";
+        $corTecsis = "";
+	}
+?>
 <!DOCTYPE html>
 <html lang="pt" class="no-js">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+  <!--  <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{!! url($icoTecsis) !!}" />
     <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif EducaSis</title>
 
     <script>
@@ -42,6 +64,8 @@
         <!-- End Google Tag Manager -->
     @endif
 
+    @stack('styles')
+
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/main.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/styles.css') }}">
@@ -59,8 +83,6 @@
     <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css') }}'>
     <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery-maxlength/jquery.maxlength.css') }}'>
     <link rel="stylesheet" type="text/css" href="{{ Asset::get("/intranet/scripts/summernote/summernote-lite.css") }}">
-
-    @stack('styles')
 
     <script>
         (function (e, t, n) {
@@ -149,7 +171,6 @@
     <!-- #&SCRIPT&# -->
 </head>
 <body>
-
 @if(!empty($config['app']['gtm']['id']))
     <!-- Google Tag Manager (noscript) -->
     <noscript>
@@ -158,88 +179,88 @@
     <!-- End Google Tag Manager (noscript) -->
 @endif
 <div id="DOM_expansivel" class="DOM_expansivel"></div>
-<table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
-    <tr id="topo" class="topo">
-        <td colspan="2">
-            <header class="ieducar-header">
-                <div class="ieducar-header-logo">
-                    <h1><a href="{{ url('/') }}">EducaSis</a></h1>
-                </div>
-                <div class="ieducar-header-links">
-                    <div class="dropdown">
-                        <div class="dropbtn">{{ $loggedUser->name }}</div>
-                        <div class="dropdown-content">
-                            <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
-                            <a href="{{ url('intranet/index.php') }}">Calendário</a>
-                            <a href="{{ url('intranet/meusdados.php') }}">Meus dados</a>
-                            <a href="{{ url('intranet/logof.php') }}" id="logout">Sair</a>
-                        </div>
+            <header class="ieducar-header" id="headerID" <?= $headerID?>>
+                <div class="container col-4">
+                    <div class="ieducar-header-logo">
+                        <h1><a href="{{ url('/') }}">EducaSis</a></h1>
                     </div>
-                    <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
-                        <img class="avatar-35" src="{{ session('logged_user_picture') }}" alt="Perfil">
-                    </a>
-                    <div class="dropdown notifications">
-                        <div class="dropbtn notifications">
-                            <img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}">
-                            <span class="notification-balloon"></span>
+                </div>
+                <div class="container col-8">
+                    <div class="ieducar-header-links">
+                        <div class="dropdown">
+                            <div class="dropbtn">{{ $loggedUser->name }}</div>
+                            <div class="dropdown-content">
+                                <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
+                                <a href="{{ url('intranet/index.php') }}">Calendário</a>
+                                <a href="{{ url('intranet/meusdados.php') }}">Meus dados</a>
+                                <a href="{{ url('intranet/logof.php') }}" id="logout">Sair</a>
+                            </div>
                         </div>
-                        <div class="dropdown-content-notifications">
-                            <div class="notifications-bar">
-                                <span> Notificações </span>
-                                <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
-                                <a class="btn-mark-all-read">Marcar todas como lidas (<span class="not-read-count">0</span>)</a>
+                        <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
+                            <img class="avatar-35" src="{{ session('logged_user_picture') }}" alt="Perfil">
+                        </a>
+                        <div class="dropdown notifications">
+                            <div class="dropbtn notifications">
+                                <img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}">
+                                <span class="notification-balloon"></span>
+                            </div>
+                            <div class="dropdown-content-notifications">
+                                <div class="notifications-bar">
+                                    <span> Notificações </span>
+                                    <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
+                                    <a class="btn-mark-all-read">Marcar todas como lidas (<span class="not-read-count">0</span>)</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="3">
-            <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
-                <tr>
-                    <td id="menu_lateral" class="r3c1" width='170'>
-                        @include('layout.menu')
-                    </td>
-
-                    <td valign=top>
-                        <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
+            <div class="main">
+                <div id="menu_lateral sidebar" class="r3c1" <?= $menu_lateral?>> 
+                    @include('partials.search')
+                    @include('layout.menu')
+                </div>
+                <div class="content">
+                    @include('layout.topmenu')
+                    <div class="content main">
+                        <table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
                             <tr>
-                                <td>
-                                    @include('layout.topmenu')
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td height="100%" valign="top" id="corpo">
-                                    <table class='tablelistagem' width='100%' border='0' cellpadding='0' cellspacing='0'>
-                                        <tr height='10px'>
-                                            <td class='fundoLocalizacao' colspan='2'>
-                                                @include('layout.breadcrumb')
+                                <td colspan="3">
+                                    <input type="checkbox" id="expandido">  
+                                    <label for="expandido" class="expandir-btn" <?= $expandido?>><i class="fa fa-ellipsis-v" <?=$corTecsis?> ></i></label>
+                                    <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
+                                        <tr>
+                                            <div class="r3c1 Mobile" <?=$r3c1Mobile?> >
+                                                @include('partials.searchMobile')
+                                                @include('layout.menu')
+                                            </div>
+                                            <td valign=top>
+                                                <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
+                                                    <tr>
+                                                        <td valign="top" id="corpo">
+                                                            <table class='tablelistagem' border='0' cellpadding='0' cellspacing='0'>
+                                                                <tr>
+                                                                    <td class='fundoLocalizacao' colspan='2'>
+                                                                        @include('layout.breadcrumb')
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            @yield('content')
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </td>
                                         </tr>
                                     </table>
-
-                                    @yield('content')
                                 </td>
                             </tr>
                         </table>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-
-    <tr class="rodape">
-        <td colspan="3">
-            <center>
+                    </div>
+                </div>
+            </div>
+            <div class="rodape" id="rodapeID" <?=$rodapeID?>>
                 @include('layout.footer')
-            </center>
-        </td>
-    </tr>
-</table>
+            </div>
 
 @include('partials.flash-message')
 

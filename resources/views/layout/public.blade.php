@@ -1,3 +1,13 @@
+<?php
+	define('HOST', isset($_SERVER['HTTP_HOST']) === true ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_ADDR']) === true ? $_SERVER['SERVER_ADDR'] : $_SERVER['SERVER_NAME']));
+	$domain_parts = explode('.', HOST); 
+	$icoTecsis = "favicon2.ico";
+
+	// if($domain_parts[2] != "tec"){
+	// 	$icoTecsis = "favicon.ico";
+	// }
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
@@ -6,13 +16,16 @@
 		
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="icon" type="image/x-icon" href="{{ url('intranet/imagens/login/logo-ico.png') }}">
+		<link rel="icon" type="image/x-icon" href="{!! url($icoTecsis) !!}" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap" rel="stylesheet">
+		
 		<link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url('intranet/styles/login-custom.css') }}">
+
 		
+
 		<!-- Google Tag Manager -->
 		<script>
 			dataLayer = [{
@@ -41,6 +54,7 @@
 			}
 		</script>
 		@endif
+
 	</head>
 	
 	<body>
@@ -72,12 +86,12 @@
 						@yield('content')
 					</div>
 					<div id="footer" class="link">
-						<div class="divLogo"></div>
+						<div class="divLogo" id="divLogoId"></div>
 						<?php /*	<p>Mantido por <a href="https://tecsisdoc.com.br/" target="_blank">Tecsis</a>.
 						{!! config('legacy.config.ieducar_login_footer') !!} </p> */?>
 					</div>
 				</div>
-				<div class="imgBorda"></div>
+				<div class="imgBorda" id="imgBordaId"></div>
 				<div class="container lateral_2">
 					<div class="container">
 						<img alt="Logo" class="entLogo" src="{{ config('legacy.config.ieducar_image') ?? url('https://tecsisdoc.com.br/wp-content/uploads/2022/01/tecsis_png.png') }}"/>
@@ -108,8 +122,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="divLogoMobile"></div>
-			<!-- <img alt="Logo" class="entLogoMobile logo-tecsis" src="{{ url('intranet/imagens/login/svg/TecSis-logo.svg') }}"/> -->
+			<div class="divLogoMobile" id="divLogoMobileId"></div>
 		</div>
 		<?php /* <div class="footer-socialMobile">
 			{!! config('legacy.config.ieducar_external_footer') !!} 
@@ -130,4 +143,17 @@
 			@endif
 		</div> */ ?>
 	</body>
+
+	<script>
+        let tecsis = window.location.hostname;
+		let tecsisSplit = tecsis.split(".");
+        (function basetecsis(){
+            if(tecsisSplit[2] == "tec"){
+                document.getElementById('divLogoId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis-animation_02.svg)"; 
+                document.getElementById('divLogoMobileId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis-bordaMobile.svg)"; 
+                document.getElementById('imgBordaId').style.backgroundImage="url(../intranet/imagens/login/svg/Tecsis_borda.svg)";
+            }
+        })()
+		console.log(tecsisSplit[2]);
+        </script>
 </html>

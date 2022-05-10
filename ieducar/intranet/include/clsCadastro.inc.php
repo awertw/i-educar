@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 class clsCadastro extends clsCampos
-{
+{ 
     public $target = '_self';
     public $largura;
     public $tipoacao;
@@ -228,7 +228,7 @@ class clsCadastro extends clsCampos
             app(Breadcrumb::class)->setLegacy($this->locale);
         }
 
-        $retorno .= "<center>\n<table class='tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
+        $retorno .= "<center>\n<table class='tablecadastro' $width border='0' style='line-height: 2.31; ' cellpadding='2' cellspacing='0'>\n";
         $applicationTitle = $this->titulo_aplication ?? '';
         $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
 
@@ -635,7 +635,7 @@ class clsCadastro extends clsCampos
 
         return $this->_inputsHelper;
     }
-
+ 
     protected function currentUserId()
     {
         return Portabilis_Utils_User::currentUserId();

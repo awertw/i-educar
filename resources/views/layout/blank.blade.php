@@ -1,10 +1,17 @@
+<?php 
+
+	if($domain_parts[2] != "tec"){
+		$icoTecsis = "favicon.ico";
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="pt" class="no-js">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="-1"/>
-    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{!! url($icoTecsis) !!}" />
     <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif {{ html_entity_decode(config('legacy.app.entity.name')) }} - i-Educar</title>
 
     <script>

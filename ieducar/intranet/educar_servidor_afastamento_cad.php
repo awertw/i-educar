@@ -183,11 +183,14 @@ return new class extends clsCadastro {
         elseif ($this->status == clsCadastro::EDITAR) {
             $this->campoRotulo('data_saida', 'Data de Afastamento', $this->data_saida);
         }
-
+        if($this->status == clsCadastro::NOVO || $this->retornar_servidor != EmployeeReturn::SIM){
+            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, true);
+        }
         // Se edição, mostra campo para entrar com data de retorno
         if ($this->retornar_servidor == EmployeeReturn::SIM || $this->data_retorno) {
-            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, false);
+            $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, true);
         }
+        
 
         $obj_servidor = new clsPmieducarServidor(
             $this->ref_cod_servidor,
@@ -367,7 +370,7 @@ return new class extends clsCadastro {
                                     false,
                                     false,
                                     '',
-                                    "<span name=\"ref_cod_servidor_substituto\" id=\"ref_cod_servidor_substituicao_{$key}\"><img border='0'  onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[{$key}]&campo2=ref_cod_servidor_substituto_{$key}_&ref_cod_instituicao={$this->ref_cod_instituicao}&dia_semana={$alocacao['dia_semana']}&hora_inicial={$alocacao['hora_inicial']}&hora_final={$alocacao['hora_final']}&ref_cod_servidor={$this->ref_cod_servidor}&professor=1&ref_cod_escola={$alocacao['ref_cod_escola']}&horario=S&ref_cod_disciplina={$alocacao['ref_cod_disciplina']}&ref_cod_curso={$alocacao['ref_cod_curso']}', 'nome')\" src=\"imagens/lupa.png\" ></span>",
+                                    "<span name=\"ref_cod_servidor_substituto\" id=\"ref_cod_servidor_substituicao_{$key}\"><img border='0'  onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[{$key}]&campo2=ref_cod_servidor_substituto_{$key}_&ref_cod_instituicao={$this->ref_cod_instituicao}&dia_semana={$alocacao['dia_semana']}&hora_inicial={$alocacao['hora_inicial']}&hora_final={$alocacao['hora_final']}&ref_cod_servidor={$this->ref_cod_servidor}&professor=1&ref_cod_escola={$alocacao['ref_cod_escola']}&horario=S&ref_cod_disciplina={$alocacao['ref_cod_disciplina']}&ref_cod_curso={$alocacao['ref_cod_curso']}', 'nome')\" src=\"imagens/lupaT.png\" ></span>",
                                     '',
                                     '',
                                     'ref_cod_servidor_substituto'

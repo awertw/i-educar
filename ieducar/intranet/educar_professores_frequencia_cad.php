@@ -74,13 +74,13 @@ return new class extends clsCadastro {
         if ($tipoacao == 'Edita' || !$_POST
             && $this->data
             && is_numeric($this->ref_cod_turma)
-            && is_numeric($this->ref_cod_componente_curricular)
             && is_numeric($this->fase_etapa)
         ) {
             $desabilitado = true;
         }
 
-        if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_componente_curricular)) {
+        if (is_numeric($this->ref_cod_turma)) {
+            $this->campoOculto('data_', dataToBanco($this->data));
             $this->campoOculto('ref_cod_turma_', $this->ref_cod_turma);
             $this->campoOculto('ref_cod_componente_curricular_', $this->ref_cod_componente_curricular);
             $this->campoOculto('fase_etapa_', $this->fase_etapa);
@@ -89,7 +89,7 @@ return new class extends clsCadastro {
         $obrigatorio = true;
 
         $this->campoOculto('id', $this->id);
-        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
@@ -115,11 +115,12 @@ return new class extends clsCadastro {
                 }
             }
 
-            $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-            $conteudo .= '  <span style="display: block; float: left; width: 400px;">Nome</span>';
-            $conteudo .= '  <span style="display: block; float: left; width: 180px;">Presença</span>';
-            $conteudo .= '  <span style="display: block; float: left; width: 300px;">' . "Justificativa (" . $maxCaracteresObservacao . " caracteres são permitidos)" . '</span>';
-            $conteudo .= '</div>';
+ 
+            $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr>';
+            $conteudo .= '  <th><p>'."Nome".'</p></th>';
+            $conteudo .= '  <th><p>'."Presença".'</p></th>';
+            $conteudo .= '  <th><p>'."Justificativa".'</p></th></tr>';
+            $conteudo .= '  </td></tr></table>';
 
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
@@ -127,9 +128,9 @@ return new class extends clsCadastro {
                 $checked = !$aluno['presenca'] ? "checked='true'" : '';
                 $disabled = !$aluno['presenca'] ? "disabled='true'" : '';
 
-                $conteudo .= '  <div style="margin-bottom: 10px; float: left">';
-                $conteudo .= '  <label style="display: block; float: left; width: 400px;">' . $aluno['nome'] . '</label>';
-                $conteudo .= "  <label style='display: block; float: left; width: 180px;'>
+                $conteudo .= '  <tr><td class="formlttd">';
+                $conteudo .= '  <label>' . $aluno['nome'] . '</label></td>';
+                $conteudo .= "  <td><label>
                                     <input
                                         type='checkbox'
                                         onchange='presencaMudou(this)'
@@ -138,22 +139,23 @@ return new class extends clsCadastro {
                                         {$checked}
                                         autocomplete='off'
                                     >
-                                </label>";
-                $conteudo .= "  <input
+                                </label></td>";
+                $conteudo .= "  <td><input
                                     type='text'
                                     name='justificativa[${id}][]'
-                                    style='width: 300px;'
+                                    style='width: 100%;'
                                     maxlength=${maxCaracteresObservacao}
                                     value='{$aluno['justificativa']}'
                                     {$disabled}
                                     autocomplete='off'
                                 />";
-                $conteudo .= '  </div>';
+                $conteudo .= '  </td>';
                 $conteudo .= '  <br style="clear: left" />';
             }
 
             if ($conteudo) {
-                $alunos = '<table cellspacing="0" cellpadding="0" border="0">';
+                $alunos .= '<table cellspacing="0" cellpadding="0" border="0" width="100%">';
+                $alunos .= '<tr align="left"><td></td></tr>';
                 $alunos .= '<tr align="left"><td>' . $conteudo . '</td></tr>';
                 $alunos .= '</table>';
             }
@@ -190,39 +192,43 @@ return new class extends clsCadastro {
         $data_agora = new DateTime('now');
         $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
+        $data_cadastro =  dataToBanco($this->data);
+
         $turma = $this->ref_cod_turma;
         $sequencia = $this->fase_etapa;
         $obj = new clsPmieducarTurmaModulo();
 
         $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
         if ($data['inicio'] != null && $data['fim'] != null) {
-            $data['inicio'] = explode(',', $data['inicio']);
-            $data['fim'] = explode(',', $data['fim']);
+            $data['inicio_periodo_lancamentos'] = explode(',', $data['inicio']);
+            $data['fim_periodo_lancamentos'] = explode(',', $data['fim']);
 
-            array_walk($data['inicio'], function(&$data_inicio, $key) {
+            array_walk($data['inicio_periodo_lancamentos'], function(&$data_inicio, $key) {
                 $data_inicio = new \DateTime($data_inicio);
             });
 
-            array_walk($data['fim'], function(&$data_fim, $key) {
+            array_walk($data['fim_periodo_lancamentos'], function(&$data_fim, $key) {
                 $data_fim = new \DateTime($data_fim);
             });
-        } else {
-            $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
-            $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
         }
+        
+        $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
+        $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
 
         $podeRegistrar = false;
-        if (is_array($data['inicio']) && is_array($data['fim'])) {
-            for ($i=0; $i < count($data['inicio']); $i++) {
-                $data_inicio = $data['inicio'][$i];
-                $data_fim = $data['fim'][$i];
+        if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
+            for ($i=0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
+                $data_inicio = $data['inicio_periodo_lancamentos'][$i];
+                $data_fim = $data['fim_periodo_lancamentos'][$i];
 
                 $podeRegistrar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
 
                 if ($podeRegistrar) break;
-            }     
+            }
+            $podeRegistrar = $podeRegistrar && new DateTime($data_cadastro) >= $data['inicio'] && new DateTime($data_cadastro) <= $data['fim'];
         } else {
-            $podeRegistrar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
+            $podeRegistrar = new DateTime($data_cadastro) >= $data['inicio'] && new DateTime($data_cadastro) <= $data['fim'];
+            $podeRegistrar = $podeRegistrar && $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
         }
 
         if (!$podeRegistrar) {
@@ -240,7 +246,7 @@ return new class extends clsCadastro {
             $this->ref_cod_turma,
             $this->ref_cod_componente_curricular,
             null,
-            dataToBanco($this->data),
+            $data_cadastro,
             null,
             null,
             $this->fase_etapa,
@@ -269,6 +275,7 @@ return new class extends clsCadastro {
     }
 
     public function Editar() {
+        $this->data = $this->data_;
         $this->ref_cod_turma = $this->ref_cod_turma_;
         $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
         $this->fase_etapa = $this->fase_etapa_;
@@ -286,7 +293,7 @@ return new class extends clsCadastro {
             null,
             $this->ref_cod_componente_curricular,
             null,
-            dataToBanco($this->data),
+            $this->data,
             null,
             null,
             $this->fase_etapa,
@@ -352,26 +359,26 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->tabela .= ' <div style="margin-bottom: 10px;">';
-        $this->tabela.= '  <span style="display: block; float: left; width: 300px; font-weight: bold">Nome</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 300px; font-weight: bold">Justificativa</span>';
-        $this->tabela .= ' </div>';
-        $this->tabela .= ' <br style="clear: left" />';
+        $this->tabela .= ' <tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">'+'Nome'+'</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">'+'Presença'+'</span></th>';
+        $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">'+'Justificativa'+'</span></th>';
+        $this->tabela .= ' </tr>';
+        $this->tabela .= ' <tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
 
         foreach ($alunos as $aluno) {
-            $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['nome']}</span>";
+            $this->tabela .= '  <td  class="colorFont">';
+            $this->tabela .= "  <p>{$aluno['nome']}</p></td>";
 
             if(!$aluno['presenca']) {
-                $this->tabela .= '  <label style="display: block; float: left; width: 100px;">
+                $this->tabela .= '  <td >
                                         <input type="checkbox" disabled Checked={false}>
-                                    </label>';
+                                    </td>';
             } else {
-                $this->tabela .= '  <label style="display: block; float: left; width: 100px;">
+                $this->tabela .= '  <td >
                                         <input type="checkbox" disabled !Checked>
-                                    </label>';
-                $this->tabela .= "  <span style='display: block; float: left; width: 300px'>{$aluno['justificativa']}</span>";
+                                    </td>';
+                $this->tabela .= "  <td><p>{$aluno['justificativa']}</p></td>";
             }
 
             $this->tabela .= '  </div>';

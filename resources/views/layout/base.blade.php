@@ -1,9 +1,19 @@
+<?php 
+define('HOST', isset($_SERVER['HTTP_HOST']) === true ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_ADDR']) === true ? $_SERVER['SERVER_ADDR'] : $_SERVER['SERVER_NAME']));
+$domain_parts = explode('.', HOST); 
+	$icoTecsis = "favicon2.ico";
+
+	if($domain_parts[2] != "tec"){
+		$icoTecsis = "favicon.ico";
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{{ url('favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{!! url($icoTecsis) !!}" />
     <title>@if(isset($title)) {!! html_entity_decode($title) !!} - @endif {{ html_entity_decode(config('legacy.app.entity.name')) }} - i-Educar</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">

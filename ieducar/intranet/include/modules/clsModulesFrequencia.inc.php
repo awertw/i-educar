@@ -60,6 +60,11 @@ class clsModulesFrequencia extends Model {
                 ON (q.ref_cod_turma = t.cod_turma AND q.sequencial = 1)
             LEFT JOIN pmieducar.modulo l
                 ON (l.cod_modulo = q.ref_cod_modulo)
+            JOIN modules.professor_turma as pt
+                ON (pt.turma_id = f.ref_cod_turma)
+            JOIN modules.professor_turma_disciplina as ptd
+                ON (pt.id = ptd.professor_turma_id AND
+                    (ptd.componente_curricular_id = f.ref_componente_curricular OR f.ref_componente_curricular IS NULL))
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
@@ -104,19 +109,19 @@ class clsModulesFrequencia extends Model {
         if (is_numeric($ref_cod_turno)) {
             $this->ref_cod_turno = $ref_cod_turno;
         }
-        if (($data)) {
+        if ($data) {
             $this->data = $data;
         }
-        if (($data_inicial)) {
+        if ($data_inicial) {
             $this->data_inicial = $data_inicial;
         }
-        if (($data_final)) {
+        if ($data_final) {
             $this->data_final = $data_final;
         }
-        if ($etapa_sequencial) {
+        if (is_numeric($etapa_sequencial)) {
             $this->etapa_sequencial = $etapa_sequencial;
         }
-        if (($alunos)) {
+        if (is_array($alunos)) {
             $this->alunos = $alunos;
         }
     }
@@ -174,7 +179,7 @@ class clsModulesFrequencia extends Model {
 
                 $gruda = '';
                 foreach ($this->alunos as $key => $aluno) {
-                    $valores .= $gruda . "(" . "'" . $id . "'" . ", " . "'" . $key . "'" . ", " . "'" . $aluno[0] . "'" . ")";
+                    $valores .= $gruda . "(" . "'" . $id . "'" . ", " . "'" . $key . "'" . ", " . "'" . $db->escapeString($aluno[0]) . "'" . ")";
                     $gruda = ', ';
                 }
 
@@ -318,7 +323,7 @@ class clsModulesFrequencia extends Model {
                             UPDATE
                                 modules.frequencia_aluno
                             SET
-                                justificativa = '{$justificativa}'
+                                justificativa = '{$db->escapeString($justificativa)}'
                             WHERE
                                 ref_frequencia = '{$this->id}' AND ref_cod_matricula = '{$matricula}'
                         ");
@@ -372,7 +377,7 @@ class clsModulesFrequencia extends Model {
 
                             (ref_frequencia, ref_cod_matricula, justificativa)
                         VALUES
-                            ('{$this->id}', '{$matricula_id}', '{$justificativa}')
+                            ('{$this->id}', '{$matricula_id}', '{$db->escapeString($justificativa)}')
                     ");
 
                     // #########################################################################################
@@ -467,10 +472,11 @@ class clsModulesFrequencia extends Model {
             $int_ref_cod_turno = null,
             $time_data_inicial = null,
             $time_data_final = null,
-            $int_etapa = null
+            $int_etapa = null,
+            $int_servidor_id = null
         ) {
         $sql = "
-                SELECT
+                SELECT DISTINCT
                     {$this->_campos_lista}
                 FROM
                     {$this->_from}
@@ -479,7 +485,11 @@ class clsModulesFrequencia extends Model {
         $whereAnd = ' AND ';
         $filtros = " WHERE TRUE ";
 
-    
+        if (is_numeric($int_ano)) {
+            $filtros .= "{$whereAnd} EXTRACT(YEAR FROM f.data) = '{$int_ano}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_ref_cod_ins)) {
             $filtros .= "{$whereAnd} i.cod_instituicao = '{$int_ref_cod_ins}'";
             $whereAnd = ' AND ';
@@ -527,6 +537,11 @@ class clsModulesFrequencia extends Model {
 
         if (is_numeric($int_etapa)) {
             $filtros .= "{$whereAnd} f.etapa_sequencial = '{$int_etapa}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_servidor_id)) {
+            $filtros .= "{$whereAnd} pt.servidor_id = '{$int_servidor_id}'";
             $whereAnd = ' AND ';
         }
 

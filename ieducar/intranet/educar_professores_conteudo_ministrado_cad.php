@@ -7,16 +7,20 @@ use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
+use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
+use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro {
     public $id;
-    public $bncc;
-    public $procedimento_metodologico;
+    public $atividades;
     public $observacao;
     public $frequencia;
+    public $planejamento_aula_id;
+    public $conteudos;
+    public $especificacoes;
 
     public function Inicializar () {
-        $this->titulo = 'Conteúdo Ministrado - Cadastro';
+        $this->titulo = 'Registro de aula - Cadastro';
 
         $retorno = 'Novo';
 
@@ -30,21 +34,22 @@ return new class extends clsCadastro {
                 $this->id
             );
             $registro = $tmp_obj->detalhe();
-
+            
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro['detalhes'] as $campo => $val) {
                     $this->$campo = $val;
                 }
-                $this->bncc = $registro['bncc']['ids'];
+                $this->conteudos = array_column($registro['conteudos'], 'planejamento_aula_conteudo_id');
 
                 $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
 
                 $this->titulo = 'Frequência - Edição';
             }
+            
         }
-
+       
         $this->nome_url_cancelar = 'Cancelar';
         $this->url_cancelar = ($retorno == 'Editar')
             ? sprintf('educar_professores_conteudo_ministrado_det.php?id=%d', $this->id)
@@ -52,7 +57,7 @@ return new class extends clsCadastro {
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' Conteúdo ministrado', [
+        $this->breadcrumb($nomeMenu . ' Registro de aula', [
             url('intranet/educar_conteudo_ministrado_index.php') => 'Professores',
         ]);
 
@@ -71,29 +76,35 @@ return new class extends clsCadastro {
 
         if (is_numeric($this->frequencia)) {
             $desabilitado = true;
+
+            $obj = new clsModulesFrequencia($this->frequencia);
+            $freq = $obj->detalhe()['detalhes'];
+
+            $obj = new clsModulesPlanejamentoAula();
+            $id = $obj->lista(
+                null,
+                null,
+                null,
+                null,
+                null,
+                $freq['ref_cod_turma'],
+                $freq['ref_cod_componente_curricular'],
+                null,
+                null,
+                null,
+                $freq['fase_etapa'],
+            )[0]['id'];
+            
+            $this->planejamento_aula_id = $id;
         }
 
         $this->campoOculto('id', $this->id);
         $this->inputsHelper()->dynamic(['frequencia'], ['frequencia' => $this->frequencia, 'disabled' => $desabilitado]);
 
-        $helperOptions = [
-            'objectName' => 'bncc',
-        ];
+        $this->campoMemo('atividades', 'Registro diário de aula', $this->atividades, 100, 5, false);
 
-        $todos_bncc = $this->getBNCC($this->frequencia)['bncc'];
-
-        $options = [
-            'label' => 'BNCC',
-            'required' => true,
-            'size' => 50,
-            'options' => [
-                'values' => $this->bncc,
-                'all_values' => $todos_bncc
-            ]
-        ];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-        $this->campoMemo('procedimento_metodologico', 'Procedimento metodológico', $this->procedimento_metodologico, 100, 5, true);
+        $this->adicionarConteudosMultiplaEscolha();
+        
         $this->campoMemo('observacao', 'Observação', $this->observacao, 100, 5, false);
     }
 
@@ -101,14 +112,15 @@ return new class extends clsCadastro {
         $obj = new clsModulesComponenteMinistrado(
             null,
             $this->frequencia,
-            $this->procedimento_metodologico,
+            $this->atividades,
             $this->observacao,
-            $this->bncc
+            $this->conteudos,
+            //$this->especificacoes
         );
 
         $cadastrou = $obj->cadastra();
 
-        if (!$cadastrou) {   
+        if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.<br>';
             $this->simpleRedirect('educar_professores_conteudo_ministrado_cad.php');
         } else {
@@ -125,9 +137,9 @@ return new class extends clsCadastro {
         $obj = new clsModulesComponenteMinistrado(
             $this->id,
             null,
-            $this->procedimento_metodologico,
+            $this->atividades,
             $this->observacao,
-            $this->bncc
+            $this->conteudos
         );
 
         $editou = $obj->edita();
@@ -159,24 +171,19 @@ return new class extends clsCadastro {
         return false;
     }
 
-    private function getBNCC($frequencia = null)
+    private function getConteudos($planejamento_aula_id = null)
     {
-        if (is_numeric($frequencia)) {
-            $bncc = [];
-            $bncc_temp = [];
-            $obj = new clsModulesBNCC();
+        if (is_numeric($planejamento_aula_id)) {
+            $rows = [];
 
-            if ($bncc_temp = $obj->lista($frequencia)) {
-                foreach ($bncc_temp as $bncc_item) {
-                    $id = $bncc_item['id'];
-                    $codigo = $bncc_item['codigo'];
-                    $habilidade = $bncc_item['habilidade'];
-
-                    $bncc[$id] = $codigo . ' - ' . $habilidade;
-                }
+            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $conteudos = $obj->lista2($planejamento_aula_id);
+    
+            foreach ($conteudos as $key => $conteudo) {
+                $rows[$conteudo['id']] = $conteudo['conteudo'];
             }
 
-            return ['bncc' => $bncc];
+            return $rows;
         }
 
         return [];
@@ -184,7 +191,7 @@ return new class extends clsCadastro {
 
     public function loadAssets () {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/BNCC.js',
+            '/modules/Cadastro/Assets/Javascripts/PlanoAulaConteudo.js'
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -195,8 +202,44 @@ return new class extends clsCadastro {
         $this->loadAssets();
     }
 
+    protected function adicionarConteudosMultiplaEscolha() {
+        // ESPECIFICAÇÕES
+        /*$helperOptions = [
+            'objectName' => 'especificacoes',
+        ];
+
+        //$todas_especificacoes = $this->getEspecificacoes($this->planejamento_aula_id);
+
+        $options = [
+            'label' => 'Especificações',
+            'required' => false,
+            'options' => [
+                'values' => $this->especificacoes,
+                'all_values' => /*$todas_especificacoes*//*[]
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);*/
+
+        // CONTEUDOS
+        $helperOptions = [
+            'objectName' => 'conteudos',
+        ];
+
+        $todos_conteudos = $this->getConteudos($this->planejamento_aula_id);
+
+        $options = [
+            'label' => 'Objetivo(s) do conhecimento/conteúdo',
+            'required' => true,
+            'options' => [
+                'values' => $this->conteudos,
+                'all_values' => $todos_conteudos
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+    }
+
     public function Formular () {
-        $this->title = 'Conteúdo ministrado - Cadastro';
+        $this->title = 'Registro de aula - Cadastro';
         $this->processoAp = '58';
     }
 };

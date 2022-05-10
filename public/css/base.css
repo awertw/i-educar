@@ -10,6 +10,10 @@ a:hover {
   text-decoration: none;
 }
 
+.r3c1{
+  background-color: rgba(54,54,54,1);
+  color: rgba(42,177,232,1);
+}
 .ieducar-container {
   display: flex;
   flex-direction: column;
@@ -19,7 +23,7 @@ a:hover {
 
 .ieducar-content {
   display: flex;
-  flex: 1 1 auto !important;
+  flex: 1 1 auto;
 }
 
 .ieducar-sidebar {
@@ -29,7 +33,7 @@ a:hover {
 }
 
 .ieducar-main {
-  flex: 1 1 auto !important;
+  flex: 1 1 auto;
 }
 
 .ieducar-main-content {
@@ -58,8 +62,10 @@ a:hover {
 
 .ieducar-header {
   display: flex;
-  background: #47728f;
+  background-image: linear-gradient(to bottom right, rgba(34,142,187,1) 0%, rgba(42,177,232,1) 75%);
+  align-items: center;
   height: 50px;
+  box-shadow: 0px 4px 7px rgba(50, 50, 50, 0.5);
 }
 
 .ieducar-header * {
@@ -90,7 +96,7 @@ a:hover {
 .ieducar-header-links .dropbtn {
   color: white;
   padding: 6px 20px 6px 6px;
-  font-size: 16px;
+  font-size: 1.5rem;
   border: none;
   cursor: pointer;
   background-image: url('../intranet/imagens/arrow-down.png');
@@ -127,7 +133,7 @@ a:hover {
   text-decoration: none;
   display: block;
   text-align: left;
-  font-size: 14px;
+  font-size: 1.1rem;
 }
 
 .ieducar-header-links .dropdown-content a:hover {
@@ -161,6 +167,7 @@ a:hover {
 
 .ieducar-quick-search {
   padding: 0 23px;
+  transition: width .5s;
 }
 
 .ieducar-quick-search label {
@@ -181,16 +188,17 @@ a:hover {
 }
 
 .ieducar-quick-search-title {
-  color: #47728f;
+  color: #fdfdfd;
   font-size: 12px;
   text-transform: uppercase;
   font-weight: bold;
-}
+  display: none;}
 
 .ieducar-sidebar-menu {
   width: 232px;
   padding: 0;
   margin: 0;
+  transition: .5s;
 }
 
 .ieducar-sidebar-menu li {
@@ -201,7 +209,7 @@ a:hover {
 
 .ieducar-sidebar-menu li a {
   display: block;
-  color: #47728f;
+  color: #fdfdfd;
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   padding: 17px 15px;
@@ -212,13 +220,13 @@ a:hover {
 }
 
 .ieducar-sidebar-menu li a:hover {
-  background: #cddce6;
-  text-decoration: none;
+  background: #cae6f1;
+  color: rgba(54,54,54,1);
 }
 
 .ieducar-sidebar-menu li a i {
-  color: #98b0c3;
-  font-size: 20px;
+  color: #2ab1e8;
+  font-size: 100%;
   padding-right: 10px;
 }
 
@@ -246,8 +254,12 @@ a:hover {
 .ieducar-menu,
 .ieducar-sub-menu {
   list-style: none;
-  background: #e9eff7;
+  background: rgba(54,54,54,1);
+/*  border-radius: 10px; */
+  box-shadow: 2px 3px 6px rgb(65 69 88 / 60%);
 }
+
+.ieducar-menu:hover{background:rgba(54,54,54,1); transition: background .2s ease-in-out;}
 
 .ieducar-sub-menu {
   background: #FFF;
@@ -258,13 +270,14 @@ a:hover {
   text-decoration: none;
   display: block;
   padding: 10px;
-  color: #47728f;
+  color: #eee;
   font-family: "Open Sans", sans-serif;
-  font-size: 16px;
+  font-size: 1.7rem;
 }
 
 .ieducar-menu a:hover {
   text-decoration: none;
+  color: rgba(54,54,54);
 }
 
 .ieducar-menu li {
@@ -276,7 +289,8 @@ a:hover {
 }
 
 .ieducar-menu > li:hover {
-  background: #cddce6;
+  background: #cae6f1;
+  border-radius: 8px;
 }
 
 .ieducar-menu li:hover > .ieducar-sub-menu {
@@ -284,7 +298,7 @@ a:hover {
 }
 
 .ieducar-sub-menu a {
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 
 .ieducar-sub-menu {
@@ -304,7 +318,8 @@ a:hover {
 }
 
 .ieducar-sub-menu li:hover {
-  background: #cddce6;
+  background: #cae6f1;
+  border-radius: 9px;
 }
 
 .ieducar-sub-menu .ieducar-sub-menu {
@@ -323,16 +338,16 @@ a:hover {
 
 .breadcrumb a,
 .breadcrumb span {
-  font-weight: bold !important;
+  font-weight: bold;
   color: #47728f;
-  font-size: 14px !important;
+  font-size: 14px;
 }
 
 .breadcrumb .breadcrumb-current,
 .breadcrumb .breadcrumb-current:hover,
 .breadcrumb .breadcrumb-separator,
 .breadcrumb .breadcrumb-separator:hover {
-  color: #999 !important;
+  color: #999;
 }
 
 .beta-badge {
@@ -341,18 +356,18 @@ a:hover {
 }
 
 .quick-search {
-  margin-bottom: 10px;
+  margin: 1.9rem 0;
 }
 
 .quick-search .multiselect,
 .quick-search .multiselect__input,
 .quick-search .multiselect__single {
-  font-size: 12px;
+  font-size: 3.5rem; font: inherit;
 }
 
 .quick-search input[type="text"].multiselect__input {
-  padding: 0 5px !important;
-  border: none !important;
+  padding: 0 5px;
+  border: none;
 }
 
 .quick-search .multiselect__tags {
@@ -394,3 +409,4 @@ a:hover {
   object-fit: cover;
   vertical-align: middle;
 }
+

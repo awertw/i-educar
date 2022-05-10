@@ -27,7 +27,7 @@ return new class extends clsDetalhe {
 
     public function Gerar()
     {
-        $this->titulo = 'Conteúdo Ministrado - Detalhe';
+        $this->titulo = 'Registro de aula - Detalhe';
         $this->id = $_GET['id'];
 
         $obj_permissoes = new clsPermissoes();
@@ -85,22 +85,23 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['bncc']['codigos'] && $registro['bncc']['descricoes']) {
-            $this->montaListaBNCC(
-                $registro['bncc']['codigos'],
-                $registro['bncc']['descricoes'],
-            );
-        }
-
-        if ($registro['detalhes']['procedimento_metodologico']) {
+        if ($registro['detalhes']['atividades']) {
             $this->addDetalhe(
                 [
-                    'Procedimento metodológico',
-                    $registro['detalhes']['procedimento_metodologico']
+                    'Registro diário de aula',
+                    $registro['detalhes']['atividades']
                 ]
             );
         }
 
+        if (is_array($registro['especificacoes'])) {
+            $this->montaListaEspecificacoes($registro['especificacoes']);
+        }
+
+        if (is_array($registro['conteudos'])) {
+            $this->montaListaConteudos($registro['conteudos']);
+        }
+        
         if ($registro['detalhes']['observacao']) {
             $this->addDetalhe(
                 [
@@ -160,46 +161,58 @@ return new class extends clsDetalhe {
         $this->url_cancelar = 'educar_professores_conteudo_ministrado_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe do conteúdo ministrado', [
+        $this->breadcrumb('Detalhe do registro de aula', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
 
-    function montaListaBNCC ($codigos, $descricoes) {
-        $this->tabela .= ' <div style="margin-bottom: 10px;">';
-        $this->tabela .= ' <span style="display: block; float: left; width: 100px; font-weight: bold">Código</span>';
-        $this->tabela .= ' <span style="display: block; float: left; width: 700px; font-weight: bold">Habilidade</span>';
-        $this->tabela .= ' </div>';
-        $this->tabela .= ' <br style="clear: left" />';
-
-        for ($i=0; $i < count($codigos); $i++) { 
-            $checked = !$aluno['presenca'] ? "checked='true'" : '';
-
-            $this->tabela .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+    function montaListaEspecificacoes ($especificacoes) {
+        for ($i=0; $i < count($especificacoes); $i++) {
+            $this->tabela3 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
             
-            $this->tabela .= "  <span style='display: block; float: left; width: 100px'>{$codigos[$i]}</span>";
+            $this->tabela3 .= "  <span style='display: block; float: left'>{$especificacoes[$i][bncc_especificacao][especificacao]}</span>";
 
-            $this->tabela .= "  <span style='display: block; float: left; width: 700px'>{$descricoes[$i]}</span>";
-
-            $this->tabela .= '  </div>';
-            $this->tabela .= '  <br style="clear: left" />';
+            $this->tabela3 .= '  </div>';
+            $this->tabela3 .= '  <br style="clear: left" />';
         }
 
-        $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
-        $bncc .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
-        $bncc .= '</table>';
+        $especificacao  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $especificacao .= sprintf('<tr align="left"><td class="formmdtd">%s</td></tr>', $this->tabela3);
+        $especificacao .= '</table>';
 
         $this->addDetalhe(
             [
-                'BNCC',
-                $bncc
+                'Especificações',
+                $especificacao
+            ]
+        );
+    }
+
+    function montaListaConteudos ($conteudos) {
+        for ($i=0; $i < count($conteudos); $i++) {
+            $this->tabela2 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+            
+            $this->tabela2 .= "  <span style='display: block; float: left'>{$conteudos[$i][planejamento_aula_conteudo][conteudo]}</span>";
+
+            $this->tabela2 .= '  </div>';
+            $this->tabela2 .= '  <br style="clear: left" />';
+        }
+
+        $conteudo  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $conteudo .= sprintf('<tr align="left"><td class="formlttd">%s</td></tr>', $this->tabela2);
+        $conteudo .= '</table>';
+
+        $this->addDetalhe(
+            [
+                'Conteúdos',
+                $conteudo
             ]
         );
     }
 
     public function Formular()
     {
-        $this->title = 'Conteúdo Ministrado - Detalhe';
+        $this->title = 'Registro de aula - Detalhe';
         $this->processoAp = 58;
     }
 };
