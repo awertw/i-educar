@@ -239,7 +239,7 @@ class clsCadastro extends clsCampos
 
         $barra = $titulo;
 
-        $retorno .= "<div class=' form-title '><h5 class='formdktd grid-box-title'>{$barra}</h5></div>";
+        $retorno .= "<div class=' form-title '><h1 class='formdktd grid-box-title'>{$barra}</h1></div>";
 
         if (empty($this->campos)) {
             $retorno .= '<label class=\' form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</label>';

@@ -171,9 +171,9 @@ HTML;
 
             // Setas de início e anterior
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . (1 + $pag_modifier) : '';
-            $strReturn .= "<a  id='page-first' href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"><label class='page-first' > &laquo; </label></a> ";
+            $strReturn .= "<a  id='page-first' href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"><label class='page-first flex' > &laquo; </label></a> ";
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . max(1 + $pag_modifier, $intPaginaAtual - 1) : '';
-            $strReturn .= "<a id='page-back' href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"><label class='page-back' >&lsaquo; </label></a>";
+            $strReturn .= "<a id='page-back' href=\"{$linkFixo}$getVar=" . max(1 + $pag_modifier, $intPaginaAtual - 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a pagina anterior\"><label class='page-back flex' >&lsaquo; </label></a>";
 
             // Meio
             $strReturn .= '';
@@ -182,16 +182,16 @@ HTML;
 
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
-                $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
+                $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo color-white' : '';
                 $strReturn .= "<a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">';
-                $strReturn .= "<label class=\"{$classe_botao} page-n\" style='color: white' >" . addLeadingZero($pagStart + $i) . "</a></label>";
+                $strReturn .= "<label class=\"{$classe_botao} flex page-n\" >" . addLeadingZero($pagStart + $i) . "</a></label>";
             }
 
             // Setas de fim e próxima
             $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
-            $strReturn .= "<a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"><label class='page-forward'> &rsaquo; </label></a>";
+            $strReturn .= "<a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"><label class='page-forward flex'> &rsaquo; </label></a>";
             $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($totalPaginas + $pag_modifier) : '';
-            $strReturn .= "<a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"><label class='page-last'> &raquo; </label></a> ";
+            $strReturn .= "<a href=\"{$linkFixo}$getVar=" . ($totalPaginas + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a ultima pagina\"><label class='page-last flex'> &raquo; </label></a> ";
 
             $strReturn .= '</div>';
 
@@ -269,29 +269,28 @@ HTML;
                 app(Breadcrumb::class)->setLegacy($this->locale);
             }
 
-            $retorno .= "<table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
+            $retorno .= "<div class='tablelistagem flex flex-col'>
+                <div class='flex flex-col'>";
+            $retorno .= "<h1 class='formdktd'>{$barra}</h1>
+                    <div class='flex flex-col w-100 '>";
 
-            $retorno .= "
-                <tr>
-                    <td class='formdktd' colspan='2' height='24'>{$barra}</td>
-                </tr>";
 
             if (empty($this->campos)) {
                 $retorno .=  '
-                    <tr>
-                        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>N&atilde;o existem campos definidos para o formul&aacute;rio</span></td>
-                    </tr>';
+                        <div class=\'formlttd\'>
+                            <span class=\'form\'>N&atilde;o existem campos definidos para o formul&aacute;rio</span>
+                        </div>';
             } else {
                 $retorno .= $this->MakeCampos();
             }
 
             $retorno .= '
-                <tr>
-                    <td class=\'formdktd\' colspan=\'2\'></td>
-                </tr>';
+                <div>
+                    <div class=\'formdktd\'></div>
+                </div>';
             $retorno .= '
-                <tr>
-                    <td colspan=\'2\' align=\'center\'>
+                <div>
+                    <div>
                         <script type="text/javascript" language=\'javascript\'>';
 
             if ($this->funcAcao) {
@@ -311,9 +310,9 @@ HTML;
             }
 
             $retorno .=  '
-                                </td>
-                            </tr>
-                        </table>
+                                </div>
+                            </div>
+                        </div>
                     <!-- cadastro end -->
                 </form>';
         }

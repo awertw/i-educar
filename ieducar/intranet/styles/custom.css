@@ -1,3 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 :root {
     /* Colors */
     --font-color: #47728f;
@@ -8,40 +14,44 @@
     --border-color: rgba(0, 0, 0, 0%);
     /* #495C67  default color at system*/
     /* Sizes */
+    font-size: 62.5%;
     --f-size-sub: 0.9rem;
     --f-size-xs: 1.1rem;
     --f-size-s: 1.2rem;
     --f-size-m: 1.4rem;
     --f-size-l: 1.6rem;
     --f-size-x: 1.8rem;
-    --text_area: ;
-    --input_: ;
+    --f-size-prop-sub: calc(var(--f-size-prop-l) - 0.7rem);
+    --f-size-prop-xs: calc(var(--f-size-prop-l) - 0.5rem);
+    --f-size-prop-s: calc(var(--f-size-prop-l) - 0.4rem);
+    --f-size-prop-m: calc(var(--f-size-prop-l) - 0.2rem);
+    --f-size-prop-l: 1.6rem;
+    --f-size-prop-x: calc(var(--f-size-prop-l) + 0.2rem);
+    --f-size-prop-xl: calc(var(--f-size-prop-l) + 0.4rem);
 }
 
 html {
+    /* chrome://flags/#smooth-scrolling */
+    scroll-behavior: smooth;
+}
+
+html,
+body {
     width: 100%;
+    height: 100%;
 }
 
 body {
-    font-size: 62.5%;
-    width: 100%;
-    height: 100%
+    font-size: 1.6rem;
+    text-align: center;
 }
 
 body,
 html {
     font-family: "Open Sans";
-    height: 100% !important;
-    min-height: 100% !important;
-    margin: auto;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-weight: 200;
     line-height: 1.5;
-    text-align: left;
-}
-
-div:not(.paginacao) {
-    /* width: 100%; */
 }
 
 a {
@@ -117,6 +127,14 @@ span.select2-selection.select2-selection--multiple {
 
 .geral {
     width: 75% !important;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.m-auto {
+    margin: auto;
 }
 
 .chosen-container,
@@ -542,6 +560,10 @@ span.error_notice {
 *************** FONTES ****************
 **************************************/
 
+.color-white {
+    color: white !important;
+}
+
 .b {
     font-weight: bold;
 }
@@ -567,7 +589,7 @@ p {
 
 label {
     display: inline-block;
-    margin-bottom: 0.5rem;
+    margin: 1.1rem 0;
 }
 
 .page-first,
@@ -576,7 +598,6 @@ label {
 .page-forward,
 .page-last {
     cursor: pointer;
-    border-radius: 5px;
     width: 1.4rem;
 }
 
@@ -595,7 +616,7 @@ label {
 }
 
 .text-base {
-    font-size: var(--f-size-xs);
+    font-size: var(--f-size-prop-l);
     /* 16px */
     line-height: 1.5rem;
     /* 24px */
@@ -686,37 +707,37 @@ h6,
 }
 
 span {
-    font-size: 1rem;
+    font-size: 1.5rem;
 }
 
 h1,
 .h1 {
-    font-size: 1.2rem;
+    font-size: var(--f-size-prop-xl);
 }
 
 h2,
 .h2 {
-    font-size: 1.5rem;
+    font-size: var(--f-size-prop-x);
 }
 
 h3,
 .h3 {
-    font-size: 1.75rem;
+    font-size: var(--f-size-prop-l)
 }
 
 h4,
 .h4 {
-    font-size: 1.5rem;
+    font-size: var(--f-size-prop-m);
 }
 
 h5,
 .h5 {
-    font-size: 1.25rem;
+    font-size: var(--f-size-prop-s);
 }
 
 h6,
 .h6 {
-    font-size: 1rem;
+    font-size: var(--f-size-prop-xs);
 }
 
 @media only screen and (max-width: 1023px) {
@@ -727,7 +748,7 @@ h6,
         font-size: 3rem;
     }
     label {
-        font-size: .7em;
+        /* font-size: .7em; */
     }
 }
 
@@ -746,7 +767,6 @@ h6,
 
 .content {
     min-height: 100vh;
-    flex: 3;
 }
 
 .content .m1 {
@@ -782,7 +802,6 @@ h6,
 
 .flex {
     display: flex;
-    margin: auto;
 }
 
 .grid {
@@ -805,6 +824,10 @@ h6,
 
 .justity-items-center {
     justify-content: center;
+}
+
+.justity-items-spacebetween {
+    justify-content: space-between;
 }
 
 .items-center {
@@ -1217,9 +1240,15 @@ h6,
     color: #FFF;
 }
 
-header {
+.div-header {
     display: flex;
-    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.div-header header {
+    width: 100vw;
+    margin-inline: auto;
 }
 
 .topo td.logo {
@@ -1284,7 +1313,6 @@ header {
 .ieducar-header-links .dropdown.notifications {
     float: right;
     margin: 0;
-    z-index: 1;
 }
 
 .ieducar-header-links .dropbtn.notifications {
@@ -1424,8 +1452,8 @@ a.icons-top {
 }
 
 .topo .foto-user {
-    width: 35px;
-    height: 35px;
+    width: 3.5rem;
+    height: 3.5rem;
     background-size: cover !important;
     background-position: center;
     position: absolute;
@@ -1463,6 +1491,10 @@ a.icons-top {
 
 .z-10 {
     z-index: 10;
+}
+
+.z-20 {
+    z-index: 20;
 }
 
 .r3c1:hover {
@@ -1539,7 +1571,7 @@ a.icons-top {
 
 sub {
     color: var(--font-color-grey);
-    font-size: var(--f-size-sub);
+    font-size: var(--f-size-prop-sub);
 }
 
 .nvp_tabelaMenu .nvp_sub {
@@ -1549,7 +1581,7 @@ sub {
 
 .nvp_tabelaMenu .nvp_sub a {
     color: var(--font-color);
-    font-size: var(--f-size-sub);
+    font-size: var(--f-size-prop-sub);
 }
 
 .nvp_tabelaMenu ul.menu {
@@ -2196,6 +2228,7 @@ tr.tableHeader {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
     /* border: 0 !important; */
 }
 
@@ -2249,7 +2282,7 @@ td.area-conhecimento-destaque {
     background-color: #ffffff;
     border: solid 1px #cddce6;
     padding: 8px;
-    font-size: var(--f-size-xs);
+    font-size: var(--f-size-prop-l);
     flex: 2;
     height: auto;
     color: var(--font-color);
@@ -2291,24 +2324,37 @@ td.area-conhecimento-destaque {
     background-color: #ffffff;
     border: solid 1px #cddce6;
     padding: 8px;
-    font-size: var(--f-size-xs);
+    font-size: var(--f-size-prop-l);
     color: var(--font-color);
 }
 
 #formcadastro .formmdtd,
 #formcadastro .formlttd {
     color: var(--font-color);
-    font-size: var(--f-size-xs);
+    font-size: var(--f-size-prop-l);
     padding: 4px 8px;
     vertical-align: top;
     max-width: 50%;
     width: auto;
 }
 
+#formcadastro .form-layout {
+    color: var(--font-color);
+    font-size: var(--f-size-prop-l);
+    padding: 4px 8px;
+    vertical-align: top;
+    max-width: 50%;
+    width: auto;
+}
+
+.form .form-bg {
+    background-color: #f5f9fd;
+}
+
 .formmdtd sub,
 .formlttd sub {
     color: var(--font-color-grey);
-    font-size: var(--f-size-sub);
+    font-size: var(--f-size-prop-sub);
 }
 
 .formmdtd {
@@ -2327,7 +2373,6 @@ td.area-conhecimento-destaque {
 
 .tablelistagem .formdktd {
     background-color: #f5f9fd !important;
-    font-size: var(--f-size-s);
     font-weight: bold;
     font-style: normal;
     font-stretch: normal;
@@ -2447,9 +2492,14 @@ div.paginacao {
 }
 
 div.paginacao label {
-    border: 1px solid var(--bg-color-title);
-    padding: 10px !important;
     text-align: center;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid var(--bg-color-title);
+    margin: .1rem;
+    justify-content: center;
+    border-radius: 5px;
+    font-weight: 700;
+    color: var(--font-color-a);
 }
 
 div.paginacao label a {
@@ -2457,7 +2507,7 @@ div.paginacao label a {
 }
 
 div.paginacao label a.nvp_paginador {
-    font-size: var(--f-size-xs);
+    font-size: var(--f-size-prop-xs);
 }
 
 #tabela_arredondamento_numerica tr:last-child,
@@ -2663,7 +2713,7 @@ input.btn_small {
         display: none;
     }
     .campo_obrigatorio {
-        font-size: 30px;
+        /* font-size: 30px; */
     }
     .paginacao .row .btn-lg {
         padding: 12px 45px;
@@ -2674,18 +2724,22 @@ input.btn_small {
     .expandir-btn {
         display: inherit;
     }
+    form {
+        display: flex;
+        flex-direction: column;
+    }
     #formcadastro .formdktd,
     .tableDetalhe .formdktd,
     .titulo-tabela-listagem {
-        font-size: 4rem
+        /* font-size: 4rem */
     }
     #formcadastro select {
-        font-size: 3rem !important;
+        /* font-size: 3rem !important; */
         max-width: none;
     }
     #formcadastro input,
     #formcadastro textarea {
-        font-size: 3rem !important;
+        /* font-size: 3rem !important; */
         min-width: 50%;
     }
     .ieducar-quick-search,
@@ -2700,9 +2754,6 @@ input.btn_small {
     .geral {
         width: 100% !important;
     }
-    .chosen-container .chosen-results li.active-result {
-        font-size: 2rem
-    }
     #formcadastro .formmdtd,
     #formcadastro .formlttd {
         display: flex;
@@ -2710,22 +2761,10 @@ input.btn_small {
         padding: 4px 10px;
         max-width: 100%;
     }
-    .breadcrumb a,
-    .breadcrumb span {
-        font-size: 2.5rem !important
-    }
-    .formmdtd sub,
-    .formlttd sub,
-    btn-size {
-        font-size: var(--f-size-sub);
-    }
     .multiselect {
         width: 90% !important;
         margin: auto;
         margin-top: 20px !important;
-    }
-    .quick-search .multiselect__tags {
-        font-size: 3.5rem !important
     }
     td input[type="checkbox"]:read-only {
         width: auto !important;
@@ -2735,9 +2774,6 @@ input.btn_small {
     }
     input[type="checkbox"] {
         min-width: 30%;
-    }
-    td p {
-        font-size: 2.75rem !important
     }
     input[type=checkbox] {
         width: auto !important;
@@ -2750,78 +2786,55 @@ input.btn_small {
     .content .m1 {
         margin: 1em;
     }
-    table {
-        font-size: 4rem !important;
-    }
-    div.paginacao label a.nvp_paginador {
-        font-size: 4.5rem !important;
-    }
-    .nvp_paginador,
-    .nvp_paginador_ativo a {
-        font-size: 5rem !important;
-    }
     div.paginacao {
         width: 95vw !important;
         margin-top: 3vh !important;
         margin-bottom: 7vh !important;
     }
     .tableDetalhe th {
-        font-size: 4.5rem;
+        /* font-size: 4.5rem; */
         padding-right: 15rem !important;
     }
     .avatar-35 {
         padding: 5px 0px !important;
     }
-    .notifications img {
-        top: 3px !important;
-        width: 40px !important;
-    }
-    .btn {
-        font-size: 3rem;
-    }
     .tablecadastro {
         display: flex;
     }
     .ieducar-header {
-        height: 30vh !important;
-    }
-    .ieducar-header-logo h1 a {
-        font-size: 4.8rem !important;
-        line-height: 100px !important;
+        height: 15vh !important;
     }
     .ieducar-header-links .dropbtn {
-        padding: 18px 36px 18px 18px !important;
-        font-size: 4rem !important;
         background-size: 24px !important;
     }
     .ieducar-header-links .dropdown-content a {
-        font-size: 1.5rem !important;
+        /* font-size: 1.5rem !important; */
         padding: 25px 25px;
         margin: 15px 0;
     }
     .ieducar-menu a {
-        font-size: 3.5rem !important;
+        /* font-size: 3.5rem !important; */
     }
     .ieducar-sidebar-menu {
         width: 100% !important
     }
     .ieducar-sidebar-menu li a {
-        font-size: 4.7rem !important;
+        /* font-size: 4.7rem !important; */
         padding: 4rem 25px !important;
     }
     .ieducar-sub-menu li a {
-        font-size: 3.7rem !important;
+        /* font-size: 3.7rem !important; */
         padding: 25px 25px !important;
         margin: 15px 0 !important;
     }
     .tablelistagem .formlttd a,
     .tablelistagem .formmdtd a,
     .titulo-tabela-listagem {
-        font-size: 3.4rem !important;
+        /* font-size: 3.4rem !important; */
         width: 39.4rem;
     }
     input[type="button"] {
-        font-size: 4rem !important;
+        /* font-size: 4rem !important; */
         padding: 30px 100px !important;
     }
     #form_resultado {
@@ -2840,14 +2853,14 @@ input.btn_small {
         overflow: auto;
     }
     #tablelistagem .formmdtd {
-        font-size: 1.7rem;
+        /* font-size: 1.7rem; */
         width: calc(100% - 15px);
         margin: 5px;
         float: left;
     }
     #ref_cod_escola_chosen a.chosen-single,
     #escola_chosen a.chosen-single {
-        font-size: 3.4rem !important;
+        /* font-size: 3.4rem !important; */
     }
     #tablelistagem .formlttd {
         width: calc(100% - 15px);
@@ -2862,7 +2875,7 @@ input.btn_small {
     #tablelistagem .formlttd,
     #tablelistagem .formmdtd,
     {
-        font-size: 4rem !important;
+        /* font-size: 4rem !important; */
         line-height: 3;
         font-weight: bold
     }

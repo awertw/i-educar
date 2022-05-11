@@ -65,7 +65,7 @@ a:hover {
     display: flex;
     background-image: linear-gradient(to bottom right, rgba(34, 142, 187, 1) 0%, rgba(42, 177, 232, 1) 75%);
     align-items: center;
-    height: 3.5rem;
+    height: 5.5rem;
     box-shadow: 0px 4px 7px rgba(50, 50, 50, 0.5);
 }
 
@@ -80,7 +80,7 @@ a:hover {
 }
 
 .ieducar-header-logo h1 a {
-    font-size: 1.6rem;
+    font-size: 2.6rem;
     font-weight: bold;
     color: white;
     line-height: 50px;
@@ -96,11 +96,11 @@ a:hover {
 
 .ieducar-header-links .dropbtn {
     color: white;
-    padding: 6px 20px 6px 6px;
+    padding-right: 3rem;
     font-size: 1.5rem;
     border: none;
     cursor: pointer;
-    background-image: url('../intranet/imagens/arrow-down.png');
+    background-image: url('../intranet/imagens/arrow-drop-down.svg');
     background-repeat: no-repeat;
     background-position: center right;
     background-size: 12px;
@@ -108,7 +108,7 @@ a:hover {
 
 .ieducar-header-links .dropbtn:hover,
 .dropdown:hover .dropbtn {
-    background-image: url('../intranet/imagens/arrow-up.png');
+    background-image: url('../intranet/imagens/arrow-drop-up.svg');
     background-repeat: no-repeat;
     background-position: center right;
 }
@@ -147,7 +147,8 @@ a:hover {
 
 .ieducar-header-links .dropdown {
     float: right;
-    margin: 7px 23px 0 0;
+    margin-right: 0.8rem;
+    padding: 0.5rem 0;
 }
 
 .notifications {
@@ -157,13 +158,12 @@ a:hover {
 
 .notifications img {
     position: relative;
-    top: 7px;
-    width: 20px;
+    width: 2.3rem;
 }
 
 .avatar {
     float: right;
-    margin: 7px 10px 0 0;
+    margin-right: 2rem;
 }
 
 .ieducar-quick-search {
@@ -277,7 +277,7 @@ a:hover {
     padding: 10px;
     color: #eee;
     font-family: "Open Sans", sans-serif;
-    font-size: 1rem;
+    font-size: var(--f-size-m);
 }
 
 .ieducar-menu a:hover {
@@ -410,10 +410,8 @@ a:hover {
     display: none;
 }
 
-.avatar-35 {
-    width: 2.2rem;
-    height: 2.2rem;
+.avatar-3 {
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
-    object-fit: cover;
-    vertical-align: middle;
 }

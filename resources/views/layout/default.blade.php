@@ -196,53 +196,55 @@ if (isset($domain_parts[2]) != 'tec') {
         <!-- End Google Tag Manager (noscript) -->
     @endif
     <div id="DOM_expansivel" class="DOM_expansivel"></div>
-    <header class="ieducar-header" id="headerID" <?= $headerID ?>>
-        <div class="col-4 container">
-            <div class="ieducar-header-logo">
-                <h1><a href="{{ url('/') }}">EducaSis</a></h1>
-            </div>
-        </div>
-        <div class="col-8 container">
-            <div class="ieducar-header-links">
-                <div class="dropdown">
-                    <div class="dropbtn log-name">
-                        <h1>{{ $loggedUser->name }}</h1>
-                    </div>
-                    <div class="dropdown-content">
-                        <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
-                        <a href="{{ url('intranet/index.php') }}">Calendário</a>
-                        <a href="{{ url('intranet/meusdados.php') }}">Meus dados</a>
-                        <a href="{{ url('intranet/logof.php') }}" id="logout">Sair</a>
-                    </div>
+    <div class="div-header">
+        <header class="ieducar-header z-20" id="headerID" <?= $headerID ?>>
+            <div class="col-4 container">
+                <div class="ieducar-header-logo">
+                    <h1><a href="{{ url('/') }}">EducaSis</a></h1>
                 </div>
-                <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
-                    <img class="avatar-35" src="{{ session('logged_user_picture') }}" alt="Perfil">
-                </a>
-                <div class="dropdown notifications">
-                    <div class="dropbtn notifications">
-                        <img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notification.svg') }}">
-                        <span class="notification-balloon"></span>
+            </div>
+            <div class="col-8 container">
+                <div class="ieducar-header-links col-auto">
+                    <div class="dropdown">
+                        <div class="dropbtn log-name">
+                            <h1>{{ $loggedUser->name }}</h1>
+                        </div>
+                        <div class="dropdown-content">
+                            <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
+                            <a href="{{ url('intranet/index.php') }}">Calendário</a>
+                            <a href="{{ url('intranet/meusdados.php') }}">Meus dados</a>
+                            <a href="{{ url('intranet/logof.php') }}" id="logout">Sair</a>
+                        </div>
                     </div>
-                    <div class="dropdown-content-notifications">
-                        <div class="notifications-bar">
-                            <span> Notificações </span>
-                            <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
-                            <a class="btn-mark-all-read">Marcar todas como lidas (<span
-                                    class="not-read-count">0</span>)</a>
+                    <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
+                        <img class="avatar-3" src="{{ session('logged_user_picture') }}" alt="Perfil">
+                    </a>
+                    <div class="dropdown notifications">
+                        <div class="dropbtn notifications">
+                            <img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notification.svg') }}">
+                            <span class="notification-balloon"></span>
+                        </div>
+                        <div class="dropdown-content-notifications">
+                            <div class="notifications-bar">
+                                <span> Notificações </span>
+                                <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
+                                <a class="btn-mark-all-read">Marcar todas como lidas (<span
+                                        class="not-read-count">0</span>)</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
+    </div>
     <div class="main flex">
         <div id="menu_lateral sidebar" class="r3c1" $menu_Tecsis>
             @include('partials.search')
             @include('layout.menu')
         </div>
-        <div class="content z-10">
+        <div class="content w-100 z-10">
             @include('layout.topmenu')
-            <div class="content m1 main grid">
+            <div class="content main flex flex-col">
                 <div class='tabelanum1' id="tablenum1">
                     <input type="checkbox" id="expandido">
                     <label for="expandido" class="expandir-btn" <?= $expandido ?>><i class="fa fa-ellipsis-v"
@@ -253,18 +255,16 @@ if (isset($domain_parts[2]) != 'tec') {
                                 @include('partials.searchMobile')
                                 @include('layout.menu')
                             </div>
-                            <div class="grid-card">
-                                <div class='tabelanum2'>
-                                    <div id="corpo">
-                                        <div class='tablelistagem'>
-                                            <div>
-                                                <div class='fundoLocalizacao'>
-                                                    @include('layout.breadcrumb')
-                                                </div>
+                            <div class='tabelanum2'>
+                                <div id="corpo">
+                                    <div class='tablelistagem'>
+                                        <div>
+                                            <div class='fundoLocalizacao'>
+                                                @include('layout.breadcrumb')
                                             </div>
                                         </div>
-                                        @yield('content')
                                     </div>
+                                    @yield('content')
                                 </div>
                             </div>
                         </div>
@@ -273,9 +273,9 @@ if (isset($domain_parts[2]) != 'tec') {
             </div>
         </div>
     </div>
-    <div class="rodape" id="rodapeID" <?= $rodapeID ?>>
+    <footer class="rodape" id="rodapeID" <?= $rodapeID ?>>
         @include('layout.footer')
-    </div>
+    </footer>
 
     @include('partials.flash-message')
 

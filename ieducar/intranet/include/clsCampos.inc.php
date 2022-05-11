@@ -1143,7 +1143,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $retorno .= "<div class='form-title col-sm-12'>";
 
                 if ($titulo) {
-                    $retorno .= "<div id='tr_{$nome_tabela}_tit'  class='formdktd'><div style='flex: $span fr'><h5 class='b'>$titulo</h5></div></div>";
+                    $retorno .= "<div id='tr_{$nome_tabela}_tit'  class='formdktd'><div style='flex: $span fr'><h2 class='b'>$titulo</h2></div></div>";
                 } else {
                     $retorno .= "<div id='tr_{$nome_tabela}_tit' style='display:none;visibility:hidden;' ><div style='flex: $span fr'>&nbsp;</div></div>";
                 }
@@ -1160,8 +1160,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                     }
                     $cabId = str_replace(' ', '_', strtolower($cab));
 
-                    $retorno .= "<div class='formmdtd flex' id='td_$cabId' ><label class='form'>$cab</label>{$obrigatorio}</div>";
-                    $retorno .= "<div class='TA ERRADO!'>" . $this->getCampoLista("{$nome}", "{$nome}[$key2]", $campo_[5], $lista, $valor[$key], $campo_[7], $campo_[8], $class, $campo_[9]) . "</div>";
+                    $retorno .= "<div class='flex form' id='td_$cabId' ><label class='form-layout'>$cab</label>{$obrigatorio}</div>";
+                    $retorno .= "<div class='TA ERRADO!'>"  . "</div>"; /* $this->getCampoLista() */
                 }
 
                 $retorno .= '<td class=\'formmdtd\' id=\'td_acao\'><span class=\'form \'>A&ccedil;&atilde;o</span></td>';
@@ -1390,12 +1390,14 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $explicacao = !empty($componente[6]) ?
                             "<sub style='vertical-align:top;'>{$componente[6]}</sub>" : '';
 
-                        $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' valign='top'><label class='form color-default text-base'>$campo</label>{$obrigatorio}{$explicacao}</td><td class='$classe' valign='top'><span class='form color-default'>\n";
+                        $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' valign='top'><div class=' form justity-items-center flex flex-col'>";
+
+                        $retorno .= "<div><div><label class='form color-default text-base '>$campo</label> {$obrigatorio}</div>{$explicacao}</div></div>";
                     }
                 } elseif ($tipo) {
                     if (!empty($componente[10]) && $componente[10] == true) {
                         $explicacao = !empty($componente[6]) ?
-                            "<sub style='vertical-align:top;'>{$componente[6]}</sub>" : '';
+                            "<div><sub style='vertical-align:top;'>{$componente[6]}</sub></div>" : '';
 
                         $retorno .= "<span class='form color-default'>$campo</span>{$explicacao}\n";
                     } else {
@@ -1596,7 +1598,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $multiple = '';
                         }
 
-                        $retorno .= "<select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}' id='{$nome}' {$componente[8]} {$multiple}>";
+                        $retorno .= "<div><select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}' id='{$nome}' {$componente[8]} {$multiple}></div>";
                         $opt_open = false;
 
                         reset($componente[3]);
@@ -1684,7 +1686,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'arquivo':
                         $retorno .= "<input class='inputfile inputfile-buttom' name=\"{$nome}\" id=\"{$nome}\" type='file' size=\"{$componente[4]}\" value=\"{$componente[3]}\">
-            <label id=\"{$nome}\" for=\"{$nome}\"><span></span> <strong>Escolha um arquivo</strong></label>";
+                    <label id=\"{$nome}\" for=\"{$nome}\"><span></span> <strong>Escolha um arquivo</strong></label>";
 
                         if (!empty($componente[5])) {
                             $retorno .= "&nbsp;$componente[5]";
@@ -1741,6 +1743,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= join('<br>', $tmpRetorno);
                         break;
                 } // endswitch
+
+
+
 
                 if (isset($this->erros[$nome])) {
                     $retorno .= '<br><font color=red>' . $this->erros[$nome] . '</font>';
