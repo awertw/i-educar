@@ -1124,7 +1124,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $nome_tabela = $componente['nome'];
                 $valores = $componente['valores'];
                 $titulo = $componente['titulo'];
-                //    $largura = $componente['largura'] ? " width=\"{$componente['largura']}\" " : '';
+                // $largura = $componente['largura'] ? " width=\"{$componente['largura']}\" " : '';
                 $valores_lista_tabela = $componente['valores_lista'];
                 $componente = array_shift($componente);
 
@@ -1134,7 +1134,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $classe = $md ? 'formlttd' : 'formmdtd';
                 $md = $md ? false : true;
 
-                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td>";
+                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td></td></tr>";
                 $retorno .= "\n<table id='$nome_tabela' class='tabela-adicao' >";
 
 
@@ -1161,7 +1161,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                     $cabId = str_replace(' ', '_', strtolower($cab));
 
                     $retorno .= "<div class='flex form' id='td_$cabId' ><label class='form-layout'>$cab</label>{$obrigatorio}</div>";
-                    $retorno .= "<div class='TA ERRADO!'>"  . "</div>"; /* $this->getCampoLista() */
+                    $retorno .= "<div class='TA_ERRADO!'>";
+                    $retorno .= "<select onchange=\"{$acao}\" class='{$class}' name='{$nome}' id='{$id}' {$desabilitado} $multiple>";
+                    $retorno .= "</div>";
+                    /* $this->getCampoLista() */
                 }
 
                 $retorno .= '<td class=\'formmdtd\' id=\'td_acao\'><span class=\'form \'>A&ccedil;&atilde;o</span></td>';
@@ -1392,7 +1395,9 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' valign='top'><div class=' form justity-items-center flex flex-col'>";
 
-                        $retorno .= "<div><div><label class='form color-default text-base '>$campo</label> {$obrigatorio}</div>{$explicacao}</div></div>";
+                        $retorno .= "<div><label class='form color-default text-base b'>$campo</label> {$obrigatorio}</div>";
+                        $retorno .= "{$explicacao}";
+                        $retorno .= "</div>";
                     }
                 } elseif ($tipo) {
                     if (!empty($componente[10]) && $componente[10] == true) {
@@ -1426,7 +1431,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         break;
 
                     case 'data':
-                        $retorno .= "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]}> $componente[7]\n";
+                        $retorno .= "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" {$componente[8]}> $componente[7]\n";
                         break;
 
                     case 'dataDupla':

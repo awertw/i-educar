@@ -246,9 +246,9 @@ HTML;
         }
 
         if ($this->campos) {
-            $width = empty($this->largura) ? '' : "width='$this->largura'";
+            // $width = empty($this->largura) ? '' : "width='$this->largura'";
 
-            $barra = '<b>Filtros de busca</b>';
+            $barra = 'Filtros de busca';
 
             $retorno .=  "
                 <!-- begin formulario -->
@@ -305,7 +305,7 @@ HTML;
                 if (isset($this->botao_submit) && $this->botao_submit) {
                     $retorno .=  '&nbsp;<input type=\'submit\' class=\'botaolistagem\' value=\'Buscar\' id=\'botao_busca\'>&nbsp;';
                 } else {
-                    $retorno .=  "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='javascript:acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
+                    $retorno .=  "&nbsp;<input type='button' class='botaolistagem flex btn-green' onclick='javascript:acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
                 }
             }
 
@@ -330,13 +330,14 @@ HTML;
             app(Breadcrumb::class)->setLegacy($this->locale);
         }
 
+        $retorno .=  "<div class='div-scroll'>";
         $retorno .=  "
             <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">
                 <!-- listagem begin -->
                 
                 <table class='tablelistagem' $width border='0' cellpadding='4' cellspacing='1'>
                     <tr>
-                        <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
+                        <td class='titulo-tabela-listagem' colspan='$ncols'><h1 class='b'>{$this->__titulo}</h1></td>
                     </tr>";
 
         $ncols = count($this->cabecalho);
@@ -431,6 +432,7 @@ HTML;
             <tr>
                 <td class='formdktd' colspan=\"{$ncols}\">&nbsp;</td>
             </tr></table>";
+        $retorno .= '</div>';
 
 
         if (!empty($this->paginador2)) {
@@ -563,7 +565,7 @@ HTML;
         if (!empty($this->acao) && $this->show_botao_novo) {
             $retorno .=  "
                 <tr>
-                    <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn-green botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
+                    <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn-green botaolistagem flex' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
                 </tr>";
         } elseif ($this->acao_imprimir) {
             $retorno .=  "
@@ -619,9 +621,10 @@ HTML;
         }
 
         $retorno .= '
-                    </table>
-                </form>
-            <!-- listagem end -->';
+        </table>
+        </form>';
+        $retorno .= '</div>
+        <!-- listagem end -->';
 
         Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 

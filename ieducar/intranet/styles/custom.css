@@ -139,7 +139,7 @@ span.select2-selection.select2-selection--multiple {
 
 .chosen-container,
 input[type="text"] select .geral {
-    width: 50% !important;
+    width: 75% !important;
 }
 
 .chosen-container-single .chosen-single {
@@ -170,7 +170,7 @@ input[type="button"] {
     padding: 10px 30px !important;
     border-radius: 3px !important;
     font-weight: normal;
-    margin: 15px 0;
+    margin: 15px auto;
 }
 
 select {
@@ -740,17 +740,7 @@ h6,
     font-size: var(--f-size-prop-xs);
 }
 
-@media only screen and (max-width: 1023px) {
-    #localizacao span {
-        font-size: 3.5rem;
-    }
-    .fundoCalendarioTopo {
-        font-size: 3rem;
-    }
-    label {
-        /* font-size: .7em; */
-    }
-}
+@media only screen and (max-width: 1023px) {}
 
 
 /**************************************
@@ -1088,6 +1078,9 @@ h6,
 }
 
 @media (min-width: 1023px) {
+    .Mobile-button {
+        display: none;
+    }
     .col-xl {
         flex-basis: 0;
         flex-grow: 1;
@@ -1497,6 +1490,18 @@ a.icons-top {
     z-index: 20;
 }
 
+.z-30 {
+    z-index: 30;
+}
+
+.z-40 {
+    z-index: 40;
+}
+
+.z-50 {
+    z-index: 50;
+}
+
 .r3c1:hover {
     background: rgba(54, 54, 54, 1) !important;
     transition: background .2s ease-in-out;
@@ -1684,25 +1689,6 @@ div#fa-icons {
     color: #98b0c3;
     font-size: 2rem;
     margin-right: 8px;
-}
-
-.expandir-btn {
-    background-color: rgba(54, 54, 54);
-    box-shadow: 2px 3px 3px rgba(50, 50, 50, 0.5);
-    border-radius: 0 30px 30px 0;
-    position: absolute;
-    display: none;
-    margin-left: -3px;
-    /*    opção 1       */
-    /*margin-top: 0px;  */
-    margin-top: 60vw;
-    padding: 80px 10px;
-    transition: margin-left .5s ease-in-out;
-    z-index: 2;
-}
-
-#expandido {
-    display: none;
 }
 
 
@@ -2207,6 +2193,10 @@ td#corpo {
     padding: 0 20px;
 }
 
+.corpo {
+    padding: 0 1.5rem;
+}
+
 .tabelanum1 {
     display: flex;
     width: 100%;
@@ -2226,8 +2216,9 @@ tr.tableHeader {
 .tabelanum2 {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
+    /* margin: 0 12px; */
+    /* align-items: center; */
     width: 100%;
     /* border: 0 !important; */
 }
@@ -2282,8 +2273,8 @@ td.area-conhecimento-destaque {
     background-color: #ffffff;
     border: solid 1px #cddce6;
     padding: 8px;
+    margin: 8px 0;
     font-size: var(--f-size-prop-l);
-    flex: 2;
     height: auto;
     color: var(--font-color);
     box-sizing: border-box;
@@ -2324,6 +2315,7 @@ td.area-conhecimento-destaque {
     background-color: #ffffff;
     border: solid 1px #cddce6;
     padding: 8px;
+    margin: 8px 0;
     font-size: var(--f-size-prop-l);
     color: var(--font-color);
 }
@@ -2706,11 +2698,26 @@ input.btn_small {
 }
 
 @media only screen and (max-width: 1023px) {
+    .comprimido {
+        display: none;
+        /* visibility: hidden; */
+        transition: display .1s ease-in-out;
+    }
+    .comprimido.expandido {
+        display: inherit;
+        /* visibility: visible; */
+        transition: display .1s ease-in-out;
+    }
+    .content-mobile {
+        margin-top: 7.1rem;
+    }
     select {
         width: 100vh;
     }
     .r3c1 {
-        display: none;
+        width: 100%;
+        position: absolute;
+        z-index: 20;
     }
     .campo_obrigatorio {
         /* font-size: 30px; */
@@ -2740,7 +2747,7 @@ input.btn_small {
     #formcadastro input,
     #formcadastro textarea {
         /* font-size: 3rem !important; */
-        min-width: 50%;
+        /* min-width: 50%; */
     }
     .ieducar-quick-search,
     .ieducar-sidebar-menu {
@@ -2756,7 +2763,6 @@ input.btn_small {
     }
     #formcadastro .formmdtd,
     #formcadastro .formlttd {
-        display: flex;
         width: 100%;
         padding: 4px 10px;
         max-width: 100%;
@@ -2966,4 +2972,37 @@ a.btn-detalhes {
 .btn-disabled#btn_enviar {
     background: rgb(233, 240, 248) !important;
     cursor: not-allowed;
+}
+
+
+/**************************************
+*********** MENU-EXPANDED *************
+**************************************/
+
+body.menu-expanded .menu {
+    position: fixed;
+    background: var(--bg-color-title);
+}
+
+.expandir-btn {
+    background-color: rgba(81, 81, 81, .0);
+    border-radius: 10px;
+    border-color: rgba(0, 0, 0, 0);
+    margin: 6px auto;
+    padding: 20px 48%;
+    transition: border-color .1s ease-in-out;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.expandir-btn:hover {
+    border-color: var(--bg-color-title);
+}
+
+#expandido {
+    display: none;
+}
+
+.div-scroll {
+    overflow-x: auto;
 }

@@ -1,4 +1,3 @@
-@if(!empty($footer))
+@if (!empty($footer))
     {!! $footer !!}
 @endif
-

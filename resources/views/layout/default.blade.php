@@ -197,7 +197,7 @@ if (isset($domain_parts[2]) != 'tec') {
     @endif
     <div id="DOM_expansivel" class="DOM_expansivel"></div>
     <div class="div-header">
-        <header class="ieducar-header z-20" id="headerID" <?= $headerID ?>>
+        <header class="ieducar-header z-30" id="headerID" <?= $headerID ?>>
             <div class="col-4 container">
                 <div class="ieducar-header-logo">
                     <h1><a href="{{ url('/') }}">EducaSis</a></h1>
@@ -239,24 +239,16 @@ if (isset($domain_parts[2]) != 'tec') {
     </div>
     <div class="main flex">
         <div id="menu_lateral sidebar" class="r3c1" $menu_Tecsis>
-            @include('partials.search')
             @include('layout.menu')
         </div>
-        <div class="content w-100 z-10">
+        <div class="content w-100 content-mobile z-10">
             @include('layout.topmenu')
             <div class="content main flex flex-col">
                 <div class='tabelanum1' id="tablenum1">
-                    <input type="checkbox" id="expandido">
-                    <label for="expandido" class="expandir-btn" <?= $expandido ?>><i class="fa fa-ellipsis-v"
-                            <?= $corTecsis ?>></i></label>
                     <div summary="" class='tabelanum2'>
                         <div>
-                            <div class="r3c1 Mobile" $r3c1Mobile?>
-                                @include('partials.searchMobile')
-                                @include('layout.menu')
-                            </div>
                             <div class='tabelanum2'>
-                                <div id="corpo">
+                                <div id="corpo" class="corpo">
                                     <div class='tablelistagem'>
                                         <div>
                                             <div class='fundoLocalizacao'>
