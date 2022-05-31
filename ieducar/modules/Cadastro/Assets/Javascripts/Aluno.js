@@ -2405,14 +2405,12 @@ function canShowParentsFields() {
       sexoParent = $j("#sexo-pessoa-parent"),
       estadocivilParent = $j("#estado-civil-pessoa-parent"),
       datanascParent = $j("#data-nasc-pessoa-parent"),
-      profissaoParent = $j("#profissao-parent"),
       falecidoParent = $j("#falecido-parent"),
       allFields = $j([])
         .add(nameParent)
         .add(sexoParent)
         .add(estadocivilParent)
         .add(datanascParent)
-        .add(profissaoParent)
         .add(falecidoParent);
        
 
@@ -2443,7 +2441,7 @@ function canShowParentsFields() {
                 "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy."
               );
           }
-          bValid = bValid && checkLength(profissaoParent, "profissao", 3, 255);
+          //bValid = bValid && checkLength(profissaoParent, "profissao", 3, 255);
 
           if (bValid) {
             postPessoa(
