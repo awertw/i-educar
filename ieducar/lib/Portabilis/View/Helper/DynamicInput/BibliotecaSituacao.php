@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 class Portabilis_View_Helper_DynamicInput_BibliotecaSituacao extends Portabilis_View_Helper_DynamicInput_CoreSelect
@@ -24,3 +25,31 @@ class Portabilis_View_Helper_DynamicInput_BibliotecaSituacao extends Portabilis_
         parent::select($options);
     }
 }
+=======
+<?php
+
+class Portabilis_View_Helper_DynamicInput_BibliotecaSituacao extends Portabilis_View_Helper_DynamicInput_CoreSelect
+{
+    protected function inputName()
+    {
+        return 'ref_cod_situacao';
+    }
+
+    protected function inputOptions($options)
+    {
+        $resources = $options['resources'];
+        $bibliotecaId = $this->getBibliotecaId();
+
+        if ($bibliotecaId and empty($resources)) {
+            $resources = App_Model_IedFinder::getBibliotecaSituacoes($bibliotecaId);
+        }
+
+        return $this->insertOption(null, 'Selecione uma situação', $resources);
+    }
+
+    public function bibliotecaSituacao($options = [])
+    {
+        parent::select($options);
+    }
+}
+>>>>>>> 0e43d46bd70bbf8f4ae92c2780080d51c6ccd837

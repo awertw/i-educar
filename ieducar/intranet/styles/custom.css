@@ -2027,7 +2027,7 @@ p.title-table-matricula {
   width: auto !important;
   font-size: 14px;
   font-weight: normal;
-  padding: 6px 20px 12px 20px;
+  padding: 6px 20px 12px 10px;
   border-radius: 0px !important;
   border: 0 !important;
   color: --var(font-color);
@@ -2277,6 +2277,14 @@ a.btn-detalhes {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+#turma_serie.tabela-adicao td.mult_curso_id,
+#turma_serie.tabela-adicao td.mult_serie_id,
+#turma_serie.tabela-adicao td.mult_boletim_id,
+#turma_serie.tabela-adicao td.mult_boletim_diferenciado_id,
+#turma_serie td.tr_turma_serie {
+  width: 23%;
 }
 
 .btn-disabled#btn_enviar {
