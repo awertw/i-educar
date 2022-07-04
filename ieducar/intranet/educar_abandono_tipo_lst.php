@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 return new class extends clsListagem {
@@ -54,14 +53,14 @@ return new class extends clsListagem {
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $lista_busca[] = 'Institui&ccedil;&atilde;o';
+            $lista_busca[] = 'Instituição';
         }
 
         $this->addCabecalhos($lista_busca);
 
         // Filtros de Foreign Keys
         include('include/pmieducar/educar_campo_lista.php');
-
+        
         // outros Filtros
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'instituicao' => $this->ref_cod_instituicao]);
         $this->campoTexto('nome', 'Abandono', $this->nome, 30, 255, false);
@@ -125,7 +124,6 @@ return new class extends clsListagem {
         $this->processoAp = '950';
     }
 };
-=======
 <?php
 
 return new class extends clsListagem {
@@ -251,4 +249,3 @@ return new class extends clsListagem {
         $this->processoAp = '950';
     }
 };
->>>>>>> 0e43d46bd70bbf8f4ae92c2780080d51c6ccd837

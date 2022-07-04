@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 use App\Models\LegacyIndividual;
@@ -1452,7 +1451,6 @@ return new class extends clsCadastro {
         $this->processoAp = 43;
     }
 };
-=======
 <?php
 
 use App\Facades\Asset;
@@ -2881,4 +2879,3 @@ return new class extends clsCadastro {
         $this->processoAp = 43;
     }
 };
->>>>>>> 0e43d46bd70bbf8f4ae92c2780080d51c6ccd837

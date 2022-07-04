@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 return new class extends clsListagem {
@@ -66,7 +65,7 @@ return new class extends clsListagem {
                     'Autor',
                     'Biblioteca',
                     'Escola',
-                    'Institui&ccedil;&atilde;o',
+                    'Instituição',
                 ]);
             break;
             case 2:
@@ -181,7 +180,6 @@ return new class extends clsListagem {
         $this->processoAp = '594';
     }
 };
-=======
 <?php
 
 return new class extends clsListagem {
@@ -361,4 +359,3 @@ return new class extends clsListagem {
         $this->processoAp = '594';
     }
 };
->>>>>>> 0e43d46bd70bbf8f4ae92c2780080d51c6ccd837
