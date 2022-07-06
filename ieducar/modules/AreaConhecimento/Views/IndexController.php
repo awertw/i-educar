@@ -1,42 +1,3 @@
-<<<<<<< HEAD
-<?php
-
-class IndexController extends Core_Controller_Page_ListController
-{
-    protected $_dataMapper = 'AreaConhecimento_Model_AreaDataMapper';
-
-    protected $_titulo = 'Listagem de áreas de conhecimento';
-
-    protected $_processoAp = 945;
-
-    protected $_tableMap = [
-        'Nome' => 'nome',
-        'Seção' => 'secao',
-        'Agrupa descritores' => 'agrupar_descritores'
-    ];
-
-    protected function _preRender()
-    {
-        parent::_preRender();
-
-        $this->breadcrumb('Listagem de &aacute;reas de conhecimento', [
-            url('intranet/educar_index.php') => 'Escola',
-        ]);
-    }
-
-    public function getEntries()
-    {
-        $areas = $this->getDataMapper()->findAll();
-
-        foreach ($areas as $key => $area) {
-            $descriptorsGroup = $area->agrupar_descritores ? 'Sim' : 'Não';
-            $areas[$key]->agrupar_descritores = $descriptorsGroup;
-        }
-
-        return $areas;
-    }
-}
-=======
 <?php
 
 class IndexController extends Core_Controller_Page_ListController
@@ -74,4 +35,3 @@ class IndexController extends Core_Controller_Page_ListController
         return $areas;
     }
 }
->>>>>>> 0e43d46bd70bbf8f4ae92c2780080d51c6ccd837

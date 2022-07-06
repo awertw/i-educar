@@ -1,29 +1,3 @@
-<<<<<<< HEAD
-.anosLetivos {
-	border: 0;
-	cellpadding: 2;
-	width: 100%;
-}
-
-.evento {
-	border:0;
-	padding-left:10px;
-}
-
-.evento a {
-	background-color: #FFFFFF;
-	vertical-align:top;
-	font-size: 11px;
-	font-family: arial, verdana, sans-serif;
-	color: #4E606C;
-}
-
-.evento img {
-	vertical-align:top;
-	width: 13px;
-	height: 13px;
-}
-=======
 .anosLetivos {
 	border: 0;
 	width: 100%;
@@ -47,4 +21,3 @@
 	width: 13px;
 	height: 13px;
 }
->>>>>>> 0e43d46bd70bbf8f4ae92c2780080d51c6ccd837
