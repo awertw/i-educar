@@ -1,7 +1,9 @@
 (function ($) {
   $(document).ready(function () {
     //TODO: Refatorar Edição do plano de aula
-
+    $(".mostra-modal").on("click", function (e) {
+      openModal();
+    });
     var id = $j("#id").val();
     var copy = $j("#copy").val();
     var bncc_table = document.getElementById("objetivos_aprendizagem");

@@ -242,7 +242,7 @@ return new class extends clsListagem {
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_trocae_f + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_m + '</td>');
       table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_f + '</td>');
-      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_t + '</td>');
+      table.push('<td class="' + cellClass + '" valign="top" align="left">' +  item.mat_final_t +  '</td>');
     table.push('</tr>');
   }
 
