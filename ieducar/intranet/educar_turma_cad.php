@@ -88,7 +88,7 @@ return new class extends clsCadastro {
         //Define que esta tela executa suas ações atraves de requisições ajax
         $this->acao_executa_submit_ajax = true;
 
-        if (is_numeric($this->cod_turma)) {
+        if (is_numeric($this->cod_turma)) { 
             $obj_turma = new clsPmieducarTurma($this->cod_turma);
             $registro = $obj_turma->detalhe();
             $obj_esc = new clsPmieducarEscola($registro['ref_ref_cod_escola']);

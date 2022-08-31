@@ -1451,9 +1451,9 @@ return new class extends clsCadastro {
         $this->processoAp = 43;
     }
 };
-<?php
 
-use App\Facades\Asset;
+
+/* use App\Facades\Asset;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Services\FileService;
@@ -2879,3 +2879,4 @@ return new class extends clsCadastro {
         $this->processoAp = 43;
     }
 };
+ */

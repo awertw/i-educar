@@ -82,7 +82,8 @@ return new class extends clsListagem {
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola]);
-        $this->inputsHelper()->dynamic(['curso', 'serie, turma'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['turma'], ['required' => false]);
         $this->inputsHelper()->dynamic(['situacaoMatricula'], ['required' => false]);
 
         $obj_permissoes = new clsPermissoes();

@@ -173,7 +173,7 @@ return new class extends clsDetalhe {
         $this->processoAp = 43;
     }
 };
-<?php
+/* <?php
 
 use App\Models\LegacyIndividual;
 use App\Services\FileService;
@@ -343,3 +343,4 @@ return new class extends clsDetalhe {
         $this->processoAp = 43;
     }
 };
+ */
