@@ -7,7 +7,7 @@ use App\Models\LegacySchoolStage;
 class PromocaoApiController extends ApiCoreController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
-    protected $_processoAp = 644;
+    protected $_processoAp = 644; 
 
     protected function canAcceptRequest()
     {

@@ -4,7 +4,11 @@ use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacySchoolCourse;
 use iEducar\Modules\Educacenso\Model\UnidadesCurriculares;
 use iEducar\Support\View\SelectOptions;
-
+use ComponenteCurricular_Model_TurmaDataMapper;
+use App_Model_LocalFuncionamentoDiferenciado;
+use RegraAvaliacao_Model_RegraDataMapper;
+use Portabilis_Model_Report_TipoBoletim;
+use ComponenteCurricular_Model_AnoEscolarDataMapper;
 return new class extends clsCadastro {
     public $pessoa_logada;
     public $cod_turma;
@@ -192,8 +196,11 @@ return new class extends clsCadastro {
         }
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
+        if (is_numeric($this->ano_letivo)) {
+            $this->ano = $this->ano_letivo;
+        }
 
-        $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
+        $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
         $this->campoOculto('cod_turma', $this->cod_turma);
         $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
         $this->campoOculto('ref_cod_curso_', $this->ref_cod_curso);

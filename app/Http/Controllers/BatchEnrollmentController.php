@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
 use Illuminate\View\View;
+use App\Models\LegacyEnrollment;
 use Throwable;
 
 class BatchEnrollmentController extends Controller

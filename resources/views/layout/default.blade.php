@@ -11,7 +11,7 @@ $domain_parts = explode('.', HOST);
     $corTecsis      = "style='color:rgb(243, 135, 42)'";
 
 
-	if($domain_parts[2] != "tec"){
+	if($domain_parts != "tec"){
 		$icoTecsis = "favicon.ico"; $headerID = "";
         $menu_lateral = ""; $rodapeID = "";
         $r3c1Mobile = ""; $expandido = "";
@@ -32,7 +32,7 @@ $domain_parts = explode('.', HOST);
 
     <script>
         dataLayer = [{
-            'slug': '{{$config['app']['database']['dbname']}}',
+            'slug': "{{$config['app']['database']['dbname']}}",
             'user_id': '{{$loggedUser->personId}}',
             'user_name': '{{$loggedUser->name}}',
             'user_email': '{{$loggedUser->email}}',
@@ -45,7 +45,7 @@ $domain_parts = explode('.', HOST);
             'teachers_count': '{{ $loggedUser->teachers_count }}',
             'classes_count': '{{ $loggedUser->classes_count }}',
         }];
-        window.useEcho = '{{ config('broadcasting.default') }}' !== '';
+        window.useEcho = "{{ config('broadcasting.default') }}" !== '';
     </script>
 
     @if(!empty($config['app']['gtm']['id']))
@@ -59,7 +59,7 @@ $domain_parts = explode('.', HOST);
                 j.async = true;
                 j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
                 f.parentNode.insertBefore(j, f);
-            })(window, document, 'script', 'dataLayer', '{{ $config['app']['gtm']['id'] }}');
+            })(window, document, 'script', 'dataLayer', "{{ $config['app']['gtm']['id'] }}");
         </script>
         <!-- End Google Tag Manager -->
     @endif
@@ -76,12 +76,12 @@ $domain_parts = explode('.', HOST);
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/jquery.modal.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/flash-messages.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}">
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/scripts/select2/select2.min.css') }}">
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
-    <link rel="stylesheet" type='text/css' href='{{ Asset::get('css/base.css') }}'>
-    <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css') }}'>
-    <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery-maxlength/jquery.maxlength.css') }}'>
-    <link rel="stylesheet" type="text/css" href="{{ Asset::get("/intranet/scripts/summernote/summernote-lite.css") }}">
+    <link rel="stylesheet" type='text/css' href="{{ Asset::get('css/base.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/scripts/jquery-maxlength/jquery.maxlength.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/scripts/summernote/summernote-lite.css') }}">
     @stack('styles')
 
     <script>
@@ -92,22 +92,22 @@ $domain_parts = explode('.', HOST);
     </script>
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true" charset="utf-8"></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/padrao.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/novo.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/dom.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/menu.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/ied/forms.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/ied/phpjs.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery.modal.min.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/prototype/prototype-1.7.1.0.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/scriptaculous/effects.js") }} "></script>
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery.mask.min.js") }} "></script>
-    <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-lite.js') }}'></script>
-    <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-pt-BR.js') }}'></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/padrao.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/novo.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/dom.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/menu.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/ied/forms.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/ied/phpjs.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/jquery/jquery-1.8.3.min.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/jquery/jquery.modal.min.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/prototype/prototype-1.7.1.0.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/scriptaculous/effects.js') }} "></script>
+    <script type="text/javascript" src="{{ Asset::get('/intranet/scripts/jquery.mask.min.js') }} "></script>
+    <script type='text/javascript' src="{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}"></script>
+    <script type='text/javascript' src="{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}"></script>
+    <script type='text/javascript' src="{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js') }}"></script>
+    <script type='text/javascript' src="{{ Asset::get('/intranet/scripts/summernote/summernote-lite.js') }}"></script>
+    <script type='text/javascript' src="{{ Asset::get('/intranet/scripts/summernote/summernote-pt-BR.js') }}"></script>
 
     <script type="text/javascript">
         window.ambiente = 'development';
@@ -325,14 +325,14 @@ $domain_parts = explode('.', HOST);
     })(jQuery);
 </script>
 
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/custom-file-input.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/js/app.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.plugin.min.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.maxlength.min.js") }}"></script>
+<script type="text/javascript" src="{{ Asset::get('/intranet/scripts/custom-file-input.js') }}"></script>
+<script type="text/javascript" src="{{ Asset::get('/intranet/scripts/select2/select2.full.min.js') }}"></script>
+<script type="text/javascript" src="{{ Asset::get('/intranet/scripts/select2/pt-BR.js') }}"></script>
+<script type="text/javascript" src="{{ Asset::get('/intranet/scripts/flash-messages.js') }}"></script>
+<script type="text/javascript" src="{{ Asset::get('/js/app.js') }}"></script>
+<script type="text/javascript" src="{{ Asset::get('/intranet/scripts/notifications.js') }}"></script>
+<script type="text/javascript" src="{{ Asset::get('/intranet/scripts/jquery-maxlength/jquery.plugin.min.js') }}"></script>
+<script type="text/javascript" src="{{ Asset::get('/intranet/scripts/jquery-maxlength/jquery.maxlength.min.js') }}"></script>
 <script>
     getNotifications();
 
