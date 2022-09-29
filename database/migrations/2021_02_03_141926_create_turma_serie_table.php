@@ -24,9 +24,12 @@ class CreateTurmaSerieTable extends Migration
             $table->foreign('turma_id')
                 ->references('cod_turma')
                 ->on('pmieducar.turma');
-            $table->foreign(['escola_id', 'serie_id'])
-                ->references(['ref_cod_escola', 'ref_cod_serie'])
+            $table->foreign(['escola_id'])
+                ->references(['ref_cod_escola'])
                 ->on('pmieducar.escola_serie');
+                $table->foreign(['serie_id'])
+                ->references(['ref_cod_serie'])
+                ->on('pmieducar.escola_serie');      
         });
     }
 
