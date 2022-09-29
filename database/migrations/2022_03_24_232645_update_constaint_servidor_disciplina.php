@@ -25,7 +25,7 @@ class UpdateConstaintServidorDisciplina extends Migration
         ];
 
         $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina', 'servidor_disciplina_pkey');
-        $this->createConstraint('pmieducar.servidor_disciplina', $columns, 'servidor_disciplina_pkey');
+        $this->createConstraint('pmieducar.servidor_disciplina', $columns, 'servidor_disciplina_pkey','pmieducar.servidor_disciplina');
     }
 
     /**
