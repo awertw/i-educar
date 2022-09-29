@@ -23,9 +23,10 @@ class UpdateConstaintServidorDisciplina extends Migration
             'ref_cod_curso',
             'ref_cod_funcao'
         ];
+       
 
-        $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina', 'servidor_disciplina_pkey');
-        $this->createConstraint('pmieducar.servidor_disciplina', $columns, 'servidor_disciplina_pkey','pmieducar.servidor_disciplina');
+        //$this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina', 'servidor_disciplina_pkey');
+        $this->createConstraint('pmieducar.servidor_disciplina', $columns, 'servidor_disciplina_pkey');
     }
 
     /**
@@ -42,7 +43,7 @@ class UpdateConstaintServidorDisciplina extends Migration
             'ref_cod_curso'
         ];
 
-        $this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina', 'servidor_disciplina_pkey');
+        //$this->dropPrimaryKeyIn('pmieducar', 'servidor_disciplina', 'servidor_disciplina_pkey');
         $this->createConstraint('pmieducar.servidor_disciplina', $columns, 'servidor_disciplina_pkey');
     }
 }
