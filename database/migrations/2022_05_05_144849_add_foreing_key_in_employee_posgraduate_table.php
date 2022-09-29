@@ -13,9 +13,12 @@ return new class () extends Migration {
     public function up()
     {
         Schema::table('employee_posgraduate', function (Blueprint $table) {
-            $table->foreign(['employee_id', 'entity_id'])
+            $table->foreign(['employee_id'])
                 ->on('pmieducar.servidor')
-                ->references(['cod_servidor', 'ref_cod_instituicao']);
+                ->references(['cod_servidor']);
+                $table->foreign(['entity_id'])
+                ->on('pmieducar.servidor')
+                ->references(['ref_cod_instituicao']);
         });
     }
 
@@ -27,7 +30,8 @@ return new class () extends Migration {
     public function down()
     {
         Schema::table('employee_posgraduate', function (Blueprint $table) {
-            $table->dropForeign(['employee_id', 'entity_id']);
+            $table->dropForeign(['employee_id']);
+            $table->dropForeign(['entity_id']);
         });
     }
 };
