@@ -41,7 +41,7 @@ return new class extends clsDetalhe {
 
         $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
         $resultado = $obj->getGrau();
-        
+
         if ($registro['detalhes']['id']) {
             $this->addDetalhe(
                 [
@@ -50,7 +50,7 @@ return new class extends clsDetalhe {
                 ]
             );
         }
-        
+
         if ($registro['detalhes']['data_inicial']) {
             $this->addDetalhe(
                 [
@@ -69,6 +69,24 @@ return new class extends clsDetalhe {
             );
         }
 
+        if ($registro['detalhes']['escola']) {
+            $this->addDetalhe(
+                [
+                    'Escola',
+                    $registro['detalhes']['escola']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['professor']) {
+            $this->addDetalhe(
+                [
+                    'Professor',
+                    $registro['detalhes']['professor']
+                ]
+            );
+        }
+
         if ($registro['detalhes']['ref_cod_turma']) {
             $this->addDetalhe(
                 [
@@ -78,11 +96,16 @@ return new class extends clsDetalhe {
             );
         }
 
-        if ($registro['detalhes']['componente_curricular']) {
+        if ($registro['componentesCurriculares']) {
+            $nomeComponenteCurricular = '';
+            foreach ($registro['componentesCurriculares'] as $componenteCurricular) {
+                $nomeComponenteCurricular .= $componenteCurricular['nome'].'<br>';
+            }
+
             $this->addDetalhe(
                 [
                     $resultado == 0 ? 'Componente curricular' : 'Campo de experiência',
-                    $registro['detalhes']['componente_curricular']
+                    $nomeComponenteCurricular
                 ]
             );
         }
@@ -95,7 +118,7 @@ return new class extends clsDetalhe {
                 ]
             );
         }
-        
+
         if (is_array($registro['bnccs'])) {
             $this->montaListaBNCC($registro['bnccs']);
         }
@@ -160,7 +183,7 @@ return new class extends clsDetalhe {
             $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
             $turma = $registro['detalhes']['ref_cod_turma'];
-            $sequencia = $registro['detalhes']['fase_etapa'];
+            $sequencia =  $registro['detalhes']['fase_etapa'];
             $obj = new clsPmieducarTurmaModulo();
 
             $data = $obj->pegaPeriodoLancamentoNotasFaltas($turma, $sequencia);
@@ -189,13 +212,13 @@ return new class extends clsDetalhe {
                     $podeEditar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
 
                     if ($podeEditar) break;
-                }     
+                }
             } else {
                 $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
             }
 
-            // if ($podeEditar)
-            //     $this->url_editar = 'educar_professores_planejamento_de_aula_cad.php?id=' . $registro['detalhes']['id'];
+             if ($podeEditar)
+                 $this->url_editar = 'educar_professores_planejamento_de_aula_cad.php?id=' . $registro['detalhes']['id'];
 
         }
 
@@ -206,13 +229,11 @@ return new class extends clsDetalhe {
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
 
-        $this->addBotao('Excluir', "");
-
-        //$this->addBotao('Copiar plano de aula', "/intranet/educar_professores_planejamento_de_aula_cad.php?id={$this->getRequest()->id}&copy=true");
+        $this->addBotao('Copiar plano de aula', "/intranet/educar_professores_planejamento_de_aula_cad.php?id={$this->getRequest()->id}&copy=true");
     }
 
     function montaListaBNCC ($bnccs) {
-        
+
         $this->tabela .= ' <tr>';
         $this->tabela .= ' <td class="formmdtd"><span style="display: block; float: left; width: 100px; font-weight: bold;">Código</span></td>';
         $this->tabela .= ' <td class="formmdtd"><span style="display: block; float: left; width: 700px; font-weight: bold;">Habilidade</span></td>';
@@ -224,7 +245,7 @@ return new class extends clsDetalhe {
             $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i]['descricao']}</span></td>";
             $this->tabela .= ' </tr>';
         }
-        
+
         $bncc  = '<table cellspacing="0" cellpadding="0" border="0">';
         $bncc .= sprintf('<tr align="left"><td>%s</td></tr>', $this->tabela);
         $bncc .= '</table>';

@@ -23,6 +23,7 @@ return new class extends clsCadastro {
     public $bncc_especificacoes;
     public $recursos_didaticos;
     public $registro_adaptacao;
+    public $tipoacao;
 
     public function Inicializar () {
         $this->titulo = 'Plano de aula - Cadastro';
@@ -45,6 +46,8 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
                 $this->bncc = array_column($registro['bnccs'], 'id');
+                $this->bncc_especificacoes = array_column($registro['especificacoes'] , 'id' );
+                $this->ref_cod_componente_curricular_array = $registro['componentesCurriculas'];
 
                 if (!$this->copy) {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
@@ -78,7 +81,6 @@ return new class extends clsCadastro {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
-
         $this->data_inicial = dataToBrasil($this->data_inicial);
         $this->data_final = dataToBrasil($this->data_final);
 
@@ -90,20 +92,55 @@ return new class extends clsCadastro {
             && is_numeric($this->ref_cod_turma)
             && is_numeric($this->ref_cod_componente_curricular_array)
             && is_numeric($this->fase_etapa)
+            && empty($this->copy)
         ) {
             $desabilitado = true;
         }
 
         $obrigatorio = true;
+        $serie = '';
+
+        if (!empty($this->copy) && is_numeric($this->ref_cod_turma)) {
+            $obj = new clsPmieducarTurma($this->ref_cod_turma);
+            $turma = $obj->detalhe();
+            $serie = $turma['ref_ref_cod_serie'];
+        }
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
+
+        $obj_servidor = new clsPmieducarServidor(
+            $this->pessoa_logada,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,      //  Ativo
+            1,      //  Fixado na instituição de ID 1
+        );
+        $isProfessor = $obj_servidor->isProfessor();
+
+        $obj = new clsModulesPlanejamentoAula($this->id);
+        $resultado = $obj->getMensagem($this->pessoa_logada);
 
         $this->campoOculto('id', $this->id);
+        $this->campoOculto('serie_id', $serie);
+        $this->campoOculto('planejamento_aula_id', $this->id);
+        $this->campoOculto('obrigatorio_conteudo', $obrigatorioConteudo);
+        $this->campoOculto('servidor_id', ($this->pessoa_logada == $resultado['emissor_user_id'] ? $resultado['receptor_user_id'] : $resultado['emissor_user_id']));
+        $this->campoOculto('auth_id', $this->pessoa_logada);
+        $this->campoOculto('is_professor', $isProfessor);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado && !$this->copy]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado && !$this->copy]);
 
         $this->adicionarBNCCMultiplaEscolha();
-        $this->adicionarConteudosTabela();
+
+        if ($obrigatorioConteudo) {
+            $this->adicionarConteudosTabela($obrigatorioConteudo);
+        }
 
         $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, $obrigatorio);
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
@@ -133,6 +170,7 @@ return new class extends clsCadastro {
             $this->atividades,
             $this->bncc,
             $this->conteudos,
+            $this->bncc_especificacoes,
             $this->referencias
         );
 
@@ -255,7 +293,7 @@ return new class extends clsCadastro {
         $this->campoTabelaFim();
     }
 
-    protected function adicionarConteudosTabela()
+    protected function adicionarConteudosTabela($obrigatorioConteudo)
     {
         $obj = new clsModulesPlanejamentoAulaConteudo();
         $conteudos = $obj->lista($this->id);
@@ -274,7 +312,7 @@ return new class extends clsCadastro {
             $rows
         );
 
-        $this->campoTexto('conteudos', 'Conteúdos', $this->conteudo_id, 100, 2048);
+        $this->campoTexto('conteudos', 'Conteúdos', $this->conteudo_id, 100, 2048, $obrigatorioConteudo);
 
         $this->campoTabelaFim();
     }

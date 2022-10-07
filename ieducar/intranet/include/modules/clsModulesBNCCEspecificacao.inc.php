@@ -133,4 +133,30 @@ class clsModulesBNCCEspecificacao extends Model {
 
         return false;
     }
+    public function retornaDiferencaEntreConjuntosBNCC($atuaisBNCCEspecificacao, $novosBNCCEspecificacao)
+    {
+        $resultado = [];
+        $resultado['adicionar'] = $novosBNCCEspecificacao;
+
+        for ($i = 0; $i < count($atuaisBNCCEspecificacao); $i++) {
+            $resultado['remover'][] = $atuaisBNCCEspecificacao[$i]['bncc_especificacao_id'];
+        }
+
+        $atuaisBNCC = $resultado['remover'];
+
+        for ($i = 0; $i < count($novosBNCCEspecificacao); $i++) {
+            $novoArray = $novosBNCCEspecificacao[$i][1];
+
+            for ($j = 0; $j < count($atuaisBNCC); $j++) {
+                $atual = $atuaisBNCC[$j];
+
+                if ($indiceAtual = array_search($atual, $novoArray)) {
+                    unset($resultado['adicionar'][$i][1][$indiceAtual]);
+                    unset($resultado['remover'][$j]);
+                }
+            }
+        }
+
+        return $resultado;
+    }
 }
