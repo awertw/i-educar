@@ -395,7 +395,8 @@ class clsModulesProfessorTurma extends Model
             GROUP BY
                 pt.id,
                 t.cod_turma,
-                p.nome
+                p.nome,
+                pt.ano
         ';
 
         $sql .= $filtros . $groupBy . $this->getOrderby() . $this->getLimite();
