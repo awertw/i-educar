@@ -85,12 +85,12 @@ class clsModulesPlanejamentoAulaBNCC extends Model {
         $info_temp = $db->Tupla();
 
         $infos['ids'] = explode(',', $info_temp['ids']);
-        $infos['codigos'] = count($info_temp['codigos']) > 0 ? explode(',', $info_temp['codigos']) : null;
-        $infos['descricoes'] = count($info_temp['descricoes']) > 0 ? explode('$/', $info_temp['descricoes']) : null;
+        $infos['codigos'] = count((array)$info_temp['codigos']) > 0 ? explode(',', $info_temp['codigos']) : null;
+        $infos['descricoes'] = count((array)$info_temp['descricoes']) > 0 ? explode('$/', $info_temp['descricoes']) : null;
 
         $bnccs = [];
 
-        for ($i=0; $i < count($infos['ids']); $i++) { 
+        for ($i=0; $i < count((array)$infos['ids']); $i++) { 
             $bnccs[$i]['id'] = $infos['ids'][$i];
             $bnccs[$i]['codigo'] = $infos['codigos'][$i];
             $bnccs[$i]['descricao'] = $infos['descricoes'][$i];

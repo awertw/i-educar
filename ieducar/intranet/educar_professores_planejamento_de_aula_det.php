@@ -35,7 +35,7 @@ return new class extends clsDetalhe {
         $tmp_obj = new clsModulesPlanejamentoAula($this->id);
         $registro = $tmp_obj->detalhe();
 
-        if (!$registro['detalhes']) {
+        if (! $registro['detalhes']) {
             $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
         }
 
@@ -97,9 +97,9 @@ return new class extends clsDetalhe {
         }
 
         if ($registro['componentesCurriculares']) {
-            $nomeComponenteCurricular = '';
+         $nomeComponenteCurricular = '';
             foreach ($registro['componentesCurriculares'] as $componenteCurricular) {
-                $nomeComponenteCurricular .= $componenteCurricular['nome'].'<br>';
+            $nomeComponenteCurricular .= $componenteCurricular['nome'].'<br>';
             }
 
             $this->addDetalhe(
