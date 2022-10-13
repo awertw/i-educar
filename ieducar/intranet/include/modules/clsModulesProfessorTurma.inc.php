@@ -392,11 +392,27 @@ class clsModulesProfessorTurma extends Model
         $resultado = [];
 
         $groupBy = '
-            GROUP BY
-                pt.id,
-                t.cod_turma,
-                p.nome,
-                pt.ano
+        GROUP BY
+        pt.id,
+        t.cod_turma,
+        p.nome,
+        pt.ano,
+        pt.instituicao_id,
+        pt.servidor_id,
+        pt.turma_id,
+        pt.funcao_exercida,
+        pt.tipo_vinculo,
+        pt.permite_lancar_faltas_componente,
+        pt.turno_id,
+        pt.unidades_curriculares,
+        t.nm_turma,
+        t.cod_turma , 
+        t.ref_ref_cod_serie, 
+        s.nm_serie, 
+        t.ref_cod_curso, 
+        c.nm_curso, 
+        t.ref_ref_cod_escola, 
+        p.nome
         ';
 
         $sql .= $filtros . $groupBy . $this->getOrderby() . $this->getLimite();
