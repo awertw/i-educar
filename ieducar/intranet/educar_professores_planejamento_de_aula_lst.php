@@ -47,11 +47,11 @@ return new class extends clsListagem {
             'Data inicial',
             'Data final',
             'Turma',
-            'Turno',
             'S&eacute;rie',
-            'Curso',
             'Escola',
-            'Etapa'
+            'Etapa',
+            'Componente Curricular',
+            'Professor'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -64,13 +64,13 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
-  
+
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
 
         $this->inputsHelper()->dynamic(['dataInicial'], ['required' => false, 'value' => $this->data_inicial]);
         $this->inputsHelper()->dynamic(['dataFinal'], ['required' => false, 'value' => $this->data_final]);
-     
+
         $this->campoQuebra();
         $this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
 
@@ -108,7 +108,20 @@ return new class extends clsListagem {
             1,      //  Ativo
             1,      //  Fixado na instituição de ID 1
         );
+
         $eh_professor = $obj_servidor->isProfessor();
+        $isCoordenador = $obj_servidor->isCoordenador();
+
+
+        $escolasUsuario = [];
+        if ($isCoordenador) {
+            $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
+
+            foreach ($escolasUser as $e) {
+                $escolasUsuario[] = $e['ref_cod_escola'];
+            }
+        }
+
 
         $lista = $obj_plano->lista(
             $this->ano,
@@ -122,13 +135,21 @@ return new class extends clsListagem {
             $this->data_inicial,
             $this->data_final,
             $this->fase_etapa,
-            $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
+            $eh_professor ? $this->pessoa_logada : null,
+            null,
+            empty($this->ref_cod_escola) ? $escolasUsuario : null
         );
 
-        $total = /*$obj_turma->_total*/count($lista); 
+        $total = $obj_plano->_total;
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
+                $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
+                $componentesCurriculares = $obj->lista($registro['id']);
+
+                $obj = new clsPmieducarSerie();
+                $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($registro['cod_serie']);
+
                 $data_inicial_formatada = dataToBrasil($registro['data_inicial']);
                 $data_final_formatada = dataToBrasil($registro['data_final']);
 
@@ -136,12 +157,26 @@ return new class extends clsListagem {
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$data_inicial_formatada}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$data_final_formatada}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
                     "<a href=\"educar_professores_planejamento_de_aula_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
+
+                if (isset($componentesCurriculares) && is_array($componentesCurriculares) && !empty($tipo_presenca) && $tipo_presenca == 2) {
+                    $abreviatura = '';
+                    foreach ($componentesCurriculares as $componenteCurricular) {
+                        $abreviatura .= $componenteCurricular['abreviatura'].'<br>';
+                    }
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$abreviatura}</a>";
+                } else {
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">—</a>";
+                }
+
+                if (!empty($registro['cod_professor_registro'])) {
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['professor_registro']}</a>";
+                } else {
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['professor_turma']}</a>";
+                }
 
                 $this->addLinhas($lista_busca);
             }

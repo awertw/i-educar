@@ -2,7 +2,8 @@
 
 use iEducar\Legacy\Model;
 
-class clsModulesBNCC extends Model {
+class clsModulesBNCC extends Model
+{
     public $id;
     public $ref_cod_serie;
     public $ref_cod_componente_curricular;
@@ -30,6 +31,15 @@ class clsModulesBNCC extends Model {
             unnest(bncc.serie_ids) as serie_id
         ';
 
+        $this->_campos_lista_aee = $this->_todos_campos_aee = '
+            bncc.id,
+            bncc.codigo,
+            bncc.habilidade,
+            bncc.campo_experiencia,
+            bncc.unidade_tematica,
+            bncc.componente_curricular_id
+        ';
+
         if (is_numeric($id)) {
             $this->id = $id;
         }
@@ -48,7 +58,7 @@ class clsModulesBNCC extends Model {
      *
      * @return array
      */
-    public function lista (
+    public function lista(
         $int_frequencia = null,
         $int_campo_experiencia = null
     ) {
@@ -147,7 +157,7 @@ class clsModulesBNCC extends Model {
      *
      * @return array
      */
-    public function listaTurma (
+    public function listaTurma(
         $int_modo = 0,
         $int_turma = null,
         $int_cod_componente_curricular = null
@@ -198,7 +208,8 @@ class clsModulesBNCC extends Model {
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico("
+        $this->_total = $db->CampoUnico(
+            "
             WITH select_ as (
                 SELECT
                     {$this->_campos_lista}
@@ -215,7 +226,104 @@ class clsModulesBNCC extends Model {
                 JOIN select_ as bncc
                     ON (bncc.serie_id = t.etapa_educacenso
                     AND {$modo}
-                {$filtros}" 
+                {$filtros}"
+        );
+
+        $db->Consulta($sql);
+
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+        } else {
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla[$this->_campos_lista];
+            }
+        }
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
+    /**
+     * Retorna uma lista filtrados de acordo com os parametros
+     *
+     * @return array
+     */
+    public function listaTurmaAee(
+        $int_turma = null,
+        $int_cod_componente_curricular = null
+    ) {
+        $sql = "
+        WITH select_ as (
+            SELECT
+                {$this->_campos_lista_aee}
+            FROM
+                {$this->_from}
+        )
+            SELECT
+                bncc.id,
+                codigo,
+                habilidade,
+                campo_experiencia,
+                unidade_tematica,
+                componente_curricular_id
+            FROM pmieducar.turma as t
+            JOIN pmieducar.escola_serie_disciplina as esd
+                ON (esd.ref_ref_cod_serie = t.ref_ref_cod_serie)
+            JOIN modules.componente_curricular as cc
+                ON (cc.id = esd.ref_cod_disciplina)
+            JOIN select_ as bncc
+                ON (bncc.campo_experiencia = cc.id) 
+                OR (bncc.componente_curricular_id = cc.codigo_educacenso)      
+        ";
+
+        $whereAnd = 'WHERE ';
+        $filtros = "";
+
+        if (is_numeric($int_turma)) {
+            $filtros .= "{$whereAnd} t.cod_turma = '{$int_turma}'";
+            $whereAnd = ' AND';
+        }
+
+        if (is_numeric($int_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} cc.id = '{$int_cod_componente_curricular}'";
+            $whereAnd = ' AND';
+        }
+
+        $filtros .= "{$whereAnd} t.tipo_atendimento = 5";
+        $whereAnd = ' AND';
+
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico(
+            "
+            WITH select_ as (
+                SELECT
+                    {$this->_campos_lista_aee}
+                FROM
+                    {$this->_from}
+            )
+                SELECT
+                    COUNT(0)
+                FROM pmieducar.turma as t
+                JOIN pmieducar.escola_serie_disciplina as esd
+                    ON (esd.ref_ref_cod_serie = t.ref_ref_cod_serie)
+                JOIN modules.componente_curricular as cc
+                    ON (cc.id = esd.ref_cod_disciplina)
+                JOIN select_ as bncc
+                    ON (bncc.campo_experiencia = cc.id)
+                {$filtros}"
         );
 
         $db->Consulta($sql);
@@ -245,7 +353,8 @@ class clsModulesBNCC extends Model {
      *
      * @return array
      */
-    public function detalhe () {
+    public function detalhe()
+    {
         $data = [];
 
         if (is_numeric($this->id)) {
@@ -268,28 +377,94 @@ class clsModulesBNCC extends Model {
         return false;
     }
 
+
+
+    public function lista_bncc()
+    {
+        $sql = "SELECT * FROM modules.bncc";
+
+        
+      
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM modules.bncc");
+
+        $db->Consulta($sql);
+
+       
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                $tupla['_total'] = $this->_total;
+                $resultado[] = $tupla;
+            }
+       
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
+    public function lista_series($id_bncc)
+    {
+
+        
+        $sql = "SELECT *, nm_serie as serie  FROM bncc_series LEFT JOIN serie
+         ON serie.cod_serie = bncc_series.id_serie WHERE id_bncc = {$id_bncc}";
+
+        
+      
+        $db = new clsBanco();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
+
+        
+
+
+        $db->Consulta($sql);
+
+       
+            while ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+                $resultado[] = $tupla;
+            }
+       
+        if (count($resultado)) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
     /**
      * Retorna array com duas arrays, uma com os BNCC a serem cadastrados e a outra com os que devem ser removidos
      *
      * @return array
      */
-    public function retornaDiferencaEntreConjuntosBNCC($atuaisBNCC, $novosBNCC) {
+    public function retornaDiferencaEntreConjuntosBNCC($atuaisBNCC, $novosBNCC)
+    {
         $resultado = [];
         $resultado['adicionar'] = $novosBNCC;
 
-        for ($i=0; $i < count($atuaisBNCC); $i++) {
-            $resultado['remover'][] = $atuaisBNCC[$i]['id']; 
+        for ($i = 0; $i < count($atuaisBNCC); $i++) {
+            $resultado['remover'][] = $atuaisBNCC[$i]['id'];
         }
+
         $atuaisBNCC = $resultado['remover'];
 
-        for ($i=0; $i < count($novosBNCC); $i++) { 
-            $novo = $novosBNCC[$i];
+        for ($i = 0; $i < count($novosBNCC); $i++) {
+            $novoArray = $novosBNCC[$i][1];
 
-            for ($j=0; $j < count($atuaisBNCC); $j++) {
+            for ($j = 0; $j < count($atuaisBNCC); $j++) {
                 $atual = $atuaisBNCC[$j];
 
-                if ($novo === $atual) {
-                    unset($resultado['adicionar'][$i]);
+                if ($indiceAtual = array_search($atual, $novoArray)) {
+                    unset($resultado['adicionar'][$i][1][$indiceAtual]);
                     unset($resultado['remover'][$j]);
                 }
             }

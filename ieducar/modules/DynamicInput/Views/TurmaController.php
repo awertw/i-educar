@@ -1,6 +1,9 @@
 <?php
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2.6-tecsis
 class TurmaController extends ApiCoreController
 {
     protected function canGetTurmas()
@@ -39,6 +42,7 @@ class TurmaController extends ApiCoreController
                 if (is_numeric($ano)) {
                     $sql = '
                         SELECT
+<<<<<<< HEAD
                             t.cod_turma AS id,
                             t.nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
                         FROM pmieducar.turma AS t
@@ -52,12 +56,27 @@ class TurmaController extends ApiCoreController
                         AND t.visivel != \'f\'
                         AND t.ano = $3
                         ORDER BY t.nm_turma ASC
+=======
+                            cod_turma AS id,
+                            nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
+                        FROM pmieducar.turma
+                        WHERE ref_ref_cod_escola = $1
+                        AND (
+                            ref_ref_cod_serie = $2
+                            OR ref_ref_cod_serie_mult = $2
+                        )
+                        AND ativo = 1
+                        AND visivel != \'f\'
+                        AND turma.ano = $3
+                        ORDER BY nm_turma asc
+>>>>>>> 2.6-tecsis
                     ';
 
                     $turmas = $this->fetchPreparedQuery($sql, [$escolaId, $serieId, $ano]);
                 } else {
                     $sql = '
                         SELECT
+<<<<<<< HEAD
                             t.cod_turma AS id,
                             t.nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
                         FROM pmieducar.turma AS t
@@ -70,6 +89,18 @@ class TurmaController extends ApiCoreController
                         AND t.ativo = 1
                         AND t.visivel != \'f\'
                         ORDER BY t.nm_turma ASC
+=======
+                            cod_turma AS id,
+                            nm_turma || \' - \' || COALESCE(ano::varchar,\'SEM ANO\') AS nome
+                        FROM pmieducar.turma
+                        WHERE ref_ref_cod_escola = $1
+                        AND (
+                            ref_ref_cod_serie = $2
+                            OR ref_ref_cod_serie_mult = $2
+                        ) and ativo = 1
+                        AND visivel != \'f\'
+                        ORDER BY nm_turma asc
+>>>>>>> 2.6-tecsis
                     ';
 
                     $turmas = $this->fetchPreparedQuery($sql, [$escolaId, $serieId]);
@@ -112,10 +143,33 @@ class TurmaController extends ApiCoreController
         }
     }
 
+<<<<<<< HEAD
+=======
+    public function getDetalhe()
+    {
+        $turmaId = $this->getRequest()->turma_id;
+
+        if (is_numeric($turmaId)) {
+            $obj = new clsPmieducarTurma($turmaId);
+            $turma = $obj->detalheWithCurso();
+
+            return $turma;
+        }
+
+        return false;
+    }
+
+>>>>>>> 2.6-tecsis
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'turmas')) {
             $this->appendResponse($this->getTurmas());
+<<<<<<< HEAD
+=======
+        } else if ($this->isRequestFor('get', 'detalhe')) {
+            $this->appendResponse($this->getDetalhe());
+            $this->appendResponse($this->getDetalhe());
+>>>>>>> 2.6-tecsis
         } else {
             $this->notImplementedOperationError();
         }

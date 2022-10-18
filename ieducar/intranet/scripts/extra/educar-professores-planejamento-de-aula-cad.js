@@ -2,15 +2,24 @@
   $(document).ready(function(){
     var bncc_table = document.getElementById("objetivos_aprendizagem");
     var btn_add    = document.getElementById("btn_add_tab_add_1");
+    var copy = $j('#copy').val();
+    var serie_id = $j('#serie_id').val();
 
     var anoField   = getElementFor('ano');
     var turmaField = getElementFor('turma');
+    var id = $j('#id').val();
+    var planejamento_aula_id    = document.getElementById('planejamento_aula_id');
+    var bnccsUtilizados = [];
+    var especificacoesUtilizados = [];
 
     var submitButton = $j('#btn_enviar');
     submitButton.removeAttr('onclick');
 
     submitButton.click(function () {
+      if ((planejamento_aula_id.value == '' || isNaN(planejamento_aula_id.value)) ||
+          (!isNaN(planejamento_aula_id.value)) && copy) {
         enviarFormulario();
+      }
     });
 
     consertarBNCCElementos();
@@ -24,8 +33,39 @@
       consertarBNCCEspecificoesElementos();
     }
 
-    var updateComponentesCurriculares = function (clearComponent = true) {
-      if (anoField.val() && turmaField.val() && turmaField.is(':enabled')) {
+    function updateTurma() {
+      var data = {
+        turma_id : turmaField.attr('value')
+      };
+
+      var urlForGetComponentesCurriculares = getResourceUrlBuilder.buildUrl(
+        '/module/DynamicInput/turma', 'detalhe', data
+      );
+
+      var options = {
+        url : urlForGetComponentesCurriculares,
+        dataType : 'json',
+        success  : function (response) {
+          handleUpdateTurma(response)
+        }
+      };
+
+      getResources(options);
+    }
+
+    function handleUpdateTurma(response) {
+      let updateComponente = true;
+
+      if (copy && response &&
+        ((parseInt(response.ref_ref_cod_serie) == parseInt(serie_id)) || (parseInt(response.multi_seriado_curso) == 1))) {
+        updateComponente = false;
+      }
+
+      updateComponentesCurriculares(true, updateComponente);
+    }
+
+    var updateComponentesCurriculares = function (clearComponent = true, updateComponente = true) {
+      if (anoField.val() && turmaField.val() && turmaField.is(':enabled') && updateComponente) {
 
         var data = {
           ano      : anoField.attr('value'),
@@ -50,9 +90,12 @@
 
     function handleGetComponentesCurriculares (response, clearComponent = true) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
+      bnccsUtilizados = response['utilizados']['bncss_utilizados'];
+      especificacoesUtilizados = response['utilizados']['especificacoes_utilizados'];
 
       var linhasElemento = document.getElementsByName("tr_objetivos_aprendizagem[]");
       var componentesCurricularesElementos = []
+      let componentesCurricularesSelecionados = pegarSomenteValoresComponentesCurriculares();
 
       // get disciplines elements
       linhasElemento.forEach(linhaElemento => {
@@ -70,11 +113,19 @@
 
         // add disciplines
         selectOptions.forEach(option => {
-          jComponenteCurricularElemento.append(option[0]);
+          if (!componentesCurricularesSelecionados.includes(option[0].value)) {
+            jComponenteCurricularElemento.append(option[0]);
+          }
         });
 
         // bind onchange event
         componenteCurricularElemento.addEventListener("change", trocaComponenteCurricular, false);
+
+        if (copy) {
+          var evt = document.createEvent("HTMLEvents");
+          evt.initEvent("change", false, true);
+          componenteCurricularElemento.dispatchEvent(evt);
+        }
       });
     }
 
@@ -172,14 +223,14 @@
           var obj = dataResponse.result;
           bnccEspeficacoesDados = dataResponse.result === null ? [] : Object.keys(obj).map((key) => [obj[key][0], obj[key][1], obj[key][2]]);
 
-          addOpcoesBNCC(bnccEspecificoesElemento, bnccEspeficacoesDados);
+          addOpcoesBNCC(bnccEspecificoesElemento, bnccEspeficacoesDados, false);
         });
       } else {
-        addOpcoesBNCC(bnccEspecificoesElemento, []);
+        addOpcoesBNCC(bnccEspecificoesElemento, [], false);
       }
     }
 
-    function addOpcoesBNCC (elemento, novasOpcoes) {
+    function addOpcoesBNCC (elemento, novasOpcoes, bncc = true) {
       const maxCharacters = 60;
 
       $(elemento).empty();
@@ -190,10 +241,24 @@
         var id = novaOpcao[2] != null ? novaOpcao[2] : novaOpcao[0];
         var value = novaOpcao[1].substring(0, maxCharacters).trimEnd();
         value = value.length < maxCharacters ? value : value.concat("...");
-        $(elemento).append(`<option value="${id}">${value}</option>`);
+        var style = '';
+
+        if (bncc && bnccsUtilizados.includes(parseInt(id))) {
+            style = "style=\"color:blue\"";
+        }
+
+        if (!bncc && especificacoesUtilizados.includes(parseInt(id))) {
+            style = "style=\"color:blue\"";
+        }
+
+        $(elemento).append(`<option value="${id}" ${style}>${value}</option>`);
       }
 
       $(elemento).trigger("chosen:updated");
+
+      if (copy) {
+        $(elemento).trigger("change");
+      }
     }
 
     function pegarId (id) {
@@ -216,6 +281,21 @@
           componenteCurricular.push(componenteCurricularId);
           componenteCurricular.push(componenteCurricularValor);
           componentesCurriculares.push(componenteCurricular);
+      });
+
+      return componentesCurriculares;
+    }
+
+    function pegarSomenteValoresComponentesCurriculares () {
+      var componentesCurriculares = []
+
+      tr_objetivos_aprendizagens = document.getElementsByName("tr_objetivos_aprendizagem[]");
+      tr_objetivos_aprendizagens.forEach(tr_objetivos_aprendizagem => {
+        var id = tr_objetivos_aprendizagem.children[0].children[0].id;
+        var componenteCurricularElemento = document.getElementById(id);
+        var componenteCurricularValor = componenteCurricularElemento.value;
+
+        componentesCurriculares.push(componenteCurricularValor);
       });
 
       return componentesCurriculares;
@@ -313,6 +393,7 @@
       var bnccEspecificacoes        = pegarBNCCEspecificacoes();
       var recursos_didaticos        = document.getElementById("recursos_didaticos").value;
       var registro_adaptacao        = document.getElementById("registro_adaptacao").value;
+      var obrigatorio_conteudo        = document.getElementById("obrigatorio_conteudo").value;
 
       // VALIDAÇÃO
       if (!ehDataValida(new Date(data_inicial))) { alert("Data inicial não é válida."); return; }
@@ -326,9 +407,12 @@
       if (!componentesCurricularesPreenchidos(componentesCurriculares, componentesCurricularesGeral)) { alert("Existem componentes sem planejamento."); }
       if (!ehBNCCsValidos(bnccs)) { alert("As habilidades são obrigatórias."); return; }
       if (!ehBNCCEspecificacoesValidos(bnccEspecificacoes)) { alert("As especificações são obrigatórias."); return; }
-      if (!ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
+      if (obrigatorio_conteudo.length == 1 && obrigatorio_conteudo == '1' && !ehConteudosValidos(conteudos)) { alert("Os conteúdos são obrigatórios."); return; }
+
+
       if (recursos_didaticos == null) { alert("O campo recursos didáticos não é válido."); return; }
       if (registro_adaptacao == null) { alert("O campo registro de adaptação não é válido."); return; }
+
 
       novoPlanoAula(
         data_inicial,
@@ -449,6 +533,6 @@
   }
 
     // bind onchange event
-    turmaField.change(updateComponentesCurriculares);
+    turmaField.change(updateTurma);
   });
 })(jQuery);

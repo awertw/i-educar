@@ -23,6 +23,11 @@ return new class extends clsCadastro {
     public $hora_final;
     public $ref_cod_instituicao_servidor;
     public $ref_cod_servidor;
+<<<<<<< HEAD
+=======
+    public $ref_cod_servidor_substituto_1;
+    public $ref_cod_servidor_substituto_2;
+>>>>>>> 2.6-tecsis
     public $incluir_horario;
     public $excluir_horario;
     public $lst_matriculas;
@@ -196,7 +201,11 @@ return new class extends clsCadastro {
                 $this->ref_cod_escola,
                 $this->ref_cod_turma
             );
+<<<<<<< HEAD
         } catch (Exception) {
+=======
+        } catch (Exception $e) {
+>>>>>>> 2.6-tecsis
         }
 
         if (0 == count($componentesTurma)) {
@@ -269,9 +278,51 @@ return new class extends clsCadastro {
             false
         );
 
+<<<<<<< HEAD
         $this->campoRotulo(
             'bt_incluir_horario',
             'Horário',
+=======
+        $this->campoListaPesq(
+            'ref_cod_servidor_substituto_1',
+            '1º Servidor Substituto',
+            ['' => 'Selecione um servidor'],
+            $this->ref_cod_servidor_substituto_1,
+            '',
+            '',
+            false,
+            '',
+            '',
+            null,
+            null,
+            '',
+            true,
+            false,
+            false
+        );
+
+        $this->campoListaPesq(
+            'ref_cod_servidor_substituto_2',
+            '2º Servidor Substituto',
+            ['' => 'Selecione um servidor'],
+            $this->ref_cod_servidor_substituto_2,
+            '',
+            '',
+            false,
+            '',
+            '',
+            null,
+            null,
+            '',
+            true,
+            false,
+            false
+        );
+
+        $this->campoRotulo(
+            'bt_incluir_horario',
+            'Hor&aacute;rio',
+>>>>>>> 2.6-tecsis
             '<a href=\'#\' id=\'btn_incluir_horario\' ><img src=\'imagens/nvp_bot_adiciona.gif\' title=\'Incluir\' border=0></a>'
         );
 
@@ -300,7 +351,12 @@ return new class extends clsCadastro {
                 $this->quadro_horario[$qtd_horario]['ref_ref_cod_disciplina_']       = $_POST['ref_cod_disciplina'];
                 $this->quadro_horario[$qtd_horario]['ref_cod_instituicao_servidor_'] = $this->ref_cod_instituicao;
                 $this->quadro_horario[$qtd_horario]['ref_servidor_']                 = $_POST['ref_cod_servidor'];
+<<<<<<< HEAD
                 $this->quadro_horario[$qtd_horario]['ref_servidor_substituto_']      = $_POST['ref_servidor_substituto'];
+=======
+                $this->quadro_horario[$qtd_horario]['ref_servidor_substituto_1_']    = $_POST['ref_cod_servidor_substituto_1'];
+                $this->quadro_horario[$qtd_horario]['ref_servidor_substituto_2_']    = $_POST['ref_cod_servidor_substituto_2'];
+>>>>>>> 2.6-tecsis
                 $this->quadro_horario[$qtd_horario]['hora_inicial_']                 = $_POST['hora_inicial'];
                 $this->quadro_horario[$qtd_horario]['hora_final_']                   = $_POST['hora_final'];
                 $this->quadro_horario[$qtd_horario]['ativo_']                        = 1;
@@ -322,7 +378,13 @@ return new class extends clsCadastro {
                     $this->dia_semana,
                     $this->hora_inicial,
                     $this->hora_final,
+<<<<<<< HEAD
                     $this->identificador
+=======
+                    $this->identificador,
+                    $this->ref_cod_servidor_substituto_1,
+                    $this->ref_cod_servidor_substituto_2,
+>>>>>>> 2.6-tecsis
                 );
 
                 $obj_quadro_horario->cadastra();
@@ -380,7 +442,13 @@ return new class extends clsCadastro {
                         null,
                         null,
                         1,
+<<<<<<< HEAD
                         $campo['dia_semana_']
+=======
+                        $campo['dia_semana_'],
+                        $campo['ref_servidor_substituto_1_'],
+                        $campo['ref_servidor_substituto_2_'],
+>>>>>>> 2.6-tecsis
                     );
 
                     if (is_array($lst_horario)) {
@@ -440,7 +508,11 @@ return new class extends clsCadastro {
                             break;
 
                         case 7:
+<<<<<<< HEAD
                             $campo['nm_dia_semana_'] = 'Sábado';
+=======
+                            $campo['nm_dia_semana_'] = 'S&aacute;bado';
+>>>>>>> 2.6-tecsis
                             break;
                     }
                 }
@@ -539,6 +611,11 @@ return new class extends clsCadastro {
                     $horarios_incluidos[$qtd_horario]['ref_cod_instituicao_servidor_'] = $campo['ref_cod_instituicao_servidor_'];
                     $horarios_incluidos[$qtd_horario]['ref_servidor_']                 = $campo['ref_servidor_'];
                     $horarios_incluidos[$qtd_horario]['ref_servidor_substituto_']      = $campo['ref_servidor_substituto_'];
+<<<<<<< HEAD
+=======
+                    $horarios_incluidos[$qtd_horario]['ref_servidor_substituto_1_']    = $campo['ref_servidor_substituto_1_'];
+                    $horarios_incluidos[$qtd_horario]['ref_servidor_substituto_2_']    = $campo['ref_servidor_substituto_2_'];
+>>>>>>> 2.6-tecsis
                     $horarios_incluidos[$qtd_horario]['hora_inicial_']                 = $campo['hora_inicial_'];
                     $horarios_incluidos[$qtd_horario]['hora_final_']                   = $campo['hora_final_'];
                     $horarios_incluidos[$qtd_horario]['ativo_']                        = $campo['ativo_'];
@@ -588,6 +665,11 @@ return new class extends clsCadastro {
             $this->dia_semana             = $_GET['dia_semana'];
             $this->identificador          = $_GET['identificador'];
             $this->ref_servidor           = $_POST['ref_cod_servidor'];
+<<<<<<< HEAD
+=======
+            $this->ref_cod_servidor_substituto_1           = $_POST['ref_servidor_substituto_1'];
+            $this->ref_cod_servidor_substituto_2           = $_POST['ref_servidor_substituto_2'];
+>>>>>>> 2.6-tecsis
             $this->hora_inicial           = $_POST['hora_inicial'];
             $this->hora_final             = $_POST['hora_final'];
 
@@ -598,7 +680,11 @@ return new class extends clsCadastro {
                     $this->ref_cod_escola,
                     $this->ref_cod_turma
                 );
+<<<<<<< HEAD
             } catch (Exception) {
+=======
+            } catch (Exception $e) {
+>>>>>>> 2.6-tecsis
             }
 
             foreach ($componentesTurma as $componente) {
@@ -623,7 +709,13 @@ return new class extends clsCadastro {
                     null,
                     null,
                     1,
+<<<<<<< HEAD
                     $this->dia_semana
+=======
+                    $this->dia_semana,
+                    $this->ref_cod_servidor_substituto_1,
+                    $this->ref_cod_servidor_substituto_2
+>>>>>>> 2.6-tecsis
                 );
 
                 $cadastrou = $obj_horario->cadastra();
@@ -655,7 +747,13 @@ return new class extends clsCadastro {
                     null,
                     null,
                     1,
+<<<<<<< HEAD
                     $registro['dia_semana_']
+=======
+                    $registro['dia_semana_'],
+                    $registro['ref_servidor_substituto_1_'],
+                    $registro['ref_servidor_substituto_2_'],
+>>>>>>> 2.6-tecsis
                 );
 
                 $cadastrou = $obj_horario->cadastra();
@@ -708,6 +806,11 @@ return new class extends clsCadastro {
             $this->dia_semana             = $_GET['dia_semana'];
             $this->identificador          = $_GET['identificador'];
             $this->ref_servidor           = $_POST['ref_cod_servidor'];
+<<<<<<< HEAD
+=======
+            $this->ref_cod_servidor_substituto_1           = $_POST['ref_servidor_substituto_1'];
+            $this->ref_cod_servidor_substituto_2           = $_POST['ref_servidor_substituto_2'];
+>>>>>>> 2.6-tecsis
             $this->hora_inicial           = $_POST['hora_inicial'];
             $this->hora_final             = $_POST['hora_final'];
 
@@ -718,7 +821,11 @@ return new class extends clsCadastro {
                     $this->ref_cod_escola,
                     $this->ref_cod_turma
                 );
+<<<<<<< HEAD
             } catch (Exception) {
+=======
+            } catch (Exception $e) {
+>>>>>>> 2.6-tecsis
             }
 
             foreach ($componentesTurma as $componente) {
@@ -742,7 +849,13 @@ return new class extends clsCadastro {
                     null,
                     null,
                     1,
+<<<<<<< HEAD
                     $this->dia_semana
+=======
+                    $this->dia_semana,
+                    $this->ref_cod_servidor_substituto_1,
+                    $this->ref_cod_servidor_substituto_2
+>>>>>>> 2.6-tecsis
                 );
 
                 $cadastrou = $obj_horario->cadastra();
@@ -773,7 +886,13 @@ return new class extends clsCadastro {
                     null,
                     null,
                     $registro['ativo_'],
+<<<<<<< HEAD
                     null
+=======
+                    null,
+                    $registro['ref_servidor_substituto_1_'],
+                    $registro['ref_servidor_substituto_2_']
+>>>>>>> 2.6-tecsis
                 );
 
                 if ($obj_horario->detalhe()) {
@@ -792,7 +911,13 @@ return new class extends clsCadastro {
                         null,
                         null,
                         $registro['ativo_'],
+<<<<<<< HEAD
                         $registro['dia_semana_']
+=======
+                        $registro['dia_semana_'],
+                        $registro['ref_servidor_substituto_1_'],
+                        $registro['ref_servidor_substituto_2_']
+>>>>>>> 2.6-tecsis
                     );
 
                     $editou = $obj_horario->edita();
@@ -820,7 +945,13 @@ return new class extends clsCadastro {
                         null,
                         null,
                         $registro['ativo_'],
+<<<<<<< HEAD
                         $registro['dia_semana_']
+=======
+                        $registro['dia_semana_'],
+                        $registro['ref_servidor_substituto_1_'],
+                        $registro['ref_servidor_substituto_2_']
+>>>>>>> 2.6-tecsis
                     );
 
                     $cadastrou = $obj_horario->cadastra();

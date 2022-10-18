@@ -2,6 +2,12 @@
 
 use iEducar\Legacy\Model;
 
+<<<<<<< HEAD
+=======
+error_reporting(E_ERROR);
+ini_set('display_errors', 1);
+
+>>>>>>> 2.6-tecsis
 class clsModulesComponenteCurricular extends Model
 {
     public $id;
@@ -126,6 +132,14 @@ class clsModulesComponenteCurricular extends Model
 
         return false;
     }
+<<<<<<< HEAD
+=======
+    /**
+     * Retorna array com duas arrays, uma com os CC a serem cadastrados e a outra com os que devem ser removidos
+     *
+     * @return array
+     */
+>>>>>>> 2.6-tecsis
     public function retornaDiferencaEntreConjuntosCC($atuaisCC, $novosCC)
     {
         $resultado = [];

@@ -1,10 +1,15 @@
 (function($){
   $(document).ready(function(){
-    
+
     var $anoField                  = getElementFor('ano');
     var $turmaField                = getElementFor('ref_cod_turma');
+    var id                         = document.getElementById('id');
 
     // var $turmaOcultaField          = document.getElementById("ref_cod_turma");
+
+    if (id.value != '') {
+      return;
+    }
 
     var handleGetTodasTurmas = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);

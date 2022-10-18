@@ -396,7 +396,7 @@ HTML;
                         $retorno .= $linha['conteudo'];
                         continue;
                     }
-
+ 
                     reset($linha);
 
                     if (!empty($this->colunas)) {

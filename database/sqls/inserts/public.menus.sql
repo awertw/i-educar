@@ -166,15 +166,18 @@ INSERT INTO public.menus VALUES (234, 233, 'Exportação para o SEB', 'Exportaç
 
 INSERT INTO public.menus VALUES (305, NULL, 'Professores', NULL, '/intranet/educar_professores_index.php', 'fa-users', 9, 1, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (306, 305, 'Diário de classe', NULL, '/intranet/educar_professores_index.php', NULL, 1, 2, NULL, NULL, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (307, 306, 'Frequência', NULL, '/intranet/educar_professores_frequencia_lst.php', NULL, 1, 3, 58, NULL, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (308, 306, 'Registro de aula', NULL, '/intranet/educar_professores_conteudo_ministrado_lst.php', NULL, 2, 3, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (307, 306, 'Frequência e Aula', NULL, '/intranet/educar_professores_frequencia_lst.php', NULL, 1, 3, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (309, 306, 'Notas', NULL, '/module/Avaliacao/diario', NULL, 3, 3, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (310, NULL, 'Portal do aluno', NULL, '/intranet/educar_portal_aluno_index.php','fa-users', 10, 1, 144, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (311, 310, 'Portal do aluno', NULL, NULL, NULL, 1, 2, NULL, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (312, 311, 'Histórico escolar', NULL, '/intranet/educar_portal_aluno_boletim_lst.php', NULL, 1, 3, NULL, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (313, 305, 'Planejamentos', NULL, NULL, NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (314, 313, 'Plano de aula', NULL, '/intranet/educar_professores_planejamento_de_aula_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);
-
 INSERT INTO public.menus VALUES (316, 305, 'AEE', NULL, NULL, NULL, 3, 1, 58, NULL, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (317, 316, 'Plano de aula - AEE', NULL, '/intranet/educar_professores_planejamento_de_aula_aee_lst.php', NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
-INSERT INTO public.menus VALUES (318, 316, 'Atendimento - AEE', NULL, '/intranet/educar_professores_conteudo_ministrado_aee_lst', NULL, 2, 3, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (317, 316, 'Ficha - AEE', NULL, '/intranet/educar_professores_ficha_aee_lst.php', NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (318, 316, 'Plano de aula - AEE', NULL, '/intranet/educar_professores_planejamento_de_aula_aee_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (319, 316, 'Atendimento - AEE', NULL, '/intranet/educar_professores_conteudo_ministrado_aee_lst', NULL, 3, 3, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (335, 115, 'BNCC', 'BNCC', '/intranet/educar_bncc_lst.php', NULL, 0, 5, 9206, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (320, 305, 'Validações', NULL, NULL, NULL, 3, 1, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (321, 320, 'Validar Plano de Aula', NULL, '/intranet/educar_professores_validacao_planejamento_de_aula_lst.php', NULL, 1, 2, 58, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (322, 320, 'Validar Registro de Frequência', NULL, '/intranet/educar_professores_validacao_registro_de_frequencia_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);

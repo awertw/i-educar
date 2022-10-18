@@ -7,6 +7,7 @@ use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 return new class extends clsCadastro {
     public $id;
@@ -46,10 +47,16 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
                 $this->bncc = array_column($registro['bnccs'], 'id');
+<<<<<<< HEAD
                 $this->bncc_especificacoes = array_column($registro['especificacoes'] , 'id' );
+=======
+                $this->bncc_especificacoes = array_column($registro['especificacoes'], 'id');
+>>>>>>> 2.6-tecsis
                 $this->ref_cod_componente_curricular_array = $registro['componentesCurriculas'];
 
-                if (!$this->copy) {
+                $podeExcluir = (!empty($registro['detalhes']['cod_professor_registro']) && $registro['detalhes']['cod_professor_registro'] == $this->pessoa_logada) || empty($registro['detalhes']['cod_professor_registro']);
+
+                if (!$this->copy && $podeExcluir) {
                     $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
                     $retorno = 'Editar';
 
@@ -90,7 +97,6 @@ return new class extends clsCadastro {
             && $this->data_inicial != ''
             && $this->data_final != ''
             && is_numeric($this->ref_cod_turma)
-            && is_numeric($this->ref_cod_componente_curricular_array)
             && is_numeric($this->fase_etapa)
             && empty($this->copy)
         ) {
@@ -105,6 +111,10 @@ return new class extends clsCadastro {
             $turma = $obj->detalhe();
             $serie = $turma['ref_ref_cod_serie'];
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2.6-tecsis
         $clsInstituicao = new clsPmieducarInstituicao();
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
@@ -133,14 +143,18 @@ return new class extends clsCadastro {
         $this->campoOculto('is_professor', $isProfessor);
         $this->inputsHelper()->dynamic('dataInicial', ['required' => $obrigatorio]);    // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('dataFinal', ['required' => $obrigatorio]);      // Disabled não funciona; ação colocada no javascript.
-        $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado && !$this->copy]);
-        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado && !$this->copy]);
+        $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
+        $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
         $this->adicionarBNCCMultiplaEscolha();
 
         if ($obrigatorioConteudo) {
             $this->adicionarConteudosTabela($obrigatorioConteudo);
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2.6-tecsis
 
         $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, $obrigatorio);
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
@@ -201,7 +215,7 @@ return new class extends clsCadastro {
         return false;
     }
 
-    private function getBNCCTurma($turma = null, $ref_cod_componente_curricular_array = null)
+    private function getBNCCTurma($turma = null, $ref_cod_componente_curricular = null)
     {
         if (is_numeric($turma)) {
             $obj = new clsPmieducarTurma($turma);
@@ -211,7 +225,7 @@ return new class extends clsCadastro {
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
 
-            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular_array)) {
+            if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
@@ -239,6 +253,7 @@ return new class extends clsCadastro {
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaExclusao.js',
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaEdicao.js',
             '/modules/Cadastro/Assets/Javascripts/PlanoAulaDuplicacao.js',
+            '/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -250,10 +265,11 @@ return new class extends clsCadastro {
     }
 
     private function adicionarBNCCMultiplaEscolha() {
+
         $this->campoTabelaInicio(
             'objetivos_aprendizagem',
             'Objetivo(s) de aprendizagem',
-            ['Componente curricular', "Habilidade(s)", "Especificação(ões)"],
+            ['Componente curricular', "Habilidade(s)", "Especificação(ões)"]
         );
 
         // Componente curricular
@@ -271,10 +287,11 @@ return new class extends clsCadastro {
             'label' => 'Objetivos de aprendizagem/habilidades (BNCC)',
             'required' => true,
             'options' => [
-                'values' => $this->bncc,
+                'values' => null,
                 'all_values' => $todos_bncc
             ]
         ];
+
         $this->inputsHelper()->multipleSearchCustom('bncc', $options);
 
         // BNCCs Especificações
@@ -284,7 +301,7 @@ return new class extends clsCadastro {
             'label' => 'Especificações',
             'required' =>true,
             'options' => [
-                'values' => $this->bncc_especificacoes,
+                'values' => null,
                 'all_values' => $todos_bncc_especificacoes
             ]
         ];
@@ -316,6 +333,7 @@ return new class extends clsCadastro {
 
         $this->campoTabelaFim();
     }
+
 
     public function Formular () {
         $this->title = 'Plano de aula - Cadastro';

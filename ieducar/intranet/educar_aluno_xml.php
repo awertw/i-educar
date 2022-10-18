@@ -7,7 +7,7 @@
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
     if (is_numeric($_GET['tur'])) {
         $db = new clsBanco();
-        
+
         $sql = "
             SELECT t.ref_cod_matricula, p.nome
             FROM pmieducar.aluno a
@@ -28,6 +28,15 @@
         } else {
             $sql .= "WHERE t.ref_cod_turma = {$_GET['tur']}";
         }
+
+        if (isset($_GET['data']) && !empty($_GET['data'])) {
+            $dateSql = implode("-",array_reverse(explode("/",$_GET['data'])));
+            $sql .= " AND T.data_enturmacao <= '{$dateSql}' AND (T.data_exclusao IS NULL OR T.data_exclusao >= '{$dateSql}') ";
+        }
+
+        $sql .= " AND m.ativo = '1' AND m.ultima_matricula = '1'";
+
+        $sql .= " ORDER BY p.nome ASC";
 
         $db->Consulta("{$sql}");
 

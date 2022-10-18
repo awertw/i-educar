@@ -76,7 +76,11 @@ var postResourceUrlBuilder = {
 
 var getResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars) {
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 2.6-tecsis
     var vars = {
       resource : resourceName,
       oper : 'get',
@@ -109,6 +113,10 @@ function  changeResource($resourceElement, postFunction, deleteFunction) {
 
 
 function setDefaultFaltaIfEmpty(matricula_id, componente_curricular_id) {
+<<<<<<< HEAD
+=======
+  console.log('aq')
+>>>>>>> 2.6-tecsis
   var $element = $j('#falta-matricula-' + matricula_id + '-cc-' + componente_curricular_id);
 
   if ($element.closest('tr').data('regra').desconsiderar_lancamento_frequencia) {
@@ -211,7 +219,11 @@ var changeNotaExame = function(event) {
   }
 
   var $element = $j(this);
+<<<<<<< HEAD
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+=======
+  //setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+>>>>>>> 2.6-tecsis
   lockedAverage($element, function () {
     changeResource($element, postNotaExame, deleteNotaExame);
   });
@@ -224,7 +236,11 @@ var changeNotaRecuperacaoParalela = function(event){
   }
 
   var $element = $j(this);
+<<<<<<< HEAD
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+=======
+  //setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+>>>>>>> 2.6-tecsis
   lockedAverage($element, function () {
     changeResource($element, postNotaRecuperacaoParalela, deleteNotaRecuperacaoParalela);
   });
@@ -237,7 +253,11 @@ var changeNotaRecuperacaoEspecifica = function(event){
   }
 
   var $element = $j(this);
+<<<<<<< HEAD
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+=======
+  //setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+>>>>>>> 2.6-tecsis
   lockedAverage($element, function () {
     changeResource($element, postNotaRecuperacaoEspecifica, deleteNotaRecuperacaoEspecifica);
   });
@@ -385,7 +405,11 @@ function postNota($notaFieldElement) {
         afterChangeResource($notaFieldElement);
         handleChange(dataResponse);
         checkIfShowNotaRecuperacaoParalelaField($notaFieldElement.val(), dataResponse);
+<<<<<<< HEAD
         setDefaultFaltaIfEmpty($notaFieldElement.data('matricula_id'), $notaFieldElement.data('componente_curricular_id'));
+=======
+       // setDefaultFaltaIfEmpty($notaFieldElement.data('matricula_id'), $notaFieldElement.data('componente_curricular_id'));
+>>>>>>> 2.6-tecsis
       }
     };
 
@@ -998,7 +1022,11 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   var $linha = $j('<tr />');
 
   if (componenteCurricularSelected) {
+<<<<<<< HEAD
     $j('<th />').html('área de Conhecimento').appendTo($linha);
+=======
+    $j('<th />').html('&Aacute;rea de Conhecimento').appendTo($linha);
+>>>>>>> 2.6-tecsis
     $j('<th />').html('Componente curricular').appendTo($linha);
   }
 
@@ -1100,7 +1128,10 @@ function setNextTabIndex($element) {
 }
 
 function handleSearch($resultTable, dataResponse) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2.6-tecsis
   var regras = $tableSearchDetails.data('regras');
   var useNota                 = regras.filter(function(regra){return regra.tipo_nota != 'nenhum'; }).length > 0;
   var ultimaEtapa             = regras[0]['quantidade_etapas'] == $j('#etapa').val();
@@ -1227,6 +1258,13 @@ function handleSearch($resultTable, dataResponse) {
     $situacaoField.prop('disabled', dataResponse.matriculas[0].bloquear_troca_de_situacao);
   }
 
+<<<<<<< HEAD
+=======
+  if(!dataResponse.instituicao.permitir_edicao_frequencia) {
+    $faltaFields.prop('disabled', true);
+  }
+
+>>>>>>> 2.6-tecsis
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {

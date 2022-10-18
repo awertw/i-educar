@@ -51,6 +51,16 @@ class clsPmieducarInstituicao extends Model
     public $permitir_matricula_fora_periodo_letivo;
     public $ordenar_alunos_sequencial_enturmacao;
     public $obrigar_telefone_pessoa;
+<<<<<<< HEAD
+=======
+    public $permitir_edicao_frequencia;
+    public $permitir_planeja_conteudos;
+    public $obrigatorio_registro_diario_atividade;
+    public $utilizar_planejamento_aula;
+    public $permitir_planeja_conteudos_aee;
+    public $obrigatorio_registro_diario_atividade_aee;
+    public $utilizar_planejamento_aula_aee;
+>>>>>>> 2.6-tecsis
 
     public function __construct(
         $cod_instituicao = null,
@@ -83,7 +93,18 @@ class clsPmieducarInstituicao extends Model
         $bloquear_vinculo_professor_sem_alocacao_escola = null,
         $permitir_matricula_fora_periodo_letivo = null,
         $ordenar_alunos_sequencial_enturmacao = null,
+<<<<<<< HEAD
         $obrigar_telefone_pessoa = null
+=======
+        $obrigar_telefone_pessoa = null,
+        $permitir_edicao_frequencia = null,
+        $permitir_planeja_conteudos = null,
+        $obrigatorio_registro_diario_atividade = null,
+        $utilizar_planejamento_aula = null,
+        $permitir_planeja_conteudos_aee = null,
+        $obrigatorio_registro_diario_atividade_aee = null,
+        $utilizar_planejamento_aula_aee = null
+>>>>>>> 2.6-tecsis
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -140,7 +161,18 @@ class clsPmieducarInstituicao extends Model
             bloquear_vinculo_professor_sem_alocacao_escola,
             permitir_matricula_fora_periodo_letivo,
             ordenar_alunos_sequencial_enturmacao,
+<<<<<<< HEAD
             obrigar_telefone_pessoa
+=======
+            obrigar_telefone_pessoa,
+            permitir_edicao_frequencia,
+            permitir_planeja_conteudos,
+            obrigatorio_registro_diario_atividade,
+            utilizar_planejamento_aula,
+            permitir_planeja_conteudos_aee,
+            obrigatorio_registro_diario_atividade_aee,
+            utilizar_planejamento_aula_aee
+>>>>>>> 2.6-tecsis
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -261,6 +293,38 @@ class clsPmieducarInstituicao extends Model
         if (is_bool($obrigar_telefone_pessoa)) {
             $this->obrigar_telefone_pessoa = $obrigar_telefone_pessoa;
         }
+<<<<<<< HEAD
+=======
+
+        if (is_bool($permitir_edicao_frequencia)) {
+            $this->permitir_edicao_frequencia = $permitir_edicao_frequencia;
+        }
+
+        if (is_bool($permitir_planeja_conteudos)) {
+            $this->permitir_planeja_conteudos = $permitir_planeja_conteudos;
+        }
+
+        if (is_bool($obrigatorio_registro_diario_atividade)) {
+            $this->obrigatorio_registro_diario_atividade = $obrigatorio_registro_diario_atividade;
+        }
+
+        if (is_bool($utilizar_planejamento_aula)) {
+           $this->utilizar_planejamento_aula = $utilizar_planejamento_aula;
+        }
+
+        if (is_bool($permitir_planeja_conteudos_aee)) {
+            $this->permitir_planeja_conteudos_aee = $permitir_planeja_conteudos_aee;
+        }
+
+        if (is_bool($obrigatorio_registro_diario_atividade_aee)) {
+            $this->obrigatorio_registro_diario_atividade_aee = $obrigatorio_registro_diario_atividade_aee;
+        }
+
+        if (is_bool($utilizar_planejamento_aula_aee)) {
+           $this->utilizar_planejamento_aula_aee = $utilizar_planejamento_aula_aee;
+        }
+
+>>>>>>> 2.6-tecsis
     }
 
     public function canRegister()
@@ -668,6 +732,79 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+<<<<<<< HEAD
+=======
+            if (dbBool($this->permitir_edicao_frequencia)) {
+                $campos .= "{$gruda}permitir_edicao_frequencia";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}permitir_edicao_frequencia";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->permitir_planeja_conteudos)) {
+                $campos .= "{$gruda}permitir_planeja_conteudos";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}permitir_planeja_conteudos";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->obrigatorio_registro_diario_atividade)) {
+                $campos .= "{$gruda}obrigatorio_registro_diario_atividade";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}obrigatorio_registro_diario_atividade";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->utilizar_planejamento_aula)) {
+                $campos .= "{$gruda}utilizar_planejamento_aula";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}utilizar_planejamento_aula";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->permitir_planeja_conteudos_aee)) {
+                $campos .= "{$gruda}permitir_planeja_conteudos_aee";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}permitir_planeja_conteudos_aee";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->obrigatorio_registro_diario_atividade_aee)) {
+                $campos .= "{$gruda}obrigatorio_registro_diario_atividade_aee";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}obrigatorio_registro_diario_atividade_aee";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->utilizar_planejamento_aula_aee)) {
+                $campos .= "{$gruda}utilizar_planejamento_aula_aee";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}utilizar_planejamento_aula_aee";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+>>>>>>> 2.6-tecsis
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -691,7 +828,10 @@ class clsPmieducarInstituicao extends Model
     {
         if (is_numeric($this->cod_instituicao)) {
             $db = new clsBanco();
+<<<<<<< HEAD
             $gruda = '';
+=======
+>>>>>>> 2.6-tecsis
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -1045,6 +1185,66 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+<<<<<<< HEAD
+=======
+            if (dbBool($this->permitir_edicao_frequencia)) {
+                $set .= "{$gruda}permitir_edicao_frequencia = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}permitir_edicao_frequencia = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->permitir_planeja_conteudos)) {
+                $set .= "{$gruda}permitir_planeja_conteudos = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}permitir_planeja_conteudos = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->obrigatorio_registro_diario_atividade)) {
+                $set .= "{$gruda}obrigatorio_registro_diario_atividade = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}obrigatorio_registro_diario_atividade = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->utilizar_planejamento_aula)) {
+                $set .= "{$gruda}utilizar_planejamento_aula = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}utilizar_planejamento_aula = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->permitir_planeja_conteudos_aee)) {
+                $set .= "{$gruda}permitir_planeja_conteudos_aee = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}permitir_planeja_conteudos_aee = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->obrigatorio_registro_diario_atividade_aee)) {
+                $set .= "{$gruda}obrigatorio_registro_diario_atividade_aee = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}obrigatorio_registro_diario_atividade_aee = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->utilizar_planejamento_aula_aee)) {
+                $set .= "{$gruda}utilizar_planejamento_aula_aee = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}utilizar_planejamento_aula_aee = false ";
+                $gruda = ', ';
+            }
+
+
+>>>>>>> 2.6-tecsis
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
 
@@ -1267,4 +1467,8 @@ class clsPmieducarInstituicao extends Model
 
         return false;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2.6-tecsis

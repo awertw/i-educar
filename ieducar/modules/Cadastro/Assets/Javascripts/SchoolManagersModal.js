@@ -150,8 +150,13 @@ function validateLinkType() {
         return true;
     }
 
+<<<<<<< HEAD
     if ($j('#managers_link_type_id').val() == '' && $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
         messageUtils.error("O campo: <b>Tipo de vínculo</b> deve ser preenchido quando <b>Situação de funcionamento</b> for: Em atividade, o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Dependência administrativa</b> não for: <b>Privada</b>");
+=======
+    if ($j('#managers_link_type_id').val() == '') {
+        messageUtils.error("O campo: <b>Tipo de vínculo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Dependência administrativa</b> não for: <b>Privada</b>");
+>>>>>>> 2.6-tecsis
         return false;
     }
 

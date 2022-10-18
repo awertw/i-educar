@@ -50,10 +50,11 @@ return new class extends clsListagem {
             'Turma',
             'Turno',
             'S&eacute;rie',
-            'Curso',
             'Escola',
             'Etapa',
-            'Componente curricular'
+            'Componente curricular',
+            'Aulas',
+            'Professor'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -66,13 +67,13 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => true]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
-  
+
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
 
         $this->inputsHelper()->dynamic(['dataInicial'], ['required' => false, 'value' => $this->data_inicial]);
         $this->inputsHelper()->dynamic(['dataFinal'], ['required' => false, 'value' => $this->data_final]);
-     
+
         $this->campoQuebra();
         $this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
 
@@ -110,7 +111,18 @@ return new class extends clsListagem {
             1,      //  Ativo
             1,      //  Fixado na instituição de ID 1
         );
+
         $eh_professor = $obj_servidor->isProfessor();
+        $isCoordenador = $obj_servidor->isCoordenador();
+
+        $escolasUsuario = [];
+        if ($isCoordenador) {
+            $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
+
+            foreach ($escolasUser as $e) {
+                $escolasUsuario[] = $e['ref_cod_escola'];
+            }
+        }
 
         $lista = $obj_turma->lista(
             $this->ano,
@@ -124,7 +136,8 @@ return new class extends clsListagem {
             $this->data_inicial,
             $this->data_final,
             $this->fase_etapa,
-            $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
+            $eh_professor ? $this->pessoa_logada : null,
+            empty($this->ref_cod_escola) ? $escolasUsuario : null
         );
 
         $total = $obj_turma->_total;
@@ -141,7 +154,6 @@ return new class extends clsListagem {
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
                     "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
                 ];
@@ -151,6 +163,19 @@ return new class extends clsListagem {
                 } else {
                     $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">—</a>";
                 }
+
+                if ($registro['ordens_aulas']) {
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['ordens_aulas']}</a>";
+                } else {
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">—</a>";
+                }
+
+                if (!empty($registro['cod_professor_registro'])) {
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['professor_registro']}</a>";
+                } else {
+                    $lista_busca[] = "<a href=\"educar_professores_frequencia_det.php?id={$registro['id']}\">{$registro['professor_turma']}</a>";
+                }
+
 
                 $this->addLinhas($lista_busca);
             }

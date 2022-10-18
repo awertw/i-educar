@@ -2919,7 +2919,11 @@ function canShowParentsFields() {
     zona_localizacao_censo,
     localizacao_diferenciada,
     nome_social,
+<<<<<<< HEAD
     pais_residencia
+=======
+    pais_residencia,
+>>>>>>> 2.6-tecsis
   ) {
     var data = {
       nome: nome,
@@ -2939,7 +2943,11 @@ function canShowParentsFields() {
       zona_localizacao_censo: zona_localizacao_censo,
       localizacao_diferenciada: localizacao_diferenciada,
       nome_social: nome_social,
+<<<<<<< HEAD
       pais_residencia: pais_residencia,
+=======
+      pais_residencia: pais_residencia
+>>>>>>> 2.6-tecsis
     };
 
     var options = {

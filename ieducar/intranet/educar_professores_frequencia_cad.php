@@ -15,7 +15,17 @@ return new class extends clsCadastro {
     public $ref_cod_componente_curricular;
     public $fase_etapa;
     public $ref_cod_serie;
+    public $alunos;
     public $justificativa;
+    public $ordens_aulas;
+    public $ordens_aulas1;
+    public $ordens_aulas2;
+    public $ordens_aulas3;
+    public $ordens_aulas4;
+    public $ordens_aulas5;
+    public $atividades;
+    public $conteudos;
+    public $planejamento_aula_ids;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -31,6 +41,7 @@ return new class extends clsCadastro {
             $tmp_obj = new clsModulesFrequencia($this->id);
             $registro = $tmp_obj->detalhe();
 
+
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro['detalhes'] as $campo => $val) {
@@ -38,9 +49,19 @@ return new class extends clsCadastro {
                 }
                 $this->matriculas = $registro['matriculas'];
                 $this->alunos = $registro['alunos'];
-                $this->ref_cod_serie = $registro['detalhes']['ref_cod_serie']; 
+                $this->ref_cod_serie = $registro['detalhes']['ref_cod_serie'];
+                $this->ordens_aulas = explode(',', $registro['detalhes']['ordens_aulas']);
+                $this->atividades = $registro['planejamento_aula']['atividades'];
+                $this->conteudos = array_column($registro['planejamento_aula']['conteudos'], 'planejamento_aula_conteudo_id');
 
-                $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
+
+                $podeExcluir = (!empty($registro['detalhes']['cod_professor_registro']) && $registro['detalhes']['cod_professor_registro'] == $this->pessoa_logada) || empty($registro['detalhes']['cod_professor_registro']);
+
+                if ($podeExcluir) {
+                    $this->fexcluir = $obj_permissoes->permissao_excluir(58, $this->pessoa_logada, 7);
+                }
+
+
                 $retorno = 'Editar';
 
                 $this->titulo = 'Frequência - Edição';
@@ -86,41 +107,127 @@ return new class extends clsCadastro {
             $this->campoOculto('fase_etapa_', $this->fase_etapa);
         }
 
+        $tipo_presenca = '';
+        if ($this->ref_cod_serie) {
+            $obj = new clsPmieducarSerie();
+            $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($this->ref_cod_serie);
+        }
+
         $obrigatorio = true;
 
+        $obj_servidor = new clsPmieducarServidor(
+            $this->pessoa_logada,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,      //  Ativo
+            1,      //  Fixado na instituição de ID 1
+        );
+        $isProfessor = $obj_servidor->isProfessor();
+
+        $obj = new clsModulesPlanejamentoAula($this->id);
+        $resultado = $obj->getMensagem($this->pessoa_logada);
+
         $this->campoOculto('id', $this->id);
+        $this->campoOculto('servidor_id', $resultado['emissor_user_id']);
+        $this->campoOculto('auth_id', $this->pessoa_logada);
+        $this->campoOculto('is_professor', $isProfessor);
+
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => !$obrigatorio, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('faseEtapa', ['required' => $obrigatorio, 'label' => 'Etapa', 'disabled' => $desabilitado]);
 
+        if (empty($tipo_presenca) || $tipo_presenca == 2) {
+            for ($i = 1; $i <= 5; $i++) {
+                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Quantidade de aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => 'Aula '.$i]);
+            }
+        }
+
+        if (is_numeric($this->id)) {
+            $obj_servidor = new clsPmieducarServidor(
+                $this->pessoa_logada,
+                null,
+                null,
+                null,
+                null,
+                null,
+                1,      //  Ativo
+                1,      //  Fixado na instituição de ID 1
+            );
+            $is_professor = $obj_servidor->isProfessor();
+
+            $obj = new clsModulesPlanejamentoAula();
+            $planejamentos = $obj->lista(
+                null,
+                null,
+                null,
+                null,
+                null,
+                $this->ref_cod_turma,
+                $this->ref_cod_componente_curricular,
+                null,
+                null,
+                null,
+                $this->fase_etapa,
+                $is_professor ? $this->pessoa_logada : null,
+                Portabilis_Date_Utils::brToPgSQL($this->data)
+            );
+
+            $this->planejamento_aula_ids = [];
+
+            foreach ($planejamentos as $planejamento) {
+                if (!in_array($planejamento['id'], $this->planejamento_aula_ids)) {
+                    array_push($this->planejamento_aula_ids, $planejamento['id']);
+                }
+            }
+        }
+
+
         // Editar
         $maxCaracteresObservacao = 256;
         $alunos = 'Faltam informações obrigatórias.';
 
-        if ($this->data && is_numeric($this->ref_cod_turma) && $this->fase_etapa && $this->alunos) {                  
+        if ($this->data && is_numeric($this->ref_cod_turma) && $this->ref_cod_serie && $this->fase_etapa && $this->alunos) {
             $alunos = '';
             $conteudo = '';
 
             $matriculas = $this->matriculas['refs_cod_matricula'];
             $justificativas = $this->matriculas['justificativas'];
+            $aulasArray = explode(';', $this->matriculas['aulas_faltou']);
+
 
             if (is_string($matriculas) && !empty($matriculas)) {
                 $matriculas = explode(',', $matriculas);
                 $justificativas = explode(',', $justificativas);
-    
+
                 for ($i = 0; $i < count($matriculas); $i++) {
                     $this->alunos[$matriculas[$i]]['presenca'] = true;
                     $this->alunos[$matriculas[$i]]['justificativa'] = $justificativas[$i];
+                    $this->alunos[$matriculas[$i]]['aulas'] = explode(',', $aulasArray[$i]);
                 }
             }
 
- 
-            $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr>';
-            $conteudo .= '  <th><p>'."Nome".'</p></th>';
-            $conteudo .= '  <th><p>'."Presença".'</p></th>';
-            $conteudo .= '  <th><p>'."Justificativa".'</p></th></tr>';
-            $conteudo .= '  </td></tr></table>';
+
+            $conteudo .= '  </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
+            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">'."Nome".'</span></th>';
+
+            if ($tipo_presenca == 1) {
+                $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Presença" . '</span></th>';
+            }
+
+            if ($tipo_presenca == 2) {
+                for ($i = 1; $i <= count($this->ordens_aulas); $i++) {
+                    $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Aula " .$i. '</span></th>';
+                }
+            }
+
+            $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">'."Justificativa".'</span></th>';
+            $conteudo .= '  </tr>';
+            $conteudo .= '  <tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
+
 
             foreach ($this->alunos as $key => $aluno) {
                 $id = $aluno['matricula'];
@@ -128,29 +235,86 @@ return new class extends clsCadastro {
                 $checked = !$aluno['presenca'] ? "checked='true'" : '';
                 $disabled = !$aluno['presenca'] ? "disabled='true'" : '';
 
-                $conteudo .= '  <tr><td class="formlttd">';
-                $conteudo .= '  <label>' . $aluno['nome'] . '</label></td>';
-                $conteudo .= "  <td><label>
+                $conteudo .= '  <tr>';
+                $conteudo .= '  <td class="sizeFont colorFont"><p>' . $aluno['nome'] . '</p></td>';
+                if ($tipo_presenca == 1) {
+                    $conteudo .= "  <td class='sizeFont colorFont'>
                                     <input
                                         type='checkbox'
                                         onchange='presencaMudou(this)'
                                         id='alunos[]'
                                         name={$name}
+                                        value={$id}
                                         {$checked}
                                         autocomplete='off'
                                     >
-                                </label></td>";
+                                    </td>";
+                }
+                if ($tipo_presenca == 2) {
+                 $qtdFaltas = 0;
+                 $aulasFaltou = '';
+
+                    for ($i = 1; $i <= count($this->ordens_aulas); $i++) {
+                        $checkFalta = in_array($i, $aluno['aulas']);
+
+                        $checked = (!$checkFalta ? "checked='true'" : '');
+
+                        if ($checkFalta) {
+                            $aulasFaltou .= $i . ',';
+                            $qtdFaltas++;
+                        }
+
+                        $conteudo .= "  <td class='sizeFont colorFont'>
+                                    <input
+                                        type='checkbox'
+                                        onchange='presencaMudou(this)'
+                                        id='alunos[]'
+                                        name={$name}
+                                        value={$id}
+                                        data-aulaid={$i}
+                                        {$checked}
+                                        autocomplete='off'
+                                    >
+                                </td>";
+                    }
+
+                    $conteudo .= "  <input
+                                    type='hidden'
+                                    name='justificativa[${id}][qtd]'
+                                    style='display: flex;'
+                                    value='{$qtdFaltas}'
+                                    readonly
+                                    autocomplete='off'
+                                />";
+                    $conteudo .= "  <input
+                                    type='hidden'
+                                    name='justificativa[${id}][qtdFaltasFreqAntiga]'
+                                    style='display: flex;'
+                                    value='{$qtdFaltas}'
+                                    readonly
+                                    autocomplete='off'
+                                />";
+                    $conteudo .= "  <input
+                                    type='hidden'
+                                    name='justificativa[${id}][aulas]'
+                                    style='display: flex;'
+                                    value='{$aulasFaltou}'
+                                    readonly
+                                    autocomplete='off'
+                                />";
+                }
                 $conteudo .= "  <td><input
                                     type='text'
                                     name='justificativa[${id}][]'
-                                    style='width: 100%;'
+                                    style='display: flex;'
                                     maxlength=${maxCaracteresObservacao}
                                     value='{$aluno['justificativa']}'
                                     {$disabled}
                                     autocomplete='off'
                                 />";
+
                 $conteudo .= '  </td>';
-                $conteudo .= '  <br style="clear: left" />';
+                $conteudo .= '  </tr>';
             }
 
             if ($conteudo) {
@@ -163,6 +327,31 @@ return new class extends clsCadastro {
 
         $this->campoRotulo('alunos_lista_', 'Alunos', "<div id='alunos'>$alunos</div>");
         $this->campoQuebra();
+
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $obrigatorioRegistroDiarioAtividade = $instituicao['obrigatorio_registro_diario_atividade'];
+        $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
+        $utilizar_planejamento_aula = $instituicao['utilizar_planejamento_aula'];
+
+        $this->campoMemo('atividades',
+            'Registro diário de aula',
+            $this->atividades,
+            100,
+            5,
+            $obrigatorioRegistroDiarioAtividade,
+            '',
+            '',
+            false,
+            false,
+            'onclick',
+            false
+        );
+
+        if ($obrigatorioConteudo && $utilizar_planejamento_aula) {
+            $this->adicionarConteudosMultiplaEscolha();
+        }
+
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
     }
@@ -211,7 +400,7 @@ return new class extends clsCadastro {
                 $data_fim = new \DateTime($data_fim);
             });
         }
-        
+
         $data['inicio'] = new \DateTime($obj->pegaEtapaSequenciaDataInicio($turma, $sequencia));
         $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
 
@@ -236,6 +425,40 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
+
+        $this->ordens_aulas = [];
+
+        if (isset($this->ordens_aulas1) && !empty($this->ordens_aulas1)) array_push($this->ordens_aulas, '1');
+        if (isset($this->ordens_aulas2) && !empty($this->ordens_aulas2)) array_push($this->ordens_aulas, '2');
+        if (isset($this->ordens_aulas3) && !empty($this->ordens_aulas3)) array_push($this->ordens_aulas, '3');
+        if (isset($this->ordens_aulas4) && !empty($this->ordens_aulas4)) array_push($this->ordens_aulas, '4');
+        if (isset($this->ordens_aulas5) && !empty($this->ordens_aulas5)) array_push($this->ordens_aulas, '5');
+
+        $clsInstituicao = new clsPmieducarInstituicao();
+        $instituicao = $clsInstituicao->primeiraAtiva();
+        $utilizarPlanejamentoAula = $instituicao['utilizar_planejamento_aula'];
+
+        if ($utilizarPlanejamentoAula) {
+            $componenteCurricular = (isset($this->ref_cod_componente_curricular) && !empty($this->ref_cod_componente_curricular)
+                                    ? [$this->ref_cod_componente_curricular]
+                                    : null);
+
+            $obj = new clsModulesPlanejamentoAula(
+                null,
+                $this->ref_cod_turma,
+                $componenteCurricular,
+                $this->fase_etapa
+            );
+
+            $existe = $obj->existeComponenteByData($data_cadastro);
+
+            if (!$existe) {
+                $this->mensagem = 'Cadastro não realizado, pois não há planejamento de aula para essa data.<br>';
+                $this->simpleRedirect('educar_professores_frequencia_cad.php');
+            }
+        }
+
+        $servidor_id = $this->pessoa_logada;
         $obj = new clsModulesFrequencia(
             null,
             null,
@@ -251,9 +474,12 @@ return new class extends clsCadastro {
             null,
             $this->fase_etapa,
             $this->justificativa,
+            $servidor_id,
+            $this->ordens_aulas
         );
 
         $existe = $obj->existe();
+
         if ($existe){
             $this->mensagem = 'Cadastro não realizado, pois esta frequência já existe.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
@@ -261,10 +487,21 @@ return new class extends clsCadastro {
 
         $cadastrou = $obj->cadastra();
 
-        if (!$cadastrou) {   
+
+        if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.<br>';
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         } else {
+            $obj = new clsModulesComponenteMinistrado(
+                null,
+                $cadastrou,
+                $this->atividades,
+                null,
+                $this->conteudos,
+            );
+
+            $obj->cadastra();
+
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_professores_frequencia_lst.php');
         }
@@ -302,6 +539,46 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
 
+        $obj = new clsModulesComponenteMinistrado();
+        $componenteMinistrado = $obj->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->id
+        )[0];
+
+        if ($componenteMinistrado) {
+            $obj = new clsModulesComponenteMinistrado(
+                $componenteMinistrado['id'],
+                $this->id,
+                $this->atividades,
+                $componenteMinistrado['observacao'],
+                $this->conteudos
+            );
+
+            $obj->edita();
+        } else {
+            $obj = new clsModulesComponenteMinistrado(
+                null,
+                $this->id,
+                $this->atividades,
+                null,
+                $this->conteudos,
+            );
+
+            $obj->cadastra();
+        }
+
+
         if ($editou) {
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_professores_frequencia_lst.php');
@@ -315,6 +592,7 @@ return new class extends clsCadastro {
     public function Excluir () {
         $this->ref_cod_turma = $this->ref_cod_turma_;
         $this->ref_cod_componente_curricular = $this->ref_cod_componente_curricular_;
+        $this->fase_etapa = $this->fase_etapa_;
 
         $obj = new clsPmieducarTurma();
         $serie = $obj->lista($this->ref_cod_turma)[0]['ref_ref_cod_serie'];
@@ -338,6 +616,28 @@ return new class extends clsCadastro {
 
         $excluiu = $obj->excluir();
 
+        $obj = new clsModulesComponenteMinistrado();
+        $componenteMinistrado = $obj->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->id
+        )[0];
+
+        if ($componenteMinistrado) {
+            $obj = new clsModulesComponenteMinistrado($componenteMinistrado['id']);
+            $obj->excluir();
+        }
+
         if ($excluiu) {
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_professores_frequencia_lst.php');
@@ -347,7 +647,7 @@ return new class extends clsCadastro {
 
         return false;
     }
- 
+
     function montaListaFrequenciaAlunos ($matriculas, $justificativas, $alunos) {
         if (is_string($matriculas) && !empty($matriculas)) {
             $matriculas = explode(',', $matriculas);
@@ -401,9 +701,65 @@ return new class extends clsCadastro {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
             '/modules/DynamicInput/Assets/Javascripts/TodasTurmas.js',
+            '/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    }
+
+    protected function adicionarConteudosMultiplaEscolha() {
+        // ESPECIFICAÇÕES
+        /*$helperOptions = [
+            'objectName' => 'especificacoes',
+        ];
+
+        //$todas_especificacoes = $this->getEspecificacoes($this->planejamento_aula_id);
+
+        $options = [
+            'label' => 'Especificações',
+            'required' => false,
+            'options' => [
+                'values' => $this->especificacoes,
+                'all_values' => /*$todas_especificacoes*//*[]
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);*/
+
+        // CONTEUDOS
+        $helperOptions = [
+            'objectName' => 'conteudos',
+        ];
+
+        $todos_conteudos = $this->getConteudos($this->planejamento_aula_ids);
+
+        $options = [
+            'label' => 'Objetivo(s) do conhecimento/conteúdo',
+            'required' => true,
+            'options' => [
+                'values' => $this->conteudos,
+                'all_values' => $todos_conteudos
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+    }
+
+    private function getConteudos($planejamento_aula_ids = null)
+    {
+        if (is_array($planejamento_aula_ids)) {
+            $rows = [];
+
+            $obj = new clsModulesPlanejamentoAulaConteudo();
+            $conteudos = $obj->listaByPlanejamentos($planejamento_aula_ids);
+
+            foreach ($conteudos as $key => $conteudo) {
+                $rows[$conteudo['id']] = $conteudo['conteudo'];
+            }
+
+            return $rows;
+        }
+
+
+        return [];
     }
 
     public function Formular () {

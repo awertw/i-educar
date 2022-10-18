@@ -33,11 +33,11 @@ return new class extends clsListagem {
     public $data_final;
 
     public $etapa;
-    public $fase_etapa;
+   public $fase_etapa;
 
     public function Gerar()
     {
-        $this->titulo = 'Registros de aula AEE - Listagem';
+        $this->titulo = 'Atendimento AEE - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -45,13 +45,9 @@ return new class extends clsListagem {
 
         $lista_busca = [
             'Data',
-            'Turma',
-            'Turno',
-            'S&eacute;rie',
-            'Curso',
-            'Escola',
-            'Etapa',
-            'Componente curricular'
+            'Hora Início',
+            'Hora Fim',
+            'Aluno'
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -61,9 +57,8 @@ return new class extends clsListagem {
         }
 
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
-        $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma', 'matricula']);
+        //$this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
   
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
@@ -71,10 +66,10 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['dataInicial'], ['required' => false, 'value' => $this->data_inicial]);
         $this->inputsHelper()->dynamic(['dataFinal'], ['required' => false, 'value' => $this->data_final]);
      
-        $this->campoQuebra();
-        $this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
+        //$this->campoQuebra();
+        //$this->campoRotulo('filtros_etapa', '<b>Filtros por etapa</b>');
 
-        $this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
+        //$this->inputsHelper()->dynamic(['faseEtapa'], ['required' => false, 'label' => 'Etapa']);
 
         // Paginador
         $this->limite = 20;
@@ -115,18 +110,15 @@ return new class extends clsListagem {
             $this->ref_cod_instituicao,
             $this->ref_cod_escola,
             $this->ref_cod_curso,
-            $this->ref_cod_serie,
             $this->ref_cod_turma,
-            $this->ref_cod_componente_curricular,
-            $this->turma_turno_id,
-            $this->data_inicial,
-            $this->data_final,
+            $this->ref_cod_matricula,
+            $this->data,
+            $this->data_fim,
             $this->fase_etapa,
             $eh_professor ? $this->pessoa_logada : null         // Passe o ID do servidor caso ele seja um professor
         );
 
-        $total = /*$obj_turma->_total*/count($lista);
-
+        $total = $obj_turma->_total;
         // monta a lista
         if (is_array($lista) && count($lista)) {
             $ref_cod_escola = '';
@@ -136,25 +128,16 @@ return new class extends clsListagem {
 
                 $lista_busca = [
                     "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$data_formatada}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['turma']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['turno']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['serie']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['curso']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['escola']}</a>",
-                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['fase_etapa']}º {$registro['etapa']}</a>"
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['hora_inicio']}</a>",
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['hora_fim']}</a>",
+                    "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['aluno']}</a>"
                 ];
-
-                if ($registro['componente_curricular']) {
-                    $lista_busca[] = "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">{$registro['componente_curricular']}</a>";
-                } else {
-                    $lista_busca[] = "<a href=\"educar_professores_conteudo_ministrado_aee_det.php?id={$registro['id']}\">—</a>";
-                }
 
                 $this->addLinhas($lista_busca);
             }
         }
 
-        $this->addPaginador2('educar_professores_frequencia_aee_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->addPaginador2('educar_professores_conteudo_ministrado_aee_lst.php', $total, $_GET, $this->nome, $this->limite);
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_professores_conteudo_ministrado_aee_cad.php")';
@@ -162,14 +145,14 @@ return new class extends clsListagem {
         }
         $this->largura = '100%';
 
-        $this->breadcrumb('Listagem de registros de aula - AEE', [
+        $this->breadcrumb('Listagem de Atendimentos - AEE', [
             url('intranet/educar_professores_index.php') => 'Professores',
         ]);
     }
 
     public function Formular()
     { 
-        $this->title = 'Registro de aula  AEE - Listagem';
+        $this->title = 'Atendimento  AEE - Listagem';
         $this->processoAp = '58';
     }
 };

@@ -42,11 +42,54 @@ return new class extends clsDetalhe {
         $obj = new clsPmieducarTurma($registro['detalhes']['ref_cod_turma']);
         $resultado = $obj->getGrau();
 
+
+        $obj = new clsModulesComponenteMinistrado();
+        $componenteMinistrado = $obj->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->id_freq
+        )[0];
+
+        if (isset($componenteMinistrado) && !empty($componenteMinistrado)) {
+            $obj = new clsModulesComponenteMinistradoConteudo();
+            $componenteMinistrado['conteudos'] = $obj->lista($componenteMinistrado['id']);
+        }
+
         if ($registro['detalhes']['data']) {
             $this->addDetalhe(
                 [
                     'Data',
                     dataToBrasil($registro['detalhes']['data'])
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['escola']) {
+            $this->addDetalhe(
+                [
+                    'Escola',
+                    $registro['detalhes']['escola']
+                ]
+            );
+        }
+
+        if ($registro['detalhes']['professor']) {
+            $this->addDetalhe(
+                [
+                    'Professor',
+                    !empty($registro['detalhes']['cod_professor_registro'])
+                        ? $registro['detalhes']['professor_registro']
+                        : $registro['detalhes']['professor_turma']
                 ]
             );
         }
@@ -85,9 +128,43 @@ return new class extends clsDetalhe {
             );
         }
 
+        if (isset($componenteMinistrado) && $componenteMinistrado['atividades']) {
+            $this->addDetalhe(
+                [
+                    'Registro diário de aula',
+                    $componenteMinistrado['atividades']
+                ]
+            );
+        }
+
+        if (isset($componenteMinistrado) && is_array($componenteMinistrado['conteudos'])) {
+            $this->montaListaConteudos($componenteMinistrado['conteudos']);
+        }
+
+        $ordensAulasArray = [];
+        if ($registro['detalhes']['ordens_aulas']) {
+            $ordensAulasArray = explode(',', $registro['detalhes']['ordens_aulas']);
+
+            $aulas = '';
+
+            foreach ($ordensAulasArray as $ordemAula) {
+                $aulas .= $ordemAula.'º Aula, ';
+            }
+
+            $this->addDetalhe(
+                [
+                    'Ordens das aulas',
+                    substr($aulas, 0, -2)
+                ]
+            );
+        }
+
         $this->montaListaFrequenciaAlunos(
+            $registro['detalhes']['ref_cod_serie'],
+            $ordensAulasArray,
             $registro['matriculas']['refs_cod_matricula'],
             $registro['matriculas']['justificativas'],
+            $registro['matriculas']['aulas_faltou'],
             $registro['alunos']
         );
 
@@ -127,10 +204,15 @@ return new class extends clsDetalhe {
                     $podeEditar = $data_agora >= $data_inicio && $data_agora <= $data_fim;
 
                     if ($podeEditar) break;
-                }     
+                }
             } else {
                 $podeEditar = $data_agora >= $data['inicio'] && $data_agora <= $data['fim'];
             }
+
+            $podeEditar = $podeEditar &&
+                          ((!empty($registro['detalhes']['cod_professor_registro']) && $registro['detalhes']['cod_professor_registro'] == $this->pessoa_logada) ||
+                           empty($registro['detalhes']['cod_professor_registro']));
+
 
             if ($podeEditar)
                 $this->url_editar = 'educar_professores_frequencia_cad.php?id=' . $registro['detalhes']['id'];
@@ -144,28 +226,54 @@ return new class extends clsDetalhe {
         ]);
     }
 
-    function montaListaFrequenciaAlunos ($matriculas, $justificativas, $alunos) {
+    function montaListaFrequenciaAlunos ($ref_cod_serie, $ordensAulasArray, $matriculas, $justificativas, $aulas_faltou, $alunos) {
+        $obj = new clsPmieducarSerie();
+        $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($ref_cod_serie);
+
         if (is_string($matriculas) && !empty($matriculas)) {
             $matriculas = explode(',', $matriculas);
             $justificativas = explode(',', $justificativas);
+            $aulasArray = explode(';', $aulas_faltou);
 
             for ($i = 0; $i < count($matriculas); $i++) {
                 $alunos[$matriculas[$i]]['presenca'] = true;
                 $alunos[$matriculas[$i]]['justificativa'] = $justificativas[$i];
+                $alunos[$matriculas[$i]]['aulas'] = explode(',', $aulasArray[$i]);
             }
         }
 
 
         $this->tabela .= ' </tr><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%">';
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Nome</span></th>';
-        $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
+
+        if ($tipo_presenca == 1) {
+            $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Presença</span></th>';
+         }
+
+        if ($tipo_presenca == 2) {
+            for ($i = 1; $i <= count($ordensAulasArray); $i++) {
+                $this->tabela .= ' <th><span style="display: block; float: left; width: 100px; font-weight: bold">Aula '.$i.'</span></th>';
+            }
+        }
+
         $this->tabela .= ' <th><span style="display: block; float: left; width: auto; font-weight: bold">Justificativa</span></th></tr>';
-        
-             foreach ($alunos as $aluno) {
+
+        foreach ($alunos as $aluno) {
              $checked = !$aluno['presenca'] ? "checked='true'" : '';
-            
+
              $this->tabela .= "  <tr><td class='formlttd'><p>{$aluno['nome']}</p></td>";
-             $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
+
+            if ($tipo_presenca == 1) {
+                $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
+            }
+
+            if ($tipo_presenca == 2) {
+                for ($i = 1; $i <= count($ordensAulasArray); $i++) {
+                    $checked = (!in_array($i, $aluno['aulas']) ? "checked='true'" : '');
+                    $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
+                }
+            }
+
              $this->tabela .= "  <td class='formlttd'><p>{$aluno['justificativa']}</p></td></tr>";
          }
         $this->tabela .= '</table></div></td></tr>';
@@ -178,6 +286,28 @@ return new class extends clsDetalhe {
             [
                 'Alunos',
                 $disciplinas
+            ]
+        );
+    }
+
+    function montaListaConteudos ($conteudos) {
+        for ($i=0; $i < count($conteudos); $i++) {
+            $this->tabela2 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
+
+            $this->tabela2 .= "  <span style='display: block; float: left'>{$conteudos[$i][planejamento_aula_conteudo][conteudo]}</span>";
+
+            $this->tabela2 .= '  </div>';
+            $this->tabela2 .= '  <br style="clear: left" />';
+        }
+
+        $conteudo  = '<table cellspacing="0" cellpadding="0" border="0">';
+        $conteudo .= sprintf('<tr align="left"><td class="formlttd">%s</td></tr>', $this->tabela2);
+        $conteudo .= '</table>';
+
+        $this->addDetalhe(
+            [
+                'Conteúdos',
+                $conteudo
             ]
         );
     }
