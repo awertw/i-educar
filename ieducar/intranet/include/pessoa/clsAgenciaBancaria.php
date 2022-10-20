@@ -13,7 +13,7 @@ class clsAgenciaBancaria extends Model
     {
         $this->codigo = $codigo;
         $this->nome = $nome;
-    }
+    } 
 
     public function lista($codigo)
     {

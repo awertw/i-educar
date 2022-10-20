@@ -63,13 +63,9 @@ class clsModulesPlanejamentoAula extends Model {
                 ON (l.cod_modulo = q.ref_cod_modulo)
             JOIN modules.professor_turma as pt
                 ON (pt.turma_id = pa.ref_cod_turma)
-<<<<<<< HEAD
-                JOIN cadastro.pessoa AS pe
-=======
             LEFT JOIN cadastro.pessoa AS pe_registro
                 ON ( pe_registro.idpes = pa.servidor_id )
             JOIN cadastro.pessoa AS pe
->>>>>>> 2.6-tecsis
                 ON ( pe.idpes = pt.servidor_id )
             JOIN modules.professor_turma_disciplina as ptd
                 ON (pt.id = ptd.professor_turma_id AND ptd.componente_curricular_id = pacc.componente_curricular_id)
@@ -248,19 +244,12 @@ class clsModulesPlanejamentoAula extends Model {
                     $obj->cadastra();
                 }
             }
-<<<<<<< HEAD
-            if (is_array($this->conteudos)) {
-            foreach ($this->conteudos as $key => $conteudo) {
-                $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
-                $obj->cadastra();
-=======
 
             if (is_array($this->conteudos)) {
                 foreach ($this->conteudos as $key => $conteudo) {
                     $obj = new clsModulesPlanejamentoAulaConteudo(null, $id, $conteudo[1]);
                     $obj->cadastra();
                 }
->>>>>>> 2.6-tecsis
             }
         }
 
@@ -275,13 +264,12 @@ class clsModulesPlanejamentoAula extends Model {
                     $obj = new clsModulesPlanejamentoAulaBNCCEspecificacao(null, $planejamento_aula_bncc_id, $bncc_especificacao_id);
                     $obj->cadastra();
                 }
+                return $id;
             }
-
-            return $id;
-        }
 
         return false;
     }
+
 
     /**
      * Edita os dados de um registro
@@ -295,20 +283,12 @@ class clsModulesPlanejamentoAula extends Model {
             && is_string($this->ddp)
             && is_string($this->atividades)
             && is_array($this->bnccs)
-<<<<<<< HEAD
+            && is_array($this->bncc_especificacoes)
             && is_array($this->ref_componente_curricular_array)
             && is_array($this->conteudos)
             && is_string($this->referencias)
             && is_string($this->recursos_didaticos)
             && is_string($this->registro_adaptacao)
-
-=======
-            && is_array($this->bncc_especificacoes)
-            && is_array($this->ref_componente_curricular_array)
-            && is_string($this->referencias)
-            && is_string($this->recursos_didaticos)
-            && is_string($this->registro_adaptacao)
->>>>>>> 2.6-tecsis
         ) {
 
             $db = new clsBanco();
@@ -333,10 +313,6 @@ class clsModulesPlanejamentoAula extends Model {
                     id = '{$this->id}'
             ");
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 2.6-tecsis
             $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
             foreach ($obj->lista($this->id) as $key => $componenteCurriculares) {
                 $cc_atuais[] = $componenteCurriculares;
@@ -357,10 +333,6 @@ class clsModulesPlanejamentoAula extends Model {
                 $obj->excluir();
             }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 2.6-tecsis
             $obj = new clsModulesPlanejamentoAulaBNCC();
             foreach ($obj->lista($this->id) as $key => $bncc) {
                 $bnccs_atuais[] = $bncc;
@@ -584,11 +556,6 @@ class clsModulesPlanejamentoAula extends Model {
             $filtros .= "{$whereAnd} pa.fl_validado = 'true' ";
         }
 
-<<<<<<< HEAD
-        if (is_bool($bool_validado) && !$bool_validado) {
-            $filtros .= "{$whereAnd} pa.fl_validado = 'false' ";
-        }
-=======
         if (is_array($arrayEscolasUsuario) && count($arrayEscolasUsuario) >= 1) {
             $filtros .= "{$whereAnd} e.cod_escola IN (" . implode(',', $arrayEscolasUsuario) . ")";
             $whereAnd = ' AND ';
@@ -602,7 +569,6 @@ class clsModulesPlanejamentoAula extends Model {
             $filtros .= "{$whereAnd} pa.fl_validado = 'false' ";
         }
 
->>>>>>> 2.6-tecsis
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
@@ -937,8 +903,6 @@ class clsModulesPlanejamentoAula extends Model {
 
         return false;
     }
-<<<<<<< HEAD
-=======
 
     public function getHabilidadesEspecificacoesUtilizados ($turmaId, $ano, $userId)
     {
@@ -1020,7 +984,6 @@ class clsModulesPlanejamentoAula extends Model {
         return false;
     }
 
->>>>>>> 2.6-tecsis
     public function getMensagem ($receptor_user_id) {
         if (is_numeric($this->id)) {
             $db = new clsBanco();
@@ -1039,12 +1002,6 @@ class clsModulesPlanejamentoAula extends Model {
 
             return $db->Tupla();
         }
-<<<<<<< HEAD
-    }
-=======
 
         return false;
     }
-
->>>>>>> 2.6-tecsis
-}

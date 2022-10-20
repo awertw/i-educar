@@ -2,12 +2,9 @@
 
 use iEducar\Legacy\Model;
 
-<<<<<<< HEAD
-=======
 error_reporting(E_ERROR);
 ini_set('display_errors', 1);
 
->>>>>>> 2.6-tecsis
 class clsModulesComponenteCurricular extends Model
 {
     public $id;

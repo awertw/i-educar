@@ -480,8 +480,6 @@ class clsFisica
                 $valores .= ", '$this->ref_cod_profissao'";
             }
 
-<<<<<<< HEAD
-=======
             if(is_numeric($this->ref_cod_banco)){
                 $campos .= ', ref_cod_banco';
                 $valores .= ", '$this->ref_cod_banco'";
@@ -502,7 +500,6 @@ class clsFisica
                 $valores .= ", '$this->tipo_conta'";
             }
 
->>>>>>> 2.6-tecsis
             $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', NOW(), 'I', '$this->idpes_cad' $valores )");
 
             if ($this->idpes) {
@@ -946,10 +943,6 @@ class clsFisica
             $where .= "{$whereAnd}cpf like '%$int_cpf%'";
         }
         if(is_numeric($this->ref_cod_profissao)){
-<<<<<<< HEAD
-            $where .= "{$whereAnd} ref_cod_profissao = '$ref_cod_profissao'";
-         }
-=======
            $where .= "{$whereAnd} ref_cod_profissao = '$ref_cod_profissao'";
         }
         if(is_numeric($this->ref_cod_banco)){
@@ -964,7 +957,6 @@ class clsFisica
         if(is_numeric($this->tipo_conta)){
             $where .= "{$whereAnd} tipo_conta = '$tipo_conta'";
         }
->>>>>>> 2.6-tecsis
 
         if (is_array($arrayint_idisin)) {
             $ok = true;
@@ -1049,11 +1041,7 @@ class clsFisica
         $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
         $total = $db->Campo('total');
-<<<<<<< HEAD
-        $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, ref_cod_religiao FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
-=======
         $db->Consulta("SELECT idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideiv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, ref_cod_religiao, ref_cod_profissaoc, ref_cod_banco, agencia, conta, tipo_conta FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
->>>>>>> 2.6-tecsis
         $resultado = [];
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
