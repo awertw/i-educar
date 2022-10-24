@@ -55,8 +55,6 @@ return new class extends clsCadastro {
     public $permitir_matricula_fora_periodo_letivo;
     public $ordenar_alunos_sequencial_enturmacao;
     public $obrigar_telefone_pessoa;
-<<<<<<< HEAD
-=======
     public $permitir_edicao_frequencia;
     public $permitir_planeja_conteudos;
     public $obrigatorio_registro_diario_atividade;
@@ -64,7 +62,6 @@ return new class extends clsCadastro {
     public $permitir_planeja_conteudos_aee;
     public $obrigatorio_registro_diario_atividade_aee;
     public $utilizar_planejamento_aula_aee;
->>>>>>> 2.6-tecsis
 
     public function Inicializar()
     {
@@ -117,8 +114,6 @@ return new class extends clsCadastro {
         $this->permitir_matricula_fora_periodo_letivo = dbBool($this->permitir_matricula_fora_periodo_letivo);
         $this->ordenar_alunos_sequencial_enturmacao = dbBool($this->ordenar_alunos_sequencial_enturmacao);
         $this->obrigar_telefone_pessoa = dbBool($this->obrigar_telefone_pessoa);
-<<<<<<< HEAD
-=======
         $this->permitir_edicao_frequencia = dbBool($this->permitir_edicao_frequencia);
         $this->permitir_planeja_conteudos = dbBool($this->permitir_planeja_conteudos);
         $this->obrigatorio_registro_diario_atividade = dbBool($this->obrigatorio_registro_diario_atividade);
@@ -126,7 +121,6 @@ return new class extends clsCadastro {
         $this->permitir_planeja_conteudos_aee = dbBool($this->permitir_planeja_conteudos_aee);
         $this->obrigatorio_registro_diario_atividade_aee = dbBool($this->obrigatorio_registro_diario_atividade_aee);
         $this->utilizar_planejamento_aula_aee = dbBool($this->utilizar_planejamento_aula_aee);
->>>>>>> 2.6-tecsis
 
         return $retorno;
     }
@@ -163,11 +157,8 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options);
 
-<<<<<<< HEAD
-=======
         $opcoes = [];
 
->>>>>>> 2.6-tecsis
         if (!empty($this->ref_sigla_uf)) {
             $opcoes = [null => 'Selecione'];
             $orgaoRegional = new Educacenso_Model_OrgaoRegionalDataMapper();
@@ -178,11 +169,7 @@ return new class extends clsCadastro {
                 false
             );
             foreach ($orgaosRegionais as $orgaoRegional) {
-<<<<<<< HEAD
-                $opcoes[strtoupper($orgaoRegional->codigo)] = strtoupper($orgaoRegional->codigo);
-=======
                 $opcoes[$orgaoRegional->codigo] = $orgaoRegional->codigo;
->>>>>>> 2.6-tecsis
             }
         } else {
             $opcoes = [null => 'Informe uma UF'];
@@ -370,8 +357,6 @@ return new class extends clsCadastro {
             false
         );
 
-<<<<<<< HEAD
-=======
         $this->campoCheck(
             'permitir_edicao_frequencia',
             'Permitir edição de frequência',
@@ -444,7 +429,6 @@ return new class extends clsCadastro {
             false
         );
 
->>>>>>> 2.6-tecsis
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Instituicao.css'];
@@ -489,9 +473,6 @@ return new class extends clsCadastro {
             $this->bloquear_vinculo_professor_sem_alocacao_escola,
             $this->permitir_matricula_fora_periodo_letivo,
             $this->ordenar_alunos_sequencial_enturmacao,
-<<<<<<< HEAD
-            $this->obrigar_telefone_pessoa
-=======
             $this->obrigar_telefone_pessoa,
             $this->permitir_edicao_frequencia,
             $this->permitir_planeja_conteudos,
@@ -500,7 +481,6 @@ return new class extends clsCadastro {
             $this->permitir_planeja_conteudos_aee,
             $this->obrigatorio_registro_diario_atividade_aee,
             $this->utilizar_planejamento_aula_aee
->>>>>>> 2.6-tecsis
         );
         $obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
         $obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
@@ -535,10 +515,6 @@ return new class extends clsCadastro {
         $obj->permitir_matricula_fora_periodo_letivo = !is_null($this->permitir_matricula_fora_periodo_letivo);
         $obj->ordenar_alunos_sequencial_enturmacao = !is_null($this->ordenar_alunos_sequencial_enturmacao);
         $obj->obrigar_telefone_pessoa = !is_null($this->obrigar_telefone_pessoa);
-<<<<<<< HEAD
-
-        $editou = $obj->edita();
-=======
         $obj->permitir_edicao_frequencia = !is_null($this->permitir_edicao_frequencia);
         $obj->permitir_planeja_conteudos = !is_null($this->permitir_planeja_conteudos);
         $obj->obrigatorio_registro_diario_atividade = !is_null($this->obrigatorio_registro_diario_atividade);
@@ -549,7 +525,6 @@ return new class extends clsCadastro {
 
         $editou = $obj->edita();
 
->>>>>>> 2.6-tecsis
         if ($editou) {
             if (is_null($this->altera_atestado_para_declaracao)) {
                 Menu::changeMenusToAttestation();

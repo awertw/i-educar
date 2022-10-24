@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-function updateSelect($targetElement, options, emptyOptionHtml) {
-=======
 function updateSelect($targetElement, options, emptyOptionHtml, optionSelected = null) {
->>>>>>> 2.6-tecsis
   $targetElement.children().not('[value=""]').remove();
 
   var groups = new Array();
@@ -27,31 +23,9 @@ function updateSelect($targetElement, options, emptyOptionHtml, optionSelected =
     optgroup.appendTo($targetElement);
   }
 
-<<<<<<< HEAD
-  if (options.length === 1) {
-      setTimeout(function () {
-        $targetElement.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
-      },200)
-  }
-=======
-  // if (options.length === 1) {
-  //   $targetElement.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
-  // }
->>>>>>> 2.6-tecsis
-
-  if (options.length > 0) {
-    $targetElement.removeAttr('disabled');
-    $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma opção");
-  } else {
-    $targetElement.children(':first').html('Sem opções');
-  }
-<<<<<<< HEAD
-=======
 
   if (optionSelected) {
-    $targetElement.val(optionSelected).change();
   }
->>>>>>> 2.6-tecsis
 }
 
 

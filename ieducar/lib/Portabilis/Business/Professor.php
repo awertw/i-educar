@@ -198,13 +198,8 @@ class Portabilis_Business_Professor
         if (self::necessarioVinculoTurma($instituicaoId)) {
             $sql = '
                 SELECT
-<<<<<<< HEAD
-                    t.cod_turma as id,
-                    t.nm_turma as nome,
-=======
                     cod_turma as id,
                     nm_turma as nome,
->>>>>>> 2.6-tecsis
                     t.ano
                 FROM pmieducar.quadro_horario qh
                 INNER JOIN pmieducar.quadro_horario_horarios qhh
@@ -222,35 +217,6 @@ class Portabilis_Business_Professor
             # Feito gambiarra para que quando professor tenha alocação liste todas turmas do turno integral
             $sql = '
                 SELECT
-<<<<<<< HEAD
-                    t.cod_turma AS id,
-		                t.nm_turma AS nome,
- 	                  t.ano
-                FROM pmieducar.turma AS t
-                LEFT JOIN pmieducar.turma_serie AS ts ON ts.turma_id = t.cod_turma
-                WHERE t.ref_ref_cod_escola = $1
-                AND (
-                    t.ref_ref_cod_serie = $2
-                    OR ts.serie_id = $2
-                )
-                AND t.ativo = 1
-                AND t.visivel != \'f\'
-                AND (
-                        t.turma_turno_id IN (
-                        SELECT s.periodo
-                        FROM servidor_alocacao AS s
-                        WHERE s.ref_cod_escola = t.ref_ref_cod_escola
-                        AND s.ref_cod_servidor = $3
-                        AND ativo = 1
-                    ) OR (
-                        t.turma_turno_id = 4
-                        AND (
-                            SELECT 1
-                            FROM servidor_alocacao AS sea
-                            WHERE sea.ref_cod_escola = t.ref_ref_cod_escola
-                            AND sea.ref_cod_servidor = $3
-                            AND t.ativo = 1
-=======
                     cod_turma as id,
 		    nm_turma as nome,
  	            turma.ano
@@ -280,16 +246,11 @@ class Portabilis_Business_Professor
                             where ref_cod_escola = ref_ref_cod_escola
                             and ref_cod_servidor = $3
                             and ativo = 1
->>>>>>> 2.6-tecsis
                             LIMIT 1
                         ) IS NOT NULL
                     )
                 )
-<<<<<<< HEAD
-                ORDER BY t.nm_turma ASC
-=======
                 order by nm_turma asc
->>>>>>> 2.6-tecsis
             ';
         }
 
@@ -312,11 +273,7 @@ class Portabilis_Business_Professor
                 INNER JOIN modules.area_conhecimento ac
                 ON (cc.area_conhecimento_id = ac.id)
                 WHERE qh.ref_cod_turma = $1
-<<<<<<< HEAD
-                AND qhh.ref_servidor = $2
-=======
                 AND (qhh.ref_servidor = $2 OR qhh.ref_cod_servidor_substituto_1 = $2 OR qhh.ref_cod_servidor_substituto_2 = $2)
->>>>>>> 2.6-tecsis
                 AND qhh.ativo = 1
                 AND qh.ativo = 1
                 ORDER BY ac.secao, ac.nome, cc.nome

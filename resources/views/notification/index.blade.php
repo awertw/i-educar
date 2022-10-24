@@ -60,20 +60,12 @@
             <th>Texto</th>
             <th>Status</th>
             <th>Data</th>
-<<<<<<< HEAD
-=======
             <th>Ação</th>
->>>>>>> 2.6-tecsis
         </tr>
         </thead>
         <tbody>
         @forelse($notifications as $notification)
             <tr @if(!$notification->read_at) class="unread" @endif>
-<<<<<<< HEAD
-                <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank" rel="noopener">{!! $notification->text !!}</a></td>
-                <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank" rel="noopener" class="text-status"> @if($notification->read_at) Lida @else Não lida @endif </a></td>
-                <td>{{$notification->created_at->format('d/m/Y H:i')}}</td>
-=======
                 <td><a onclick="markAsRead(this, true)" href="{{ $presigner->getNotificationUrl($notification) }}" data-id="{{$notification->id}}" target="_blank">
                         {!! $notification->text !!}
                         @if($notification->type_id == '5')
@@ -90,16 +82,14 @@
                         name="enviar_mensagem_btn[]"
                         style="width: 40px;cursor: pointer;"
                         class="btn btn-info"
-                        onclick="modalOpen(this, {{$notification->register_id}}, 3, {{$notification->issuer_id}}, '{{$notification->link}}', {{$auth_id}}, {{$isProfessor}})"
+                        onclick="modalOpen(this, '{{$notification->register_id}}', 3, '{{$notification->issuer_id}}', '{{$notification->link}}', '{{$auth_id}}', '{{$isProfessor}}')"
                         alt="Enviar mensagem ao coordenador"
                         >
                         <i class="fa fa-send" aria-hidden="true" alt="Enviar mensagem ao coordenador"></i><span>
                         </button>
                     @else
-                        --
                     @endif
                 </td>
->>>>>>> 2.6-tecsis
             </tr>
         @empty
             <tr>
@@ -132,20 +122,17 @@
     </script>
 
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
+            src='{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}'></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
+            src='{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}'></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
+            src='{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}'></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Curso.js") }}"></script>
+            src='{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Curso.js") }}'></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
+            src='{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}'></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
-<<<<<<< HEAD
-=======
+            src='{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Turma.js") }}'></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js") }}"></script>
->>>>>>> 2.6-tecsis
+            src='{{ Asset::get("/modules/Cadastro/Assets/Javascripts/ValidacaoEnviarMensagemModal.js") }}'></script>
 @endprepend

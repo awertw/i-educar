@@ -142,7 +142,7 @@ return new class extends clsCadastro {
 
         if (empty($tipo_presenca) || $tipo_presenca == 2) {
             for ($i = 1; $i <= 5; $i++) {
-                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Quantidade de aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => 'Aula '.$i]);
+                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Quantidade de aulas', 'value' => (in_array((array)$i, (array)$this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => 'Aula '.$i]);
             }
         }
 
@@ -179,7 +179,7 @@ return new class extends clsCadastro {
             $this->planejamento_aula_ids = [];
 
             foreach ($planejamentos as $planejamento) {
-                if (!in_array($planejamento['id'], $this->planejamento_aula_ids)) {
+                if (!in_array((array)$planejamento['id'], (array)$this->planejamento_aula_ids)) {
                     array_push($this->planejamento_aula_ids, $planejamento['id']);
                 }
             }
@@ -255,7 +255,7 @@ return new class extends clsCadastro {
                  $aulasFaltou = '';
 
                     for ($i = 1; $i <= count($this->ordens_aulas); $i++) {
-                        $checkFalta = in_array($i, $aluno['aulas']);
+                        $checkFalta = in_array((array)$i, (array)$aluno['aulas']);
 
                         $checked = (!$checkFalta ? "checked='true'" : '');
 

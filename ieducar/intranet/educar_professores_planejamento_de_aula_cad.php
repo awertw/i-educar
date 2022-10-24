@@ -47,11 +47,7 @@ return new class extends clsCadastro {
                     $this->$campo = $val;
                 }
                 $this->bncc = array_column($registro['bnccs'], 'id');
-<<<<<<< HEAD
-                $this->bncc_especificacoes = array_column($registro['especificacoes'] , 'id' );
-=======
                 $this->bncc_especificacoes = array_column($registro['especificacoes'], 'id');
->>>>>>> 2.6-tecsis
                 $this->ref_cod_componente_curricular_array = $registro['componentesCurriculas'];
 
                 $podeExcluir = (!empty($registro['detalhes']['cod_professor_registro']) && $registro['detalhes']['cod_professor_registro'] == $this->pessoa_logada) || empty($registro['detalhes']['cod_professor_registro']);
@@ -90,7 +86,6 @@ return new class extends clsCadastro {
         }
         $this->data_inicial = dataToBrasil($this->data_inicial);
         $this->data_final = dataToBrasil($this->data_final);
-
         $this->ano = explode('/', $this->data_inicial)[2];
 
         if ($tipoacao == 'Edita' || !$_POST
@@ -111,10 +106,6 @@ return new class extends clsCadastro {
             $turma = $obj->detalhe();
             $serie = $turma['ref_ref_cod_serie'];
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> 2.6-tecsis
         $clsInstituicao = new clsPmieducarInstituicao();
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigatorioConteudo = $instituicao['permitir_planeja_conteudos'];
@@ -151,10 +142,6 @@ return new class extends clsCadastro {
         if ($obrigatorioConteudo) {
             $this->adicionarConteudosTabela($obrigatorioConteudo);
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> 2.6-tecsis
 
         $this->campoMemo('ddp','Metodologia', $this->ddp, 100, 5, $obrigatorio);
         $this->campoMemo('atividades','Atividades/Avaliações', $this->atividades, 100, 5, !$obrigatorio);
@@ -230,7 +217,6 @@ return new class extends clsCadastro {
                     $id = $bncc_item['id'];
                     $codigo = $bncc_item['codigo'];
                     $habilidade = $bncc_item['habilidade'];
-
                     $bncc[$id] = $codigo . ' - ' . $habilidade;
                 }
             }

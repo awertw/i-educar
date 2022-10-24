@@ -716,33 +716,6 @@ class clsModulesPlanejamentoAula extends Model {
 
         return false;
     }
-    public function existeComponenteByData ($data) {
-        if (!empty($this->ref_cod_turma) && !empty($this->etapa_sequencial)) {
-            $sql = "
-             SELECT
-                 pa.*,
-                 pacc.componente_curricular_id
-             FROM
-                 modules.planejamento_aula as pa
-             JOIN modules.planejamento_aula_componente_curricular as pacc
-                ON (pacc.planejamento_aula_id = pa.id)
-             WHERE
-                 '{$data}' BETWEEN DATE(pa.data_inicial) AND DATE(pa.data_final)
-                 AND pa.ref_cod_turma = '{$this->ref_cod_turma}' AND pa.etapa_sequencial = '{$this->etapa_sequencial}'";
-
-            if (is_array($this->ref_componente_curricular_array)) {
-                $sql .= " AND pacc.componente_curricular_id IN (" . implode(',', $this->ref_componente_curricular_array) . ")";
-            }
-
-            $db = new clsBanco();
-            $db->Consulta($sql);
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
-        }
-
-        return false;
-    }
 
     public function existeComponenteByData ($data) {
         if (!empty($this->ref_cod_turma) && !empty($this->etapa_sequencial)) {
@@ -848,41 +821,6 @@ class clsModulesPlanejamentoAula extends Model {
 
 
     /**
-     * Retorna array com registro(s) de aula com ligação com o plano de aula informado ou no caso de erro, false
-     *
-     * @return false|array
-     */
-    public function existeLigacaoRegistroAulaByFrequencia () {
-        if (is_numeric($this->id)) {
-            $data = [];
-
-            $db = new clsBanco();
-            $db->Consulta("
-                SELECT DISTINCT
-                    cmc.conteudo_ministrado_id as id,
-                    cm.frequencia_id
-                FROM
-                    modules.planejamento_aula_conteudo AS pac
-                    INNER JOIN modules.conteudo_ministrado_conteudo cmc ON pac.ID = cmc.planejamento_aula_conteudo_id
-                    INNER JOIN modules.conteudo_ministrado cm ON cmc.conteudo_ministrado_id = cm.ID
-                WHERE
-                    pac.planejamento_aula_id = '{$this->id}'
-            ");
-
-            while($db->ProximoRegistro()) {
-                $data[] = [
-                    'id' => $db->Campo('id'),
-                    'frequencia_id' => $db->Campo('frequencia_id')
-                ];
-            }
-
-            return $data;
-        }
-
-        return false;
-    }
-
-    /**
      * Exclui um registro
      *
      * @return bool
@@ -908,7 +846,7 @@ class clsModulesPlanejamentoAula extends Model {
     {
         $planejamentos = $this->lista($ano,
             null,
-            ull,
+            null,
             null,
             null,
             $turmaId,
@@ -1005,3 +943,4 @@ class clsModulesPlanejamentoAula extends Model {
 
         return false;
     }
+};

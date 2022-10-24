@@ -1045,8 +1045,6 @@ class clsPmieducarMatricula extends Model
 
         return false;
     }
-<<<<<<< HEAD
-=======
 
     public function lista_matriculas_aee()
     {
@@ -1071,7 +1069,6 @@ class clsPmieducarMatricula extends Model
         return $resultado;
     }
 
->>>>>>> 2.6-tecsis
 
     /**
      * Retorna um array com os dados de um registro.

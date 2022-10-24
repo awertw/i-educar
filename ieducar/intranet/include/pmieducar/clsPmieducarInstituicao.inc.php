@@ -51,8 +51,6 @@ class clsPmieducarInstituicao extends Model
     public $permitir_matricula_fora_periodo_letivo;
     public $ordenar_alunos_sequencial_enturmacao;
     public $obrigar_telefone_pessoa;
-<<<<<<< HEAD
-=======
     public $permitir_edicao_frequencia;
     public $permitir_planeja_conteudos;
     public $obrigatorio_registro_diario_atividade;
@@ -60,7 +58,6 @@ class clsPmieducarInstituicao extends Model
     public $permitir_planeja_conteudos_aee;
     public $obrigatorio_registro_diario_atividade_aee;
     public $utilizar_planejamento_aula_aee;
->>>>>>> 2.6-tecsis
 
     public function __construct(
         $cod_instituicao = null,
@@ -93,9 +90,6 @@ class clsPmieducarInstituicao extends Model
         $bloquear_vinculo_professor_sem_alocacao_escola = null,
         $permitir_matricula_fora_periodo_letivo = null,
         $ordenar_alunos_sequencial_enturmacao = null,
-<<<<<<< HEAD
-        $obrigar_telefone_pessoa = null
-=======
         $obrigar_telefone_pessoa = null,
         $permitir_edicao_frequencia = null,
         $permitir_planeja_conteudos = null,
@@ -104,7 +98,7 @@ class clsPmieducarInstituicao extends Model
         $permitir_planeja_conteudos_aee = null,
         $obrigatorio_registro_diario_atividade_aee = null,
         $utilizar_planejamento_aula_aee = null
->>>>>>> 2.6-tecsis
+
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -161,9 +155,6 @@ class clsPmieducarInstituicao extends Model
             bloquear_vinculo_professor_sem_alocacao_escola,
             permitir_matricula_fora_periodo_letivo,
             ordenar_alunos_sequencial_enturmacao,
-<<<<<<< HEAD
-            obrigar_telefone_pessoa
-=======
             obrigar_telefone_pessoa,
             permitir_edicao_frequencia,
             permitir_planeja_conteudos,
@@ -172,7 +163,6 @@ class clsPmieducarInstituicao extends Model
             permitir_planeja_conteudos_aee,
             obrigatorio_registro_diario_atividade_aee,
             utilizar_planejamento_aula_aee
->>>>>>> 2.6-tecsis
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -293,8 +283,6 @@ class clsPmieducarInstituicao extends Model
         if (is_bool($obrigar_telefone_pessoa)) {
             $this->obrigar_telefone_pessoa = $obrigar_telefone_pessoa;
         }
-<<<<<<< HEAD
-=======
 
         if (is_bool($permitir_edicao_frequencia)) {
             $this->permitir_edicao_frequencia = $permitir_edicao_frequencia;
@@ -324,7 +312,6 @@ class clsPmieducarInstituicao extends Model
            $this->utilizar_planejamento_aula_aee = $utilizar_planejamento_aula_aee;
         }
 
->>>>>>> 2.6-tecsis
     }
 
     public function canRegister()
@@ -732,8 +719,6 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
-<<<<<<< HEAD
-=======
             if (dbBool($this->permitir_edicao_frequencia)) {
                 $campos .= "{$gruda}permitir_edicao_frequencia";
                 $valores .= "{$gruda} true ";
@@ -804,7 +789,6 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
->>>>>>> 2.6-tecsis
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -828,10 +812,7 @@ class clsPmieducarInstituicao extends Model
     {
         if (is_numeric($this->cod_instituicao)) {
             $db = new clsBanco();
-<<<<<<< HEAD
             $gruda = '';
-=======
->>>>>>> 2.6-tecsis
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -1185,8 +1166,6 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
-<<<<<<< HEAD
-=======
             if (dbBool($this->permitir_edicao_frequencia)) {
                 $set .= "{$gruda}permitir_edicao_frequencia = true ";
                 $gruda = ', ';
@@ -1243,8 +1222,6 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
-
->>>>>>> 2.6-tecsis
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
 
@@ -1467,8 +1444,4 @@ class clsPmieducarInstituicao extends Model
 
         return false;
     }
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> 2.6-tecsis
+};

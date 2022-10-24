@@ -11,10 +11,7 @@ use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Auth;
-=======
->>>>>>> 2.6-tecsis
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -395,12 +392,10 @@ class DiarioApiController extends ApiCoreController
      */
     protected function postNota()
     {
-<<<<<<< HEAD
         $componenteCurricularId = $this->getRequest()->componente_curricular_id;
         $matriculaId = $this->getRequest()->matricula_id;
 
-=======
->>>>>>> 2.6-tecsis
+
         if ($this->canPostNota()) {
             $nota = urldecode($this->getRequest()->att_value);
             $notaOriginal = urldecode($this->getRequest()->nota_original);
@@ -409,52 +404,20 @@ class DiarioApiController extends ApiCoreController
             $nota = $this->serviceBoletim()->calculateStageScore($etapa, $nota, null);
 
             $array_nota = [
-<<<<<<< HEAD
-                'componenteCurricular' => $componenteCurricularId,
-=======
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
->>>>>>> 2.6-tecsis
                 'nota' => $nota,
                 'etapa' => $etapa,
                 'notaOriginal' => $notaOriginal,
             ];
 
-<<<<<<< HEAD
-            $notaAntiga = $this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa);
-            if ($notaAntiga) {
-                $array_nota['notaRecuperacaoParalela'] = $notaAntiga->notaRecuperacaoParalela;
-                $array_nota['notaRecuperacaoEspecifica'] = $notaAntiga->notaRecuperacaoEspecifica;
-=======
             if ($_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)) {
                 $array_nota['notaRecuperacaoParalela'] = $_notaAntiga->notaRecuperacaoParalela;
                 $array_nota['notaRecuperacaoEspecifica'] = $_notaAntiga->notaRecuperacaoEspecifica;
->>>>>>> 2.6-tecsis
             }
 
             $nota = new Avaliacao_Model_NotaComponente($array_nota);
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
-<<<<<<< HEAD
-            $this->inserirAuditoriaNotas($notaAntiga, $nota);
-            $this->messenger->append('Nota matrícula ' . $matriculaId . ' alterada com sucesso.', 'success');
-        }
-
-        $notaNecessariaExame = $this->getNotaNecessariaExame($componenteCurricularId);
-
-        $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
-        $this->appendResponse('componente_curricular_id', $componenteCurricularId);
-        $this->appendResponse('matricula_id', $matriculaId);
-        $this->appendResponse('situacao', $this->getSituacaoComponente());
-        $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame);
-        $this->appendResponse('media', round($this->getMediaAtual($componenteCurricularId), 3));
-        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($componenteCurricularId));
-
-        $situacaoComponente = ['Em exame', 'Aprovado após exame', 'Retido'];
-        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), $situacaoComponente)) {
-            $this->createOrUpdateNotaExame($matriculaId, $componenteCurricularId, $notaNecessariaExame);
-        } else {
-            $this->deleteNotaExame($matriculaId, $componenteCurricularId);
-=======
             $this->inserirAuditoriaNotas($_notaAntiga, $nota);
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
@@ -471,7 +434,6 @@ class DiarioApiController extends ApiCoreController
             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
         } else {
             $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
->>>>>>> 2.6-tecsis
         }
     }
 
@@ -899,10 +861,6 @@ class DiarioApiController extends ApiCoreController
                         );
 
                         $query->whereHas('registration', function ($query) {
-<<<<<<< HEAD
-                            $query->where('ref_ref_cod_serie', $this->getRequest()->ref_cod_serie);
-=======
->>>>>>> 2.6-tecsis
                             $query->whereHas('student', function ($query) {
                                 $query->where('ativo', 1);
                             });
@@ -1051,8 +1009,6 @@ class DiarioApiController extends ApiCoreController
 
         return $matriculaId;
     }
-<<<<<<< HEAD
-=======
  
     protected function getInstituicao() {
         $instituicao_id = $this->getRequest()->instituicao_id;
@@ -1066,7 +1022,6 @@ class DiarioApiController extends ApiCoreController
 
         return [];
     }
->>>>>>> 2.6-tecsis
 
     /**
      * @param bool $reload
@@ -1088,11 +1043,7 @@ class DiarioApiController extends ApiCoreController
             try {
                 $params = [
                     'matricula' => $matriculaId,
-<<<<<<< HEAD
-                    'usuario' => Auth::id(),
-=======
                     'usuario' => \Illuminate\Support\Facades\Auth::id(),
->>>>>>> 2.6-tecsis
                     'componenteCurricularId' => $this->getRequest()->componente_curricular_id,
                     'turmaId' => $this->getRequest()->turma_id,
                 ];
@@ -1114,11 +1065,7 @@ class DiarioApiController extends ApiCoreController
     {
         try {
             $this->serviceBoletim()->save();
-<<<<<<< HEAD
-        } catch (CoreExt_Service_Exception) {
-=======
         } catch (CoreExt_Service_Exception $e) {
->>>>>>> 2.6-tecsis
             // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
             // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
         }
@@ -1129,11 +1076,7 @@ class DiarioApiController extends ApiCoreController
         try {
             $this->serviceBoletim()->saveFaltas(true);
             $this->serviceBoletim()->promover();
-<<<<<<< HEAD
-        } catch (CoreExt_Service_Exception) {
-=======
         } catch (CoreExt_Service_Exception $e) {
->>>>>>> 2.6-tecsis
         }
     }
 
@@ -1292,16 +1235,7 @@ class DiarioApiController extends ApiCoreController
             $componentesCurriculares[] = $componente;
         }
 
-<<<<<<< HEAD
-        $ordenamentoComponentes = [
-            'ordenamento_ac' => [],
-            'ordenamento' => [],
-            'ordem_nome_area_conhecimento' => [],
-            'ordem_componente_curricular' => [],
-        ];
-=======
         $ordenamentoComponentes = [];
->>>>>>> 2.6-tecsis
 
         foreach ($componentesCurriculares as $chave => $componente) {
             $ordenamentoComponentes['ordenamento_ac'][$chave] = $componente['ordenamento_ac'];
@@ -1514,11 +1448,7 @@ class DiarioApiController extends ApiCoreController
             $etapas = $regraRecuperacao->getEtapas();
             $sumNota = 0;
             foreach ($etapas as $key => $_etapa) {
-<<<<<<< HEAD
-                $sumNota += (int)$this->getNotaOriginal($_etapa, $componenteCurricularId);
-=======
                 $sumNota += $this->getNotaOriginal($_etapa, $componenteCurricularId);
->>>>>>> 2.6-tecsis
             }
 
             // caso a média das notas da etapa seja menor que média definida na regra e a última nota tenha sido lançada
@@ -1857,11 +1787,7 @@ class DiarioApiController extends ApiCoreController
 
     public function canChange()
     {
-<<<<<<< HEAD
-        $user = Auth::id();
-=======
         $user = \Illuminate\Support\Facades\Auth::id();
->>>>>>> 2.6-tecsis
         $processoAp = $this->_processoAp;
         $obj_permissao = new clsPermissoes();
 
@@ -1925,10 +1851,7 @@ class DiarioApiController extends ApiCoreController
     {
         if ($this->isRequestFor('get', 'matriculas')) {
             $this->appendResponse('matriculas', $this->getMatriculas());
-<<<<<<< HEAD
-=======
             $this->appendResponse('instituicao', $this->getInstituicao());
->>>>>>> 2.6-tecsis
             $this->appendResponse('navegacao_tab', $this->getNavegacaoTab());
             $this->appendResponse('can_change', $this->canChange());
             $this->appendResponse('locked', !$this->validatesPeriodoLancamentoFaltasNotas(false));

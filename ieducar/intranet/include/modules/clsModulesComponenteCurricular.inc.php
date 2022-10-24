@@ -129,14 +129,11 @@ class clsModulesComponenteCurricular extends Model
 
         return false;
     }
-<<<<<<< HEAD
-=======
     /**
      * Retorna array com duas arrays, uma com os CC a serem cadastrados e a outra com os que devem ser removidos
      *
      * @return array
      */
->>>>>>> 2.6-tecsis
     public function retornaDiferencaEntreConjuntosCC($atuaisCC, $novosCC)
     {
         $resultado = [];

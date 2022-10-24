@@ -39,10 +39,6 @@ class ComponenteCurricularController extends ApiCoreController
         if ($this->canGetComponentesCurriculares()) {
             $userId = \Illuminate\Support\Facades\Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
-<<<<<<< HEAD
-            $serieId = $this->getRequest()->serie_id;
-=======
->>>>>>> 2.6-tecsis
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
             $etapa = $this->getRequest()->etapa;
@@ -73,10 +69,6 @@ class ComponenteCurricularController extends ApiCoreController
                         AND cct.turma_id = turma.cod_turma
                         AND cct.componente_curricular_id = cc.id
                         AND al.ano = $2
-<<<<<<< HEAD
-                        AND turma.multiseriada != 1
-=======
->>>>>>> 2.6-tecsis
                         AND turma.ref_ref_cod_escola = al.ref_cod_escola
                         AND cc.area_conhecimento_id = ac.id
                         AND (turma.ref_cod_disciplina_dispensada <> cc.id OR turma.ref_cod_disciplina_dispensada is null)
@@ -110,11 +102,7 @@ class ComponenteCurricularController extends ApiCoreController
                         INNER JOIN modules.area_conhecimento ac on (cc.area_conhecimento_id = ac.id)
                         INNER JOIN pmieducar.escola_ano_letivo al on (esd.ref_ref_cod_escola = al.ref_cod_escola)
                         WHERE t.cod_turma = $1
-<<<<<<< HEAD
-                            AND esd.ref_ref_cod_serie = $4
-=======
                             AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
->>>>>>> 2.6-tecsis
                             AND al.ano = $2
                             AND t.ativo = 1
                             AND esd.ativo = 1
@@ -135,11 +123,7 @@ class ComponenteCurricularController extends ApiCoreController
                             cc.nome
                     ';
 
-<<<<<<< HEAD
-                    $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano, $etapa, $serieId]);
-=======
                     $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano, $etapa]);
->>>>>>> 2.6-tecsis
                 }
             }
 
@@ -154,12 +138,7 @@ class ComponenteCurricularController extends ApiCoreController
     {
         if ($this->canGetComponentesCurriculares()) {
             $userId = \Illuminate\Support\Facades\Auth::id();
-<<<<<<< HEAD
-            $instituicaoId = $this->getRequest()->instituicao_id;
-            $serieId = $this->getRequest()->serie_id;
-=======
             $instituicaoId = $this->getRequest()->instituicao_id || 1;
->>>>>>> 2.6-tecsis
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
 
@@ -213,11 +192,7 @@ class ComponenteCurricularController extends ApiCoreController
                             pmieducar.escola_ano_letivo as al
                         WHERE t.cod_turma = $1
                             AND esd.ref_ref_cod_escola = t.ref_ref_cod_escola
-<<<<<<< HEAD
-                            AND esd.ref_ref_cod_serie = coalesce($3, t.ref_ref_cod_serie)
-=======
                             AND esd.ref_ref_cod_serie = t.ref_ref_cod_serie
->>>>>>> 2.6-tecsis
                             AND esd.ref_cod_disciplina = cc.id
                             AND al.ano = $2
                             AND esd.ref_ref_cod_escola = al.ref_cod_escola
@@ -233,26 +208,17 @@ class ComponenteCurricularController extends ApiCoreController
                             cc.nome
                     ';
 
-<<<<<<< HEAD
-                    $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano, $serieId]);
-=======
                     $componentesCurriculares = $this->fetchPreparedQuery($sql, [$turmaId, $ano]);
->>>>>>> 2.6-tecsis
                 }
             }
 
             $options = [];
             $options = $this->agrupaComponentesCurriculares($componentesCurriculares);
-<<<<<<< HEAD
-
-            return ['options' => $options];
-=======
             $objPlanoAula = new clsModulesPlanejamentoAula();
             $habilidadesEspecificacoes = $objPlanoAula->getHabilidadesEspecificacoesUtilizados($turmaId, $ano, $userId);
 
             return ['options' => $options,
                     'utilizados' => $habilidadesEspecificacoes];
->>>>>>> 2.6-tecsis
         }
     }
 
@@ -264,14 +230,8 @@ class ComponenteCurricularController extends ApiCoreController
 
         $escola = $this->getRequest()->escola;
         $serie = $this->getRequest()->serie;
-<<<<<<< HEAD
-        $ano = $this->getRequest()->ano ?: 0;
-
-        $componentesCurriculares = (new SchoolGradeDisciplineService)->getDisciplinesForYear($escola, $serie, $ano);
-=======
 
         $componentesCurriculares = (new SchoolGradeDisciplineService)->getDisciplines($escola, $serie);
->>>>>>> 2.6-tecsis
 
         $options = $this->agrupaComponentesCurriculares($componentesCurriculares->toArray());
 

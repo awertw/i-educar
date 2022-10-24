@@ -235,8 +235,8 @@ return new class extends clsDetalhe {
 
         for ($i=0; $i < count($bnccs); $i++) {
             $this->tabela .= ' <tr>';
-            $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i][codigo]}</span></td>";
-            $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i][descricao]}</span></td>";
+            $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i]['codigo']}</span></td>";
+            $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i]['descricao']}</span></td>";
             $this->tabela .= ' </tr>';
         }
 
@@ -255,7 +255,7 @@ return new class extends clsDetalhe {
     function montaListaEspecificacoes ($especificacoes) {
         for ($i=0; $i < count($especificacoes); $i++) {
             $this->tabela3 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela3 .= "  <span style='display: block; float: left; width: 750px'>{$especificacoes[$i][especificacao]}</span>";
+            $this->tabela3 .= "  <span style='display: block; float: left; width: 750px'>{$especificacoes[$i]['especificacao']}</span>";
             $this->tabela3 .= '  </div>';
             $this->tabela3 .= '  <br style="clear: left" />';
         }
@@ -275,7 +275,7 @@ return new class extends clsDetalhe {
     function montaListaConteudos ($conteudos) {
         for ($i=0; $i < count($conteudos); $i++) {
             $this->tabela2 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-            $this->tabela2 .= "  <span style='display: block; float: left; width: 750px'>{$conteudos[$i][conteudo]}</span>";
+            $this->tabela2 .= "  <span style='display: block; float: left; width: 750px'>{$conteudos[$i]['conteudo']}</span>";
             $this->tabela2 .= '  </div>';
             $this->tabela2 .= '  <br style="clear: left" />';
         }

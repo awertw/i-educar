@@ -382,12 +382,10 @@ class clsModulesBNCC extends Model
     public function lista_bncc()
     {
         $sql = "SELECT * FROM modules.bncc";
-
-        
-      
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
+        $filtros = 'WHERE ';
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
@@ -413,19 +411,12 @@ class clsModulesBNCC extends Model
     public function lista_series($id_bncc)
     {
 
-        
         $sql = "SELECT *, nm_serie as serie  FROM bncc_series LEFT JOIN serie
          ON serie.cod_serie = bncc_series.id_serie WHERE id_bncc = {$id_bncc}";
 
-        
-      
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
-
-        
-
-
         $db->Consulta($sql);
 
        
