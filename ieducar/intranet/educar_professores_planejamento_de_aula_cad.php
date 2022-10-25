@@ -301,7 +301,7 @@ return new class extends clsCadastro {
         $obj = new clsModulesPlanejamentoAulaConteudo();
         $conteudos = $obj->lista($this->id);
 
-        for ($i=0; $i < count($conteudos); $i++) {
+        for ($i=0; $i < count((array)$conteudos); $i++) {
             $conteudo = $conteudos[$i];
             $rows[$conteudo['id']][] = $conteudo['conteudo'];
         }

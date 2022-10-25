@@ -172,7 +172,7 @@ return new class extends clsCadastro
 
         $podeRegistrar = false;
         if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
-            for ($i = 0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
+            for ($i = 0; $i < count((array)$data['inicio_periodo_lancamentos']); $i++) {
                 $data_inicio = $data['inicio_periodo_lancamentos'][$i];
                 $data_fim = $data['fim_periodo_lancamentos'][$i];
 
