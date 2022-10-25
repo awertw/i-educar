@@ -170,7 +170,7 @@ return new class extends clsDetalhe {
         for ($i=0; $i < count($especificacoes); $i++) {
             $this->tabela3 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
             
-            $this->tabela3 .= "  <span style='display: block; float: left'>{$especificacoes[$i][bncc_especificacao][especificacao]}</span>";
+            $this->tabela3 .= "  <span style='display: block; float: left'>{$especificacoes[$i]['bncc_especificacao']['especificacao']}</span>";
 
             $this->tabela3 .= '  </div>';
             $this->tabela3 .= '  <br style="clear: left" />';
@@ -192,7 +192,7 @@ return new class extends clsDetalhe {
         for ($i=0; $i < count($conteudos); $i++) {
             $this->tabela2 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
             
-            $this->tabela2 .= "  <span style='display: block; float: left'>{$conteudos[$i][planejamento_aula_conteudo][conteudo]}</span>";
+            $this->tabela2 .= "  <span style='display: block; float: left'>{$conteudos[$i]['planejamento_aula_conteudo']['conteudo']}</span>";
 
             $this->tabela2 .= '  </div>';
             $this->tabela2 .= '  <br style="clear: left" />';

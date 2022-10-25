@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 return new class extends clsCadastro {
     public $id;
-    public $ref_cod_turma;
+    public $ref_cod_turma;  
     public $ref_cod_componente_curricular_array;
     public $fase_etapa;
     public $data_inicial;
