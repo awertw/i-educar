@@ -854,7 +854,8 @@ class clsCampos extends Core_Controller_Page_Abstract
         $todos_inline = false,
         $todos_disabled = false,
         $junta_linhas = false,
-        $start_md = null
+        $start_md = null,
+        $evento = null
     ) {
         $retorno = '';
         $style = '';
@@ -1132,7 +1133,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 foreach ($cabecalho as $key => $cab) {
                     $expressao_regular = $componente[$key][2];
 
-                    if ($expressao_regular && substr($expressao_regular, 0, 1) != '*') {
+                    if ($expressao_regular && substr((string)$expressao_regular, 0, 1) != '*') {
                         $obrigatorio = '<span class="campo_obrigatorio">*</span>';
                     } else {
                         $obrigatorio = '';
@@ -1178,7 +1179,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         $expressao_regular = $campo_[2];
 
-                        if ($expressao_regular && substr($expressao_regular, 0, 1) != '*') {
+                        if ($expressao_regular && substr((string)$expressao_regular, 0, 1) != '*') {
                             $class = 'obrigatorio';
                         } else {
                             $class = 'geral';
@@ -1299,7 +1300,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $nome .= $adicionador_complemento_campo;
             $expressao_regular = $componente[2];
 
-            if ($expressao_regular && substr($expressao_regular, 0, 1) != '*') {
+            if ($expressao_regular && substr((string)$expressao_regular, 0, 1) != '*') {
                 $class = 'obrigatorio';
                 $obrigatorio = '<span class="campo_obrigatorio">*</span>';
             } else {
@@ -1411,7 +1412,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         break;
 
                     case 'hora':
-                        $componente[3] = (strlen($componente[3]) < 6  || $componente[5] != 5) ? $componente[3] : substr($componente[3], 0, 5);
+                        $componente[3] = (strlen($componente[3]) < 6  || $componente[5] != 5) ? $componente[3] : substr((string)$componente[3], 0, 5);
                         $segundos = ($componente[5] != 5) ? 'true' : 'false';
                         $retorno .= "<input onKeyPress=\"formataHora(this, event, {$segundos});\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
                         break;
@@ -1551,7 +1552,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         if ($componente[11]) {
                             $retorno .= "<textarea class='{$class}' name=\"{$nome}\" id=\"{$nome}\" cols=\"{$componente[4]}\" rows=\"{$componente[5]}\" style='wrap:virtual' {$evento} disabled ";
                         } else {
-                            $retorno .= "<textarea class='{$class}' name=\"{$nome}\" id=\"{$nome}\" cols=\"{$componente[4]}\" rows=\"{$componente[5]}\" style='wrap:virtual' {$evento} ";
+                            $retorno .= "<textarea class='{$class}' name=\"{$nome}\" id=\"{$nome}\" cols=\"{$componente[4]}\" rows=\"{$componente[5]}\" style='wrap:virtual' {$evento}";
                         }
 
                         if ($componente[9] && $componente[10]) {
@@ -1581,10 +1582,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                         reset($componente[3]);
 
                         foreach ($componente[3] as $chave => $texto) {
-                            if (substr($texto, 0, 9) == 'optgroup:') {
+                            if (substr((string)$texto, 0, 9) == 'optgroup:') {
                                 $opt_open = true;
-                                $retorno .= '<optgroup label="' . substr($texto, 9) . '">';
-                            } elseif (substr($texto, 0, 8) == 'optgroup') {
+                                $retorno .= '<optgroup label="' . substr((string)$texto, 9) . '">';
+                            } elseif (substr((string)$texto, 0, 8) == 'optgroup') {
                                 // optgroup
                                 if ($opt_open) {
                                     $opt_open = false;
@@ -1851,13 +1852,13 @@ class clsCampos extends Core_Controller_Page_Abstract
         $adicionador_indice = null;
 
         foreach ($valor as $chave => $texto) {
-            if (substr($texto, 0, 9) == 'optgroup:') {
+            if (substr((string)$texto, 0, 9) == 'optgroup:') {
                 // optgroup
                 if ($opt_open) {
                     $retorno .= '</optgroup>';
                 }
 
-                $retorno .= '<optgroup label="' . substr($texto, 9) . '">';
+                $retorno .= '<optgroup label="' . substr((string)$texto, 9) . '">';
             } else {
                 // option normal
                 $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
@@ -1920,7 +1921,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     ) {
         $id = $id ? $id : $nome;
 
-        $valor = strlen($valor) < 6 ? $valor : substr($valor, 0, 5);
+        $valor = strlen($valor) < 6 ? $valor : substr((string)$valor, 0, 5);
 
         return "<input onKeyPress=\"formataHora(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" $acao>{$descricao}";
     }

@@ -351,7 +351,7 @@ class clsModulesFrequencia extends Model {
                 $matriculas_novas = $this->alunos;
 
 
-                for ($i=0; $i < count($matriculas_antigas); $i++) {
+                for ($i=0; $i < count((array)$matriculas_antigas); $i++) {
                     $matricula_antiga = $matriculas_antigas[$i];
 
                     if ($matriculas_novas[$matricula_antiga]) {
@@ -644,7 +644,7 @@ class clsModulesFrequencia extends Model {
             $whereAnd = ' AND ';
         }
 
-        if (is_array($arrayEscolasUsuario) && count($arrayEscolasUsuario) >= 1) {
+        if (is_array((array)$arrayEscolasUsuario) && count((array)$arrayEscolasUsuario) >= 1) {
             $filtros .= "{$whereAnd} e.cod_escola IN (" . implode(',', $arrayEscolasUsuario) . ")";
         }
 

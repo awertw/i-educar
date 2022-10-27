@@ -52,7 +52,7 @@ return new class extends clsCadastro {
                 $this->ref_cod_serie = $registro['detalhes']['ref_cod_serie'];
                 $this->ordens_aulas = explode(',', $registro['detalhes']['ordens_aulas']);
                 $this->atividades = $registro['planejamento_aula']['atividades'];
-                $this->conteudos = array_column($registro['planejamento_aula']['conteudos'], 'planejamento_aula_conteudo_id');
+                $this->conteudos = array_column((array)$registro['planejamento_aula']['conteudos'], 'planejamento_aula_conteudo_id');
 
 
                 $podeExcluir = (!empty($registro['detalhes']['cod_professor_registro']) && $registro['detalhes']['cod_professor_registro'] == $this->pessoa_logada) || empty($registro['detalhes']['cod_professor_registro']);
@@ -203,7 +203,7 @@ return new class extends clsCadastro {
                 $matriculas = explode(',', $matriculas);
                 $justificativas = explode(',', $justificativas);
 
-                for ($i = 0; $i < count($matriculas); $i++) {
+                for ($i = 0; $i < count((array)$matriculas); $i++) {
                     $this->alunos[$matriculas[$i]]['presenca'] = true;
                     $this->alunos[$matriculas[$i]]['justificativa'] = $justificativas[$i];
                     $this->alunos[$matriculas[$i]]['aulas'] = explode(',', $aulasArray[$i]);
@@ -219,7 +219,7 @@ return new class extends clsCadastro {
             }
 
             if ($tipo_presenca == 2) {
-                for ($i = 1; $i <= count($this->ordens_aulas); $i++) {
+                for ($i = 1; $i <= count((array)$this->ordens_aulas); $i++) {
                     $conteudo .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Aula " .$i. '</span></th>';
                 }
             }
@@ -254,7 +254,7 @@ return new class extends clsCadastro {
                  $qtdFaltas = 0;
                  $aulasFaltou = '';
 
-                    for ($i = 1; $i <= count($this->ordens_aulas); $i++) {
+                    for ($i = 1; $i <= count((array)$this->ordens_aulas); $i++) {
                         $checkFalta = in_array((array)$i, (array)$aluno['aulas']);
 
                         $checked = (!$checkFalta ? "checked='true'" : '');
@@ -406,7 +406,7 @@ return new class extends clsCadastro {
 
         $podeRegistrar = false;
         if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
-            for ($i=0; $i < count($data['inicio_periodo_lancamentos']); $i++) {
+            for ($i=0; $i < count((array)$data['inicio_periodo_lancamentos']); $i++) {
                 $data_inicio = $data['inicio_periodo_lancamentos'][$i];
                 $data_fim = $data['fim_periodo_lancamentos'][$i];
 
@@ -653,7 +653,7 @@ return new class extends clsCadastro {
             $matriculas = explode(',', $matriculas);
             $justificativas = explode(',', $justificativas);
 
-            for ($i = 0; $i < count($matriculas); $i++) {
+            for ($i = 0; $i < count((array)$matriculas); $i++) {
                 $alunos[$matriculas[$i]]['presenca'] = true;
                 $alunos[$matriculas[$i]]['justificativa'] = $justificativas[$i];
             }
