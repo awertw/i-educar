@@ -7,11 +7,12 @@ use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 return new class extends clsCadastro {
     public $id;
-    public $ref_cod_turma;  
+    public $ref_cod_turma;
     public $ref_cod_componente_curricular_array;
     public $fase_etapa;
     public $data_inicial;
@@ -34,7 +35,7 @@ return new class extends clsCadastro {
         $this->id = $_GET['id'];
         $this->copy = $_GET['copy'];
 
-       
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_lst.php');
@@ -59,14 +60,14 @@ return new class extends clsCadastro {
                     $retorno = 'Editar';
 
                     $this->titulo = 'Plano de aula - Edição';
-                    
+
                 }
-                
+
             } else {
                 $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
             }
         }
-       
+
 
         $this->url_cancelar = ($retorno == 'Editar')
             ? sprintf('educar_professores_planejamento_de_aula_det.php?id=%d', $this->id)
@@ -157,7 +158,8 @@ return new class extends clsCadastro {
         $this->campoOculto('id', $this->id);
         $this->campoOculto('copy', $this->copy);
 
-        $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
+        $year =  Carbon::now()->format('Y');
+        $this->campoOculto('ano', $year);
     }
 
     public function Novo() {
@@ -229,7 +231,7 @@ return new class extends clsCadastro {
         }
 
         return [];
-        
+
     }
 
     public function __construct () {
