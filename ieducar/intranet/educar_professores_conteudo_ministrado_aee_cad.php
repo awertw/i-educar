@@ -41,7 +41,7 @@ return new class extends clsCadastro
                 }
 
                 //$this->conteudos = array_column($registro['planejamento_aula_aee']['conteudos'], 'planejamento_aula_aee_conteudo_id');
-                $this->conteudos = array_column($registro['conteudos'], 'planejamento_aula_conteudo_aee_id');
+                $this->conteudos = array_column((array)$registro['conteudos'], 'planejamento_aula_conteudo_aee_id');
 
                  //die(var_dump($this->conteudos));
                 if (!$this->copy) {

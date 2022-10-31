@@ -197,7 +197,7 @@ return new class extends clsDetalhe {
 
             $podeEditar = false;
             if (is_array($data['inicio']) && is_array($data['fim'])) {
-                for ($i=0; $i < count($data['inicio']); $i++) {
+                for ($i=0; $i < count((array)$data['inicio']); $i++) {
                     $data_inicio = $data['inicio'][$i];
                     $data_fim = $data['fim'][$i];
 
@@ -233,7 +233,7 @@ return new class extends clsDetalhe {
         $this->tabela .= ' <td class="formmdtd"><span style="display: block; float: left; width: 700px; font-weight: bold;">Habilidade</span></td>';
         $this->tabela .= ' </tr>';
 
-        for ($i=0; $i < count($bnccs); $i++) {
+        for ($i=0; $i < count((array)$bnccs); $i++) {
             $this->tabela .= ' <tr>';
             $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 100px; margin-bottom: 10px'>{$bnccs[$i]['codigo']}</span></td>";
             $this->tabela .= "  <td class='formmdtd'><span style='display: block; float: left; width: 700px; margin-bottom: 10px'>{$bnccs[$i]['descricao']}</span></td>";
@@ -253,7 +253,7 @@ return new class extends clsDetalhe {
     }
 
     function montaListaEspecificacoes ($especificacoes) {
-        for ($i=0; $i < count($especificacoes); $i++) {
+        for ($i=0; $i < count((array)$especificacoes); $i++) {
             $this->tabela3 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
             $this->tabela3 .= "  <span style='display: block; float: left; width: 750px'>{$especificacoes[$i]['especificacao']}</span>";
             $this->tabela3 .= '  </div>';
@@ -273,7 +273,7 @@ return new class extends clsDetalhe {
     }
 
     function montaListaConteudos ($conteudos) {
-        for ($i=0; $i < count($conteudos); $i++) {
+        for ($i=0; $i < count((array)$conteudos); $i++) {
             $this->tabela2 .= '  <div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
             $this->tabela2 .= "  <span style='display: block; float: left; width: 750px'>{$conteudos[$i]['conteudo']}</span>";
             $this->tabela2 .= '  </div>';
