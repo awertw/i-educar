@@ -53,7 +53,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function campoTabelaFim()
     {
-        if (count($this->__campos_tabela) && is_array($this->__campos_tabela)) {
+        if (is_array($this->__campos_tabela) && count($this->__campos_tabela)) {
             $this->campos['tab_add_' . $this->__id_tabela][] = $this->__campos_tabela;
             $this->campos['tab_add_' . $this->__id_tabela]['cabecalho'] = $this->__cabecalho_tabela;
             $this->campos['tab_add_' . $this->__id_tabela]['nome'] = $this->__nm_tabela;
@@ -693,42 +693,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
-    public function campoTextoDisabled(
-        $nome,
-        $campo,
-        $valor,
-        $tamanhovisivel = null,
-        $tamanhomaximo = null,
-        $obrigatorio = false,
-        $expressao = false,
-        $duplo = false,
-        $descricao = '',
-        $descricao2 = '',
-        $script = '',
-        $evento = 'onKeyUp',
-        $disabled = true
-    ) {
-        $arr_componente = [
-            $duplo ? 'textoDuplo' : 'texto',
-            $this->__adicionando_tabela ? $nome : $campo,
-            $expressao ? $expressao : ($obrigatorio ? '/[^ ]/' : ''),
-            $valor,
-            $tamanhovisivel,
-            $tamanhomaximo,
-            $descricao,
-            $descricao2,
-            $script,
-            $evento,
-            $disabled
-        ];
-
-        if (!$this->__adicionando_tabela) {
-            $this->campos[$nome] = $arr_componente;
-        } else {
-            $this->__campos_tabela[] = $arr_componente;
-        }
-    }
-
     public function campoEmail(
         $nome,
         $campo,
@@ -866,6 +830,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         reset($arr_campos);
         $campo_anterior = '';
+        $nome_anterior = '';
         $md = true;
 
         if (!is_null($start_md) && is_bool($start_md)) {
@@ -900,7 +865,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       this.isIE      = (navigator.appName.indexOf(\'Microsoft\') != -1) ? 1 : 0;
       this.nome      = name;
       this.campos    = new Array();
-      this.reordenar = false;
+      this.reordenar = true;
 
       this.getId = function() { return this.id; }
 
@@ -1115,9 +1080,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $classe = $md ? 'formlttd' : 'formmdtd';
                 $md = $md ? false : true;
 
-                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td style='width: 100%' colspan='2'>";
+                $retorno .= "<tr id='tr_$nome_tabela' class='$classe'><td valign='top' align='center' colspan='2'>";
                 $retorno .= "\n<table cellspacing='0' $largura id='$nome_tabela' class='tabela-adicao' cellpadding='2' style='margin:10px 0px 10px 0px;' >";
-          
 
                 $total_campos = count($cabecalho);
                 $span = $total_campos + 1;
@@ -1151,7 +1115,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $img = '<img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="excluir" />';
                 $md2 = false;
 
-                if (!count($valores)) {
+                if (empty($valores)) {
                     $valores[0] = '';
                 }
 
@@ -1213,8 +1177,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                                     $lista = array_shift($array_valores_lista);
                                 }
 
-                                $lista = is_array($lista) && (sizeof($lista)) ?
-                                    $lista : $campo_[3];
+                                $lista = is_array($lista) && sizeof($lista) ? $lista : $campo_[3];
+
+
 
                                 $retorno .= $this->getCampoLista("{$nome}[{$key2}]", "{$nome}[$key2]", $campo_[5], $lista, $valor[$key], $campo_[7], $campo_[8], $class, $campo_[9]);
                                 break;
@@ -1283,8 +1248,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $img = '<img src="/intranet/imagens/nvp_bot_novo.png" border="0" alt="incluir" style="float:left; margin:5px;" />';
                 $retorno .= '<tr id=\'adicionar_linha\' style="background-color:#f5f9fd;">';
                 $tt = $total_campos + 1;
-                $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><label><a style=\"color: #47728f; text-decoration:none;\" href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'><p>$img ADICIONAR NOVO</p></a></label></td>";
-                $retorno .= '</tr>';
+                $retorno .= "<td colspan='$tt' align='left' style='padding-top: 17px !important;'><a style=\"color: #47728f; text-decoration:none;\" href='javascript:void(0)' id='btn_add_$nome_add' onclick='$click' style='outline: none;'>$img <p style=\"padding:9px; margin:0;\">ADICIONAR NOVO<p></a></td>";
                 $retorno .= '</tr>';
 
                 $retorno .= '</table>';
@@ -1325,10 +1289,11 @@ class clsCampos extends Core_Controller_Page_Abstract
                     $campo = $componente[1] . "{$componente['separador']}";
                 }
 
-                if (($campo == $campo_anterior) && ($campo != '-:')) {
+                if (($campo == $campo_anterior) && ($campo != '-:') && $nome == $nome_anterior) {
                     $campo = '';
                 } else {
                     $campo_anterior = $campo;
+                    $nome_anterior = $nome;
 
                     if (!$foiDuplo) {
                         $md = !$md;
@@ -1431,7 +1396,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'cnpj_pesq':
                         $retorno .= "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">";
-                        $retorno .= "<img src=\"imagens/lupaT.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_popless('{$componente[7]}?campos={$componente[8]}', '{$nome}')\"> {$componente[9]}";
+                        $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_popless('{$componente[7]}?campos={$componente[8]}', '{$nome}')\"> {$componente[9]}";
                         break;
 
                     case 'check':
@@ -1513,28 +1478,28 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $disabled = '';
                         }
 
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" maxlength=\"{$componente[5]}\" {$componente[12]}='{$componente[11]}' {$disabled}> ";
+                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[12]}='{$componente[11]}' {$disabled}> ";
 
                         if ($componente[9]) {
                             // tem serialized campos
-                            $retorno .= "<img src=\"imagens/lupaT.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$nome}_lupa' onclick=\"pesquisa_valores_popless('{$componente[8]}?campos={$componente[9]}', '{$nome}')\"> {$componente[7]}";
+                            $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$nome}_lupa' onclick=\"pesquisa_valores_popless('{$componente[8]}?campos={$componente[9]}', '{$nome}')\"> {$componente[7]}";
                         } else {
-                            $retorno .= "<img src=\"imagens/lupaT.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$nome}_lupa' onclick=\"pesquisa_valores_popless('{$componente[8]}', '{$nome}')\"> {$componente[7]}";
+                            $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$nome}_lupa' onclick=\"pesquisa_valores_popless('{$componente[8]}', '{$nome}')\"> {$componente[7]}";
                         }
 
                         break;
 
                     case 'textoInv':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$componente[3]}\" maxlength=\"{$componente[5]}\" disabled=true {$componente[9]}=\"{$componente[8]}\">&nbsp;$componente[7]";
+                        $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true {$componente[9]}=\"{$componente[8]}\">&nbsp;$componente[7]";
                         break;
 
                     case 'textoDuploInv':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$componente[3]}\" maxlength=\"{$componente[5]}\" disabled=true>";
+                        $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true>";
                         $foiDuplo = true;
                         break;
 
                     case 'senha':
-                        $retorno .= "<input class='{$class}' type='password' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" maxlength=\"{$componente[5]}\">";
+                        $retorno .= "<input class='{$class}' type='password' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">";
                         break;
 
                     case 'textoDuplo':
@@ -1544,7 +1509,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $disabled = '';
                         }
 
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\" {$disabled}>";
+                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\" {$disabled}>";
                         $foiDuplo = true;
                         break;
 
@@ -1552,7 +1517,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         if ($componente[11]) {
                             $retorno .= "<textarea class='{$class}' name=\"{$nome}\" id=\"{$nome}\" cols=\"{$componente[4]}\" rows=\"{$componente[5]}\" style='wrap:virtual' {$evento} disabled ";
                         } else {
-                            $retorno .= "<textarea class='{$class}' name=\"{$nome}\" id=\"{$nome}\" cols=\"{$componente[4]}\" rows=\"{$componente[5]}\" style='wrap:virtual' {$evento}";
+                            $retorno .= "<textarea class='{$class}' name=\"{$nome}\" id=\"{$nome}\" cols=\"{$componente[4]}\" rows=\"{$componente[5]}\" style='wrap:virtual' {$evento} ";
                         }
 
                         if ($componente[9] && $componente[10]) {
@@ -1619,8 +1584,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                         reset($componente[3]);
 
                         foreach ($componente[3] as $chave => $texto) {
-                            $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '>"';
-                            
+                            $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
+
                             if ($chave == $componente[4]) {
                                 $retorno .= ' selected';
                             }
@@ -1632,22 +1597,22 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         if ($componente[13]) {
                             // Tem serialized campos
-                            $retorno .= "<img src=\"imagens/lupaT.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$nome}_lupa' onclick=\"pesquisa_valores_popless('{$componente[7]}?campos={$componente[13]}', '{$nome}')\"> {$componente[8]}";
+                            $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$nome}_lupa' onclick=\"pesquisa_valores_popless('{$componente[7]}?campos={$componente[13]}', '{$nome}')\"> {$componente[8]}";
                         } else {
                             if ($componente[12]) {
                                 // Vai abrir em um div
-                                $retorno .= "<img src=\"imagens/lupaT.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$nome}_lupa' onclick=\"pesquisa_valores_popless('{$componente[7]}', '{$nome}')\"> {$componente[8]}";
+                                $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$nome}_lupa' onclick=\"pesquisa_valores_popless('{$componente[7]}', '{$nome}')\"> {$componente[8]}";
                             } else {
                                 // Abre num pop-up
-                                $retorno .= "<img id='lupa' src=\"imagens/lupaT.png\" alt=\"Pesquisa\" name='{$nome}_lupa' id='{$nome}_lupa' border=\"0\" onclick=\"pesquisa_valores_f('{$componente[7]}', '{$nome}', '{$componente[9]}', '{$componente[10]}')\"> {$componente[8]}";
+                                $retorno .= "<img id='lupa' src=\"imagens/lupa.png\" alt=\"Pesquisa\" name='{$nome}_lupa' id='{$nome}_lupa' border=\"0\" onclick=\"pesquisa_valores_f('{$componente[7]}', '{$nome}', '{$componente[9]}', '{$componente[10]}')\"> {$componente[8]}";
                             }
                         }
                         break;
 
                     case 'listaDupla':
                         $retorno .= "<select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}' id='{$nome}' {$componente[8]}>";
-                        reset($componente[3]);
 
+                        reset($componente[3]);
                         foreach ($componente[3] as $chave => $texto) {
                             $retorno .= '<option value="' . urlencode($chave) . '"';
 
@@ -1657,6 +1622,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                             $retorno .= ">$texto</option>";
                         }
+
 
                         $retorno .= '</select>';
                         $foiDuplo = true;
@@ -1672,10 +1638,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         break;
 
-                    case 'email':
-                        $retorno .= '<a href=\'www.google.com.br\' class=\'linkBory\'>Enviar Por Email</a>';
-                        break;
-
                     case 'emailDuplo':
                         $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\">";
                         $foiDuplo = true;
@@ -1684,10 +1646,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                     case 'radio':
                         $primeiro = true;
 
-                        reset($componente[3]);
 
                         $retorno .= "<span onclick=\"{$componente[5]}\" >";
 
+                        reset($componente[3]);
                         foreach ($componente[3] as $chave => $texto) {
                             if ($primeiro) {
                                 $primeiro = false;
@@ -1847,12 +1809,11 @@ class clsCampos extends Core_Controller_Page_Abstract
         $retorno = "<select onchange=\"{$acao}\" class='{$class}' name='{$nome}' id='{$id}' {$desabilitado} $multiple>";
         $opt_open = false;
 
-        reset($valor);
-
         $adicionador_indice = null;
 
+        reset($valor);
         foreach ($valor as $chave => $texto) {
-            if (substr((string)$texto, 0, 9) == 'optgroup:') {
+            if (str_starts_with($texto, 'optgroup:')) {
                 // optgroup
                 if ($opt_open) {
                     $retorno .= '</optgroup>';
@@ -2075,9 +2036,9 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         if ($campos_serializados) {
             // Tem serialized campos
-            $retorno .= "<img src=\"imagens/lupaT.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$id}_lupa' onclick=\"pesquisa_valores_popless('{$caminho}?campos={$campos_serializados}', '{$nome}')\">$descricao";
+            $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" name='{$nome}_lupa' id='{$id}_lupa' onclick=\"pesquisa_valores_popless('{$caminho}?campos={$campos_serializados}', '{$nome}')\">$descricao";
         } else {
-            $retorno .= "<img src=\"imagens/lupaT.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_f('{$caminho}', '{$nome}')\"> $descricao";
+            $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_f('{$caminho}', '{$nome}')\"> $descricao";
         }
 
         return $retorno;

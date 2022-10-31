@@ -188,7 +188,6 @@ class clsModulesBNCC extends Model
                     ON (bncc.serie_id = t.etapa_educacenso
                     AND {$modo}
         ";
-
         $whereAnd = 'WHERE ';
         $filtros = "";
 
@@ -207,7 +206,6 @@ class clsModulesBNCC extends Model
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
         $this->_total = $db->CampoUnico(
             "
             WITH select_ as (
@@ -230,6 +228,7 @@ class clsModulesBNCC extends Model
         );
 
         $db->Consulta($sql);
+       
 
         if ($countCampos > 1) {
             while ($db->ProximoRegistro()) {

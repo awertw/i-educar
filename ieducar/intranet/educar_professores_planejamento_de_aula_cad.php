@@ -34,6 +34,8 @@ return new class extends clsCadastro {
         $this->id = $_GET['id'];
         $this->copy = $_GET['copy'];
 
+       
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7, 'educar_professores_planejamento_de_aula_lst.php');
 
@@ -57,11 +59,14 @@ return new class extends clsCadastro {
                     $retorno = 'Editar';
 
                     $this->titulo = 'Plano de aula - Edição';
+                    
                 }
+                
             } else {
                 $this->simpleRedirect('educar_professores_planejamento_de_aula_lst.php');
             }
         }
+       
 
         $this->url_cancelar = ($retorno == 'Editar')
             ? sprintf('educar_professores_planejamento_de_aula_det.php?id=%d', $this->id)
@@ -211,7 +216,6 @@ return new class extends clsCadastro {
             $bncc = [];
             $bncc_temp = [];
             $obj = new clsModulesBNCC();
-
             if ($bncc_temp = $obj->listaTurma($resultado, $turma, $ref_cod_componente_curricular)) {
                 foreach ($bncc_temp as $bncc_item) {
                     $id = $bncc_item['id'];
