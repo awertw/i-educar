@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use App\Models\LegacyDiscipline;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
+use Illuminate\Support\Carbon;
 use App\Services\CheckPostedDataService;
 
 return new class extends clsCadastro
@@ -134,7 +135,8 @@ return new class extends clsCadastro
         $this->campoOculto('id', $this->id);
         $this->campoOculto('copy', $this->copy);
 
-        $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
+        $year =  Carbon::now()->format('Y');
+        $this->campoOculto('ano', $year);
     }
 
     public function __construct()
