@@ -23,9 +23,21 @@ function updateSelect($targetElement, options, emptyOptionHtml, optionSelected =
     optgroup.appendTo($targetElement);
   }
 
+  if (options.length === 1) {
+    $targetElement.removeAttr('selected').find('option:eq(1)').attr('selected', 'selected').change();
+  }
+
+  if (options.length > 0) {
+    $targetElement.removeAttr('disabled');
+    $targetElement.children('[value=""]').first().html(emptyOptionHtml || "Selecione uma opção");
+  } else {
+    $targetElement.children(':first').html('Sem opções');
+  }
 
   if (optionSelected) {
+    $targetElement.val(optionSelected).change();
   }
+
 }
 
 
