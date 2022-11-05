@@ -73,7 +73,7 @@ return new class extends clsCadastro
             }
         }
 
-        $this->data = dataToBrasil($this->data);
+        $this->data = convertDateToFormatBrazil($this->data);
 
         if (
             $tipoacao == 'Edita' || !$_POST
@@ -86,7 +86,7 @@ return new class extends clsCadastro
 
         $obrigatorio = true;
 
-        $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
+        $this->campoOculto('ano', getYearFromDate());
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio]);
 
         if (empty($this->id)) {
@@ -138,7 +138,7 @@ return new class extends clsCadastro
         }
 
         $this->campoMemo('caracterizacao_pedagogica', 'Caracterização Pedagógica', $this->caracterizacao_pedagogica, 100, 5, !$obrigatorio);
-        $this->campoMemo('necessidades_aprendizagem', 'Necessidades de Aprendizagem', $this->necessidades_aprendizagem, 100, 5, !$obrigatorio);       
+        $this->campoMemo('necessidades_aprendizagem', 'Necessidades de Aprendizagem', $this->necessidades_aprendizagem, 100, 5, !$obrigatorio);
     }
 
     public function __construct()

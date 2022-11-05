@@ -87,8 +87,8 @@ class clsModulesPlanejamentoAulaBNCCAee extends Model {
 
         $infos['ids'] = explode(',', $info_temp['ids']);
         $infos['pab_ids'] = explode(',', $info_temp['pab_ids']);
-        $infos['codigos'] = count($info_temp['codigos']) > 0 ? explode(',', $info_temp['codigos']) : null;
-        $infos['descricoes'] = count($info_temp['descricoes']) > 0 ? explode('$/', $info_temp['descricoes']) : null;
+        $infos['codigos'] = count((array) $info_temp['codigos']) > 0 ? explode(',', $info_temp['codigos']) : null;
+        $infos['descricoes'] = count((array) $info_temp['descricoes']) > 0 ? explode('$/', $info_temp['descricoes']) : null;
 
         $bnccs = [];
 

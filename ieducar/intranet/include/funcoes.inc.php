@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Carbon;
+
 /**
  * Adiciona zeros a esquerda de um numero
  *
@@ -403,4 +405,22 @@ function isArrayEmpty($value): bool
     }
 
     return null;
+}
+
+function convertDateToFormatBrazil($date = null): string
+{
+    if (!empty($date)) {
+        return Carbon::parse($date)->format('d/m/Y');
+    }
+
+    return Carbon::now()->format('d/m/Y');
+}
+
+function getYearFromDate($date = null): string
+{
+    if (!empty($date)) {
+        return Carbon::parse($date)->format('Y');
+    }
+
+    return Carbon::now()->format('Y');
 }

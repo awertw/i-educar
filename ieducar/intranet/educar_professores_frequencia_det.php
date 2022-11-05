@@ -269,7 +269,10 @@ return new class extends clsDetalhe {
 
             if ($tipo_presenca == 2) {
                 for ($i = 1; $i <= count($ordensAulasArray); $i++) {
-                    $checked = (!in_array((array)$i, $aluno['aulas']) ? "checked='true'" : '');
+                    if (empty($aluno['aulas'][0])) {
+                        continue;
+                    }
+                    $checked = (!in_array($i, $aluno['aulas']) ? "checked='true'" : '');
                     $this->tabela .= "  <td style='margin: auto'><input type='checkbox' disabled {$checked}></td>";
                 }
             }

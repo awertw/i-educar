@@ -89,8 +89,8 @@ return new class extends clsCadastro {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
         }
-        $this->data = dataToBrasil($this->data);
-        $this->ano = explode('/', $this->data)[2];
+        $this->data = convertDateToFormatBrazil($this->data);
+        $this->ano = getYearFromDate($this->data);
 
         if ($tipoacao == 'Edita' || !$_POST
             && $this->data
@@ -255,7 +255,7 @@ return new class extends clsCadastro {
                  $aulasFaltou = '';
 
                     for ($i = 1; $i <= count((array)$this->ordens_aulas); $i++) {
-                        $checkFalta = in_array((array)$i, (array)$aluno['aulas']);
+                        $checkFalta = in_array($i, (array)$aluno['aulas']);
 
                         $checked = (!$checkFalta ? "checked='true'" : '');
 
@@ -353,7 +353,7 @@ return new class extends clsCadastro {
         }
 
 
-        $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
+        $this->campoOculto('ano', getYearFromDate());
     }
 
     public function Novo() {
