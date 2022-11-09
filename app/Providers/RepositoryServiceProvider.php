@@ -24,5 +24,7 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(\iEducar\Support\Repositories\StudentRepository::class, \App\Repositories\StudentRepositoryEloquent::class);
+        $this->app->bind(\iEducar\Support\Repositories\ResponsavelRepository::class, \App\Repositories\ResponsavelRepositoryEloquent::class);
+        $this->app->bind(\iEducar\Support\Repositories\ResponsavelTurmaRepository::class, \App\Repositories\ResponsavelTurmaRepositoryEloquent::class);
     }
 }

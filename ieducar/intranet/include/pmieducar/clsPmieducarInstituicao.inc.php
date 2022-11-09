@@ -58,6 +58,8 @@ class clsPmieducarInstituicao extends Model
     public $permitir_planeja_conteudos_aee;
     public $obrigatorio_registro_diario_atividade_aee;
     public $utilizar_planejamento_aula_aee;
+    public $checa_qtd_aulas_quadro_horario;
+    public $utiliza_sabado_alternado;
 
     public function __construct(
         $cod_instituicao = null,
@@ -97,8 +99,9 @@ class clsPmieducarInstituicao extends Model
         $utilizar_planejamento_aula = null,
         $permitir_planeja_conteudos_aee = null,
         $obrigatorio_registro_diario_atividade_aee = null,
-        $utilizar_planejamento_aula_aee = null
-
+        $utilizar_planejamento_aula_aee = null,
+        $checa_qtd_aulas_quadro_horario = null,
+        $utiliza_sabado_alternado = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -162,7 +165,9 @@ class clsPmieducarInstituicao extends Model
             utilizar_planejamento_aula,
             permitir_planeja_conteudos_aee,
             obrigatorio_registro_diario_atividade_aee,
-            utilizar_planejamento_aula_aee
+            utilizar_planejamento_aula_aee,
+            checa_qtd_aulas_quadro_horario,
+            utiliza_sabado_alternado
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -310,6 +315,14 @@ class clsPmieducarInstituicao extends Model
 
         if (is_bool($utilizar_planejamento_aula_aee)) {
            $this->utilizar_planejamento_aula_aee = $utilizar_planejamento_aula_aee;
+        }
+
+        if (is_bool($checa_qtd_aulas_quadro_horario)) {
+           $this->checa_qtd_aulas_quadro_horario = $checa_qtd_aulas_quadro_horario;
+        }
+
+        if (is_bool($utiliza_sabado_alternado)) {
+           $this->utiliza_sabado_alternado = $utiliza_sabado_alternado;
         }
 
     }
@@ -789,6 +802,26 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->checa_qtd_aulas_quadro_horario)) {
+                $campos .= "{$gruda}checa_qtd_aulas_quadro_horario";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}checa_qtd_aulas_quadro_horario";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->utiliza_sabado_alternado)) {
+                $campos .= "{$gruda}utiliza_sabado_alternado";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}utiliza_sabado_alternado";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -1222,6 +1255,25 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+<<<<<<< HEAD
+=======
+            if (dbBool($this->checa_qtd_aulas_quadro_horario)) {
+                $set .= "{$gruda}checa_qtd_aulas_quadro_horario = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}checa_qtd_aulas_quadro_horario = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->utiliza_sabado_alternado)) {
+                $set .= "{$gruda}utiliza_sabado_alternado = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}utiliza_sabado_alternado = false ";
+                $gruda = ', ';
+            }
+
+>>>>>>> 2.6-tecsis
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
 

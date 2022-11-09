@@ -1,8 +1,8 @@
 <?php
 
-return new class extends clsCadastro {
+return new class() extends clsCadastro {
     /**
-     * Referencia pega da session para o idpes do usuario atual
+     * Referencia pega da session para o idpes do usuario atual.
      *
      * @var int
      */
@@ -12,8 +12,8 @@ return new class extends clsCadastro {
     {
         $retorno = 'Novo';
 
-        $this->ref_cod_matricula=$_GET['ref_cod_matricula'];
-        $this->ref_cod_aluno=$_GET['ref_cod_aluno'];
+        $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
+        $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
@@ -47,7 +47,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data do falecimento', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
 
-        $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
+        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
     }
 
     public function Novo()
@@ -81,6 +81,37 @@ return new class extends clsCadastro {
             }
         }
 
+        $turma = new clsPmieducarTurma($_GET['turma']);
+        $tipoTurma = $turma->getTipoTurma();
+
+        $atendimento = new clsModulesComponenteMinistradoAee();
+        $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
+
+        if (($obj_matricula->data_cancel <= $dataFrequencia['data']) || ($obj_matricula->data_cancel <= $dataAtendimento['data'])) {
+            $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
+
+            $atendimento = new clsModulesComponenteMinistradoAee();
+            $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
+
+            if (($obj_matricula->data_cancel <= $dataAtendimento['data'])) {
+                $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
+
+                return false;
+            }
+        }
+
+        if ($tipoTurma == 0) {
+
+            $frequencia = new clsModulesFrequencia();
+            $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
+
+            if (($obj_matricula->data_cancel <= $dataFrequencia['data'])) {
+                $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br>';
+
+                return false;
+            }
+        }
+
         if ($obj_matricula->edita()) {
             if ($obj_matricula->cadastraObservacaoFalecido($this->observacao)) {
                 $enturmacoes = new clsPmieducarMatriculaTurma();
@@ -89,8 +120,8 @@ return new class extends clsCadastro {
                 foreach ($enturmacoes as $enturmacao) {
                     $enturmacao = new clsPmieducarMatriculaTurma($this->ref_cod_matricula, $enturmacao['ref_cod_turma'], $this->pessoa_logada, null, null, null, 0, null, $enturmacao['sequencial']);
 
-                    if (! $enturmacao->edita()) {
-                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
+                    if (!$enturmacao->edita()) {
+                        $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.';
 
                         return false;
                     } else {
@@ -99,7 +130,7 @@ return new class extends clsCadastro {
                 }
 
                 $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
-                                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
+                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
 
                 if (!empty($notaAluno)) {
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper())
@@ -121,7 +152,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->title = 'Transferência Solicitação';
+        $this->title = 'Transfer&ecirc;ncia Solicita&ccedil;&atilde;o';
         $this->processoAp = '578';
     }
 };

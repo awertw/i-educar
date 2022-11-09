@@ -81,14 +81,7 @@
         success: function (response) {
           $('#ref_cod_turma').attr('tipo_presenca', response.tipo_presenca);
 
-          if (response.tipo_presenca == 2 || response.tipo_presenca == '2') {
-            for (let i = 1; i <= 5; i++) {
-              $('#tr_ordens_aulas' + i).show();
-              $('#ordens_aulas' + i).show();
-            }
-          } else {
-            carregarAlunos();
-          }
+          carregarAulas(response.tipo_presenca, campoTurma);
         },
       };
 
@@ -122,6 +115,46 @@
         $('.tablelistagem').append(html);
       }
     }
+
+    function carregarAulas(tipo_presenca, campoTurma) {
+      if (tipo_presenca == 2 || tipo_presenca == '2') {
+        const campoData = document.getElementById('data').value;
+
+        let params = {
+          id: campoTurma,
+          data: campoData
+        };
+
+        let options = {
+          url: getResourceUrlBuilder.buildUrl('/module/Api/Frequencia', 'getQtdAulasQuadroHorario', params),
+          dataType: 'json',
+          data: {},
+          success: function (response) {
+            let qtdAulas = 5;
+
+            if (response.isProfessor) {
+              qtdAulas = response.qtdAulas;
+            }
+
+            if (qtdAulas > 0) {
+              for (let i = 1; i <= qtdAulas; i++) {
+                $('#tr_ordens_aulas' + i).show();
+                $('#ordens_aulas' + i).show();
+              }
+            } else {
+              alert('A data não está alocada no quadro de horário');
+              return false;
+            }
+          },
+        };
+
+        getResource(options);
+
+      } else {
+        carregarAlunos();
+      }
+    }
+
 
     addBtnEnviarMensagem();
   });
@@ -168,6 +201,7 @@ function getAluno(xml_aluno) {
   if (DOM_array.length) {
     conteudo += '<td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
     conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Nome" + '</span></th>';
+    conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "FA" + '</span></th>';
 
     if (qtdAulas == 0) {
       conteudo += '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' + "Presença" + '</span></th>';
@@ -183,7 +217,9 @@ function getAluno(xml_aluno) {
 
     for (var i = 0; i < DOM_array.length; i++) {
       id = DOM_array[i].getAttribute("cod_aluno");
+      qtd_faltas = DOM_array[i].getAttribute("qtd_faltas");
       conteudo += ' <td class="sizeFont colorFont"><p>' + DOM_array[i].firstChild.data + '</p></td>';
+      conteudo += ' <td class="sizeFont colorFont"><p>' + qtd_faltas + '</p></td>';
 
       if (qtdAulas == 0) {
         conteudo += ` <td class="sizeFont colorFont" > \
@@ -231,21 +267,33 @@ function presencaMudou (presenca) {
   let elementJustificativaAulas = document.getElementsByName("justificativa[" + presenca.value + "][aulas]")[0];
 
   let aula_id = presenca.dataset.aulaid;
-  let aulasValue = elementJustificativaAulas.value;
+  let aulasValue = '';
+  let qtdValue = '';
+
+  if (elementJustificativaQtd) {
+    qtdValue = elementJustificativaQtd.value;
+  }
+
+  if (elementJustificativaAulas) {
+    aulasValue = elementJustificativaAulas.value;
+  }
 
   if (presenca.checked) {
     elementJustificativaQtd.value = parseInt(elementJustificativaQtd.value) - 1;
 
-    if (aulasValue.indexOf(aula_id + ',') > -1) {
+    if (aulasValue != '' && aulasValue.indexOf(aula_id + ',') > -1) {
       elementJustificativaAulas.value = aulasValue.replace(aula_id + ',', '');
     }
 
-  } else if (elementJustificativaQtd.value != '' || parseInt(elementJustificativaQtd.value) >= 0) {
-    elementJustificativaQtd.value = parseInt(elementJustificativaQtd.value) + 1;
-    elementJustificativaAulas.value = aulasValue + aula_id + ',';
+  } else if (qtdValue != '' || parseInt(qtdValue) >= 0) {
+    elementJustificativaQtd.value = parseInt(qtdValue) + 1;
+    if (aulasValue != '') {
+      elementJustificativaAulas.value = aulasValue + aula_id + ',';
+    }
+
   }
 
-  if (presenca.checked && parseInt(elementJustificativaQtd.value) > 0){
+  if (presenca.checked && parseInt(qtdValue) > 0){
     elementJustificativa.disabled = !presenca.checked;
   } else {
     elementJustificativa.disabled = presenca.checked;

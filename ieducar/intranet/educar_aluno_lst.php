@@ -78,7 +78,6 @@ return new class extends clsListagem {
         $this->campoTexto('nome_mae', 'Nome da Mãe', $this->nome_mae, 50, 255);
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
         $this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
-
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola]);
@@ -236,16 +235,18 @@ return new class extends clsListagem {
             $this->acao = 'go("/module/Cadastro/aluno")';
             $this->nome_acao = 'Novo';
         }
-
+       
         if ($_GET) {
-            $this->array_botao_script = ['dataExport("formcadastro", "students")'];
-            $this->array_botao = ['Exportar para planilha'];
-            $this->array_botao_id = ['export-btn'];
+            $this->array_botao_script = ['dataExport("formcadastro", "students")','dataExport("formcadastro", "responsaveis_turma")'];
+            $this->array_botao = ['Exportar para planilha','Exportar responsáveis para planilha'];
+            $this->array_botao_id = ['export-btn','export-btn-responsaveis'];
         }
+       
 
         $this->largura = '100%';
 
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
+        Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter_responsaveis.js']);
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
     }

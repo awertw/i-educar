@@ -101,7 +101,6 @@ class clsPmieducarTurmaModulo extends Model
     {
         if (is_numeric($this->ref_cod_turma) && is_numeric($this->ref_cod_modulo) && is_numeric($this->sequencial)) {
             $db = new clsBanco();
-            $gruda = '';
             $set = '';
 
             if (is_string($this->data_inicio)) {
@@ -287,7 +286,7 @@ class clsPmieducarTurmaModulo extends Model
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();
             }
-        } catch (Throwable) {
+        } catch (Throwable $throwable) {
             return false;
         }
 
@@ -316,12 +315,132 @@ class clsPmieducarTurmaModulo extends Model
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();
             }
-        } catch (Throwable) {
+        } catch (Throwable $throwable) {
             return false;
         }
 
         return true;
     }
+
+    /**
+     * Retorna um caracter indicando se o modulo encerrou
+     *
+     * @return array
+     */
+    public function numModulo($int_ref_sequencial, $int_disc_ref_ref_cod_serie, $int_disc_ref_ref_cod_escola, $arr_disc_ref_ref_cod_disciplina, $int_disc_ref_cod_turma, $int_ref_ref_cod_turma)
+    {
+        if (is_numeric($int_disc_ref_ref_cod_serie) && is_numeric($int_disc_ref_ref_cod_escola) && is_array($arr_disc_ref_ref_cod_disciplina) && is_numeric($int_disc_ref_cod_turma) && is_numeric($int_ref_ref_cod_turma)) {
+            $db = new clsBanco();
+            $plus = '';
+            $sql = 'SELECT( ';
+
+            foreach ($arr_disc_ref_ref_cod_disciplina as $cod) {
+                $sql .= "{$plus}( SELECT COUNT( cod_nota_aluno ) / ( ( SELECT CASE WHEN COUNT( 0 ) = 0
+                                                                                THEN 1
+                                                                                ELSE COUNT( 0 )
+                                                                            END
+                                                                    FROM pmieducar.disciplina_serie
+                                                                   WHERE ref_cod_serie = {$int_ref_cod_serie} ) - ( SELECT COUNT( ref_ref_cod_matricula )
+                                                                                                                      FROM pmieducar.dispensa_disciplina
+                                                                                                                     WHERE ref_cod_serie      = {$int_disc_ref_ref_cod_serie}
+                                                                                                                       AND ref_cod_escola     = {$int_disc_ref_ref_cod_escola}
+                                                                                                                       AND ref_cod_disciplina = {$cod} ) )
+                                    FROM pmieducar.nota_aluno
+                                   WHERE ref_cod_serie      = {$int_disc_ref_ref_cod_serie}
+                                     AND ref_cod_escola     = {$int_disc_ref_ref_cod_escola}
+                                     AND ativo              = 1
+                                     AND ref_cod_disciplina = {$cod} )";
+                $plus = ' + ';
+            }
+            $sql .= " ) / ( SELECT COUNT( ref_cod_disciplina )
+                              FROM pmieducar.turma_disciplina
+                             WHERE ref_cod_turma  = {$int_ref_ref_cod_turma}
+                               AND ref_cod_escola = {$int_disc_ref_ref_cod_escola}
+                               AND ref_cod_serie  = {$int_disc_ref_ref_cod_serie} )";
+
+            $resultado = $db->CampoUnico($sql);
+            if (is_string($resultado)) {
+                return $resultado;
+            } else {
+                return 'N';
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Retorna uma variavel com os dados de um registro
+     *
+     * @return array
+     */
+    public function fimAno($int_ref_cod_turma, $int_qtd_modulo, $int_ref_cod_escola, $int_ref_cod_serie)
+    {
+        if (is_numeric($int_ref_cod_turma) && is_numeric($int_qtd_modulo) && is_numeric($int_ref_cod_escola) && is_numeric($int_ref_cod_serie)) {
+            $db = new clsBanco();
+
+            $sql = "SELECT CASE WHEN ( SELECT COUNT(0)
+                                         FROM pmieducar.matricula_turma
+                                        WHERE ref_cod_turma = {$int_ref_cod_turma} ) > ( SELECT COUNT( DISTINCT ref_ref_cod_matricula )
+                                                                                           FROM pmieducar.nota_aluno
+                                                                                          WHERE ref_cod_escola = {$int_ref_cod_escola}
+                                                                                            AND ref_cod_serie  = {$int_ref_cod_serie} )
+                                THEN 'N'
+                                WHEN ( SELECT MIN( modulo )
+                                         FROM ( SELECT ( COUNT(0) / ( ( SELECT COUNT(0)
+                                                                          FROM pmieducar.disciplina_serie
+                                                                         WHERE ref_cod_serie = {$int_ref_cod_serie} ) - ( SELECT COUNT(0)
+                                                                                                                            FROM pmieducar.dispensa_disciplina
+                                                                                                                           WHERE ref_cod_matricula = {$int_ref_cod_matricula}
+                                                                                                                             AND ref_cod_serie    = {$int_ref_cod_serie}
+                                                                                                                             AND ref_cod_escola       = {$int_ref_cod_escola} ) ) ) AS modulo
+                                                  FROM pmieducar.nota_aluno na
+                                                 WHERE ref_cod_escola = {$int_ref_cod_escola}
+                                                   AND ref_cod_serie  = {$int_ref_cod_serie}
+                                              GROUP BY ref_ref_cod_matricula ) AS subquery1 ) <> ( SELECT MAX(modulo)
+                                                                                                     FROM ( SELECT ( COUNT(0) / ( ( SELECT COUNT(0)
+                                                                                                                                      FROM pmieducar.disciplina_serie
+                                                                                                                                     WHERE ref_cod_serie = {$int_ref_cod_serie} ) - ( SELECT COUNT(0)
+                                                                                                                                                                                        FROM pmieducar.dispensa_disciplina dd
+                                                                                                                                                                                       WHERE na.ref_cod_matricula = dd.ref_ref_cod_matricula ) ) ) AS modulo
+                                                                                                              FROM pmieducar.nota_aluno na
+                                                                                                             WHERE ref_ref_cod_turma = {$int_ref_cod_turma}
+                                                                                                          GROUP BY ref_ref_cod_matricula ) AS subquery2 )
+                                     AND ( SELECT MAX(modulo)
+                                             FROM ( SELECT ( COUNT(0) / ( ( SELECT COUNT(0)
+                                                                              FROM pmieducar.disciplina_serie
+                                                                             WHERE ref_cod_serie = {$int_ref_cod_serie} ) - ( SELECT COUNT(0)
+                                                                                                                                FROM pmieducar.dispensa_disciplina dd
+                                                                                                                               WHERE na.ref_cod_matricula = dd.ref_ref_cod_matricula ) ) ) AS modulo
+                                                      FROM pmieducar.nota_aluno na
+                                                     WHERE ref_ref_cod_turma = {$int_ref_cod_turma}
+                                                  GROUP BY ref_ref_cod_matricula ) AS subquery2 ) <= {$int_qtd_modulo}
+                                THEN 'N'
+                                WHEN ( SELECT MIN(modulo)
+                                         FROM ( SELECT ( COUNT(0) / ( ( SELECT COUNT(0)
+                                                                          FROM pmieducar.disciplina_serie
+                                                                         WHERE ref_cod_serie = {$int_ref_cod_serie} ) - ( SELECT COUNT(0)
+                                                                                                                            FROM pmieducar.dispensa_disciplina dd
+                                                                                                                           WHERE na.ref_cod_matricula = dd.ref_ref_cod_matricula ) ) ) AS modulo
+                                                  FROM pmieducar.nota_aluno na
+                                                 WHERE ref_cod_escola = {$int_ref_cod_escola}
+                                                   AND ref_cod_serie  = {$int_ref_cod_serie}
+                                              GROUP BY ref_cod_matricula ) AS subquery1 ) = {$int_qtd_modulo}
+                                THEN 'S'
+                                ELSE 'N'
+                                 END AS modulo";
+
+            return $db->CampoUnico($sql);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Retorna a data de inicio da sequencia da etapa
+     *
+     * @return array
+     */
     public function pegaEtapaSequenciaDataInicio($int_cod_turma, $int_sequencial)
     {
         $sql = "
@@ -366,7 +485,7 @@ class clsPmieducarTurmaModulo extends Model
         return $data;
     }
 
-    public function pegaPeriodoLancamentoNotasFaltas ($int_cod_turma, $int_sequencial) {
+    public function pegaPeriodoLancamentoNotasFaltas ($int_cod_turma, $int_sequencial, $cod_escola) {
         $sql = "
             SELECT
                 STRING_AGG (d.start_date::character varying, ',') as data_inicio,
@@ -375,6 +494,39 @@ class clsPmieducarTurmaModulo extends Model
                 public.release_period_dates d
             JOIN public.release_periods p
                 ON (p.id = d.release_period_id)
+            JOIN PUBLIC.release_period_schools PS
+                ON ( PS.release_period_id = d.release_period_id )
+            JOIN pmieducar.turma_modulo t
+                ON (p.stage_type_id = t.ref_cod_modulo AND p.stage = t.sequencial)
+            WHERE
+                t.ref_cod_turma = {$int_cod_turma} AND t.sequencial = {$int_sequencial} AND PS.school_id = {$cod_escola}
+        ";
+
+        $db = new clsBanco();
+        $db->Consulta($sql);
+        $db->ProximoRegistro();
+
+        $data['inicio'] = $db->Campo('data_inicio');
+        $data['fim'] = $db->Campo('data_fim');
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data;
+    }
+
+    public function pegaPeriodoLancamentoNotasFaltasAee ($int_cod_turma, $int_sequencial) {
+        $sql = "
+            SELECT
+                STRING_AGG (d.start_date::character varying, ',') as data_inicio,
+                STRING_AGG (d.end_date::character varying, ',') as data_fim
+            FROM
+                public.release_period_dates d
+            JOIN public.release_periods p
+                ON (p.id = d.release_period_id)
+            JOIN PUBLIC.release_period_schools PS
+                ON ( PS.release_period_id = d.release_period_id )
             JOIN pmieducar.turma_modulo t
                 ON (p.stage_type_id = t.ref_cod_modulo AND p.stage = t.sequencial)
             WHERE

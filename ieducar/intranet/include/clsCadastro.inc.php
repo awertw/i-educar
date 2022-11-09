@@ -45,10 +45,9 @@ class clsCadastro extends clsCampos
     public $sucesso;
     public $onSubmit = 'acao()';
     public $form_enctype;
-    public $acao_executa_submit_ajax = false;
 
-    public const NOVO = 'N';
-    public const EDITAR = 'E';
+    const NOVO = 'N';
+    const EDITAR = 'E';
 
     public function __construct()
     {

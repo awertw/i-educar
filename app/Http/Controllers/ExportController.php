@@ -1,5 +1,5 @@
 <?php
-
+ 
 namespace App\Http\Controllers;
 
 use App\Jobs\DatabaseToCsvExporter;
@@ -7,6 +7,7 @@ use App\Models\Exporter\Export;
 use App\Models\Exporter\SocialAssistance;
 use App\Models\Exporter\Stage;
 use App\Models\Exporter\Student;
+use App\Models\Exporter\Responsavel;
 use App\Models\Exporter\Teacher;
 use App\Process;
 use Illuminate\Http\RedirectResponse;
@@ -107,6 +108,12 @@ class ExportController extends Controller
         if ($model === Student::class) {
             $data = $this->filterStudents($request, $data, 'exporter_student');
         }
+        if ($model === Responsavel::class) {
+            $data = $this->filterResponsavel($request, $data, 'exporter_person');
+        }
+        if ($model === ResponsavelTurma::class) {
+            $data = $this->filterResponsavelTurma($request, $data, 'exporter_person');
+        }
 
         if ($model === Teacher::class) {
             $data = $this->filterTeachers($request, $data);
@@ -122,6 +129,7 @@ class ExportController extends Controller
 
         return $data;
     }
+     
 
     /**
      * @param Request $request
@@ -148,14 +156,15 @@ class ExportController extends Controller
                 'value' => intval($year),
             ];
         }
-
-        if ($request->input('ref_cod_escola')) {
+        if ($cod_turma = $request->input('ref_cod_turma')) {
             $data['filters'][] = [
-                'column' => $table . '.school_id',
-                'operator' => 'in',
-                'value' => [$request->input('ref_cod_escola')]
+                'column' => $table . '.school_class_id',
+                'operator' => '=',
+                'value' => intval($cod_turma),
             ];
-        } elseif ($request->user()->isSchooling()) {
+        }
+
+       elseif ($request->user()->isSchooling()) {
             $data['filters'][] = [
                 'column' => $table . '.school_id',
                 'operator' => 'in',
@@ -165,6 +174,76 @@ class ExportController extends Controller
 
         return $data;
     }
+
+    
+    /**
+     * @param Request $request
+     * @param array   $data
+     *
+     * @return array
+     */
+    protected function filterResponsavel(Request $request, $data, $table)
+    {
+        $data['filename'] = 'responsaveis_turma.csv';
+
+      
+        if ($status = $request->input('situacao_matricula')) {
+            $data['filters'][] = [
+                'column' => $table . '.status',
+                'operator' => '=',
+                'value' => $status,
+            ];
+        }
+
+        if ($year = $request->input('ano')) {
+            $data['filters'][] = [
+                'column' => $table . '.year',
+                'operator' => '=',
+                'value' => intval($year),
+            ];
+        }
+        if ($cod_turma = $request->input('ref_cod_turma')) {
+            $data['filters'][] = [
+                'column' => $table . '.school_class_id',
+                'operator' => '=',
+                'value' => intval($cod_turma),
+            ];
+        }
+
+       elseif ($request->user()->isSchooling()) {
+            $data['filters'][] = [
+                'column' => $table . '.school_id',
+                'operator' => 'in',
+                'value' => $request->user()->schools->pluck('cod_escola')->all(),
+            ];
+        }
+
+        return $data;
+        }
+     /**
+     * @param Request $request
+     * @param array   $data
+     *
+     * @return array
+     */
+    protected function filterResponsavelTurma(Request $request, $data, $table)
+    {
+        $data['filename'] = 'responsavel.csv';
+
+      
+        if ($cod_pessoa_fj = $request->input('cod_pessoa_fj')) {
+            $data['filters'][] = [
+                'column' => $table . '.id',
+                'operator' => '=',
+                'value' => intval($cod_pessoa_fj),
+            ];
+        }
+
+ 
+
+        return $data;
+    }
+
 
     /**
      * @param Request $request

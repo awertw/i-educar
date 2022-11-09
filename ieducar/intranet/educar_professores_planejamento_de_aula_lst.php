@@ -63,7 +63,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => false]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
+        $this->inputsHelper()->dynamic(['componenteCurricular'], ['required' => false]);
 
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
@@ -146,6 +146,10 @@ return new class extends clsListagem {
             foreach ($lista as $registro) {
                 $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
                 $componentesCurriculares = $obj->lista($registro['id']);
+
+                if (!$eh_professor && $registro['professor_turma'] != $registro['professor_registro']) {
+                    continue;
+                }
 
                 $obj = new clsPmieducarSerie();
                 $tipo_presenca = $obj->tipoPresencaRegraAvaliacao($registro['cod_serie']);
