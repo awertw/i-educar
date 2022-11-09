@@ -350,12 +350,7 @@ class clsModulesFrequencia extends Model {
 
                 $matriculas_novas = $this->alunos;
 
-<<<<<<< HEAD
-
-                for ($i=0; $i < count((array)$matriculas_antigas); $i++) {
-=======
                 for ($i=0; $i < count($matriculas_antigas); $i++) {
->>>>>>> 2.6-tecsis
                     $matricula_antiga = $matriculas_antigas[$i];
 
                     if ($matriculas_novas[$matricula_antiga]) {

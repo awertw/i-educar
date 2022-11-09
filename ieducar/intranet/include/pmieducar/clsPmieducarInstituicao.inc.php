@@ -1255,8 +1255,6 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
-<<<<<<< HEAD
-=======
             if (dbBool($this->checa_qtd_aulas_quadro_horario)) {
                 $set .= "{$gruda}checa_qtd_aulas_quadro_horario = true ";
                 $gruda = ', ';
@@ -1273,7 +1271,6 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
->>>>>>> 2.6-tecsis
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
 
