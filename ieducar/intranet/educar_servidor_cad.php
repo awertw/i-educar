@@ -40,7 +40,7 @@ return new class extends clsCadastro {
 
     public function Inicializar()
     {
-        $retorno = 'Novo'; 
+        $retorno = 'Novo';
 
         $this->cod_servidor = $this->getQueryString('cod_servidor');
         $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
@@ -480,7 +480,7 @@ JS;
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
 
-        $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
+        $this->pos_graduacao = '{' . implode(',', array_filter((array) $this->pos_graduacao)) . '}';
 
         $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
