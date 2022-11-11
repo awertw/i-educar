@@ -1934,7 +1934,7 @@ function canShowParentsFields() {
                   </td>
                 </tr>
               </table>
-              <p><a id="link_cadastro_detalhado">Cadastro detalhado</a></p>
+              <p><a id="link_cadastro_detalhado">alhado</a></p>
             </form>
           </div>
 
@@ -2745,10 +2745,6 @@ function canShowParentsFields() {
       estadocivilParent.val(window[parentType + "_details"].estadocivil);
       sexoParent.val(window[parentType + "_details"].sexo);
       datanascParent.val(window[parentType + "_details"].data_nascimento);
-<<<<<<< HEAD
-=======
-
->>>>>>> 2.6-tecsis
       falecidoParent.prop(
         "checked",
         window[parentType + "_details"].falecido
