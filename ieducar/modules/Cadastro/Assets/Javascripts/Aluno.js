@@ -1078,7 +1078,7 @@ var handleGetPersonDetails = function (dataResponse) {
 
   mae_details = dataResponse.mae_details;
 
-  
+
 
   pai_details = dataResponse.pai_details;
 
@@ -2543,9 +2543,9 @@ function canShowParentsFields() {
         "href",
         "/export/responsavel?cod_pessoa_fj=" + person_details.id
       );
-    
 
-      
+
+
 
 
       name.val(person_details.nome);
@@ -2745,10 +2745,7 @@ function canShowParentsFields() {
       estadocivilParent.val(window[parentType + "_details"].estadocivil);
       sexoParent.val(window[parentType + "_details"].sexo);
       datanascParent.val(window[parentType + "_details"].data_nascimento);
-<<<<<<< HEAD
-=======
 
->>>>>>> 2.6-tecsis
       falecidoParent.prop(
         "checked",
         window[parentType + "_details"].falecido
