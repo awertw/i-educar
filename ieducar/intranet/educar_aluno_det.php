@@ -167,7 +167,7 @@ return new class extends clsDetalhe {
 
             $registro['ddd_fax'] = $det_pessoa_fj['ddd_fax'] ?? null;
             $registro['fone_fax'] = $det_pessoa_fj['fone_fax'] ?? null;
-
+ 
             $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'] ?? null;
             $registro['fone_mov'] = $det_pessoa_fj['fone_mov'] ?? null;
 
@@ -400,8 +400,8 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Página Pessoal', $registro['url']]);
         }
 
-        if ($det_fisica['ref_cod_religiao']) {
-            $obj_religiao = new clsPmieducarReligiao($det_fisica['ref_cod_religiao']);
+        if ($registro['ref_cod_religiao']) {
+            $obj_religiao = new clsPmieducarReligiao($registro['ref_cod_religiao']);
             $obj_religiao_det = $obj_religiao->detalhe();
 
             $this->addDetalhe(['Religião', $obj_religiao_det['nm_religiao']]);
@@ -461,7 +461,7 @@ return new class extends clsDetalhe {
                         align=\'center\'>
                           <td>
                             <a href=\'' . $this->urlPresigner()->getPresignedUrl($documento->url) . '\'
-                               target=\'_blank\' > Visualizar documento ' . (count((array)$documento) > 1 ? ($key + 1) : '') . '
+                               target=\'_blank\' > Visualizar documento ' . (count($documento) > 1 ? ($key + 1) : '') . '
                             </a>
                           </td>
                     </tr>';
@@ -503,6 +503,9 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Estado Expedidor', $registro['sigla_uf_exp_rg']]);
         }
 
+        /**
+         * @todo CoreExt_Enum?
+         */
         if (!$registro['tipo_cert_civil'] && $registro['certidao_nascimento']) {
             $this->addDetalhe(['Tipo Certidão Civil', 'Nascimento (novo formato)']);
             $this->addDetalhe(['Número Certidão Civil', $registro['certidao_nascimento']]);
@@ -561,7 +564,7 @@ return new class extends clsDetalhe {
         $transporteAluno = null;
         try {
             $transporteAluno = $transporteMapper->find(['aluno' => $this->cod_aluno]);
-        } catch (Exception) {
+        } catch (Exception $e) {
         }
 
         $this->addDetalhe([
@@ -575,6 +578,10 @@ return new class extends clsDetalhe {
         if ($registro['nis_pis_pasep']) {
             $this->addDetalhe(['NIS', $registro['nis_pis_pasep']]);
         }
+
+        // Verifica se o usuário tem permissão para cadastrar um aluno.
+        // O sistema irá validar o cadastro de permissões e o parâmetro
+        // "bloquear_cadastro_aluno" da instituição.
 
         if ($this->obj_permissao->permissao_cadastra(578, $this->pessoa_logada, 7)) {
             $bloquearCadastroAluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
@@ -724,6 +731,7 @@ return new class extends clsDetalhe {
             if (trim($reg['desc_plano_saude']) != '') {
                 $this->addDetalhe(['Qual', $reg['desc_plano_saude']]);
             }
+            
             $this->addDetalhe(['Aluno Vacinado Covid-19?', ($reg['vacina_covid'] == 'S' ? 'Sim' : 'Não')]);
 
             if(trim($reg['desc_vacina_covid']) != '') {
@@ -807,6 +815,8 @@ return new class extends clsDetalhe {
             }
 
             $this->addDetalhe(['<span id="fmoradia"></span>Moradia', $moradia]);
+            $situacao;
+
             switch ($reg['moradia_situacao']) {
                 case 1:
                     $situacao = 'Alugado';
@@ -843,9 +853,7 @@ return new class extends clsDetalhe {
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
 
             $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
-            if (is_array($recursosTecnlogicos)) {
-                $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
-            }
+            $recursosTecnlogicos = implode(', ', $recursosTecnlogicos);
             $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
 
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);
@@ -935,11 +943,7 @@ return new class extends clsDetalhe {
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
-        if ($_GET) {
-            $this->array_botao_script = ['dataExport("formcadastro", "students")','dataExport("formcadastro", "responsaveis_turma")'];
-            $this->array_botao = ['Exportar para planilha','Exportar responsáveis para planilha'];
-            $this->array_botao_id = ['export-btn','export-btn-responsaveis'];
-        }
+      
 
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
     }
