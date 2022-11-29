@@ -5,23 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Frequencia extends Model
+class Turma extends Model
 {
- /**
+  
+    /**
      * @var string
      */
-    protected $table = 'modules.frequencia';
+    protected $table = 'pmieducar.turma';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'cod_turma';
 
     protected $fillable = [
-        'id',
-        'data',
-        'ref_cod_turma'
-    ];
+        'ref_cod_matricula',
+        'nm_turma',
+        'cod_turma'
+        
+    
+    ]; 
 
     /**
      * @var bool
@@ -29,4 +32,5 @@ class Frequencia extends Model
     public $timestamps = false;
 
     
-    use HasFactory;}
+    use HasFactory;
+}

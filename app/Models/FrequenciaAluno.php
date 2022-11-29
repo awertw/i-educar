@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Frequencia extends Model
+class FrequenciaAluno extends Model
 {
+
  /**
      * @var string
      */
-    protected $table = 'modules.frequencia';
+    protected $table = 'modules.frequencia_aluno';
 
     /**
      * @var string
@@ -19,8 +20,8 @@ class Frequencia extends Model
 
     protected $fillable = [
         'id',
-        'data',
-        'ref_cod_turma'
+        'ref_frequencia',
+        'ref_cod_matricula'
     ];
 
     /**
@@ -28,5 +29,5 @@ class Frequencia extends Model
      */
     public $timestamps = false;
 
-    
-    use HasFactory;}
+    use HasFactory;
+}

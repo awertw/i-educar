@@ -155,26 +155,52 @@ return new class() extends clsCadastro
         $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
     }
 
-    public function Novo()
+    public function Novo()  
     {
+        $frequencia = new clsModulesFrequencia();
+        $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
 
-        $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->get();
+        $frequencia = Frequencia::where('ref_cod_turma', $_GET['turma'])->orderBy('id', 'DESC')->get();
         $contador = 0;
         foreach($frequencia as $list) {
             $dateformated = date('d/m/Y', strtotime($list->data));
-           if($dateformated >= $_POST['data_cancel']){
+            $dateformated2 = date('d/m/Y', strtotime($_POST['data_cancel']));
+           if($dateformated >= $dateformated2){
 
-            break;
-            $this->mensagem = 'Não é possível realizar a operação, existem frequências 
-            registradas na data informada. 
-            Data da frequência: '.$dateformated.' Data informada: '.$_POST['data_cancel'].'<br>';
-
-            return false;
-           }   
-        }
+           
+            
+           }}
    
                 $turma = new clsPmieducarTurma($_GET['turma']);
                 $tipoTurma = $turma->getTipoTurma();
+
+                if ($tipoTurma == 1) {
+
+                    $atendimento = new clsModulesComponenteMinistradoAee();
+                    $dataAtendimento = $atendimento->selectDataAtendimentoByMatricula($_GET['ref_cod_matricula']);
+
+                    $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+
+                    if (($data_cancel <= $dataAtendimento['data'])) {                                                                               
+                        $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br> Data da frequência: '.$dataAtendimento['data'].' Data informada: '.$$data_cancel.'<br>';
+
+                        return false;
+                    }
+                }
+
+                if ($tipoTurma == 0) {
+
+                    $frequencia = new clsModulesFrequencia();
+                    $dataFrequencia = $frequencia->selectDataFrequenciaByTurma($_GET['turma']);
+
+                    $data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+
+                    if (($data_cancel <= $dataFrequencia['data'])) {
+                        $this->mensagem = 'Não é possível realizar a operação, existem frequências registradas no período <br> Data da frequência: '.$dataFrequencia['data'].' Data informada: '.$data_cancel.'<br>';
+
+                        return false;
+            
+        }
 
                 if ($tipoTurma == 1) {
 
@@ -315,6 +341,7 @@ return new class() extends clsCadastro
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+    }
     }
     }
 
