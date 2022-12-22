@@ -952,14 +952,12 @@ class clsModulesFrequencia extends Model {
                             {$where}
                     ");
 
-
                     $db->Consulta("
                             DELETE FROM
                                 modules.frequencia_aluno
                             WHERE
                                 ref_frequencia = '{$this->id}' AND ref_cod_matricula = '{$matricula['ref_cod_matricula']}'
                     ");
-
                 }
             }
 
