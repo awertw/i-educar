@@ -147,8 +147,16 @@ return new class extends clsListagem {
                 $obj = new clsModulesPlanejamentoAulaComponenteCurricular();
                 $componentesCurriculares = $obj->lista($registro['id']);
 
-                if (!$eh_professor && ($registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
+                if (!$eh_professor && (!empty($registro['professor_registro']) && ($registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador'))) {
                     continue;
+                }
+
+                if($eh_professor) {
+                    $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($registro['ref_cod_turma'], $this->pessoa_logada, null, true);
+
+                    if (count($quadroHorario) > 0 && $registro['professor_turma'] != $registro['professor_registro']) {
+                        continue;
+                    }
                 }
 
                 $obj = new clsPmieducarSerie();

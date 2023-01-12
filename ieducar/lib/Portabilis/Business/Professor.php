@@ -68,7 +68,7 @@ class Portabilis_Business_Professor
                 INNER JOIN pmieducar.escola e
                 ON (e.cod_escola = qhh.ref_cod_escola)
                 WHERE e.ref_cod_instituicao = $1
-                AND qhh.ref_servidor = $2
+                AND (qhh.ref_servidor = $2 OR qhh.ref_cod_servidor_substituto_1 = $2 OR qhh.ref_cod_servidor_substituto_2 = $2)
                 AND qh.ativo = 1
                 AND qhh.ativo = 1
                 ORDER BY nome
@@ -122,7 +122,7 @@ class Portabilis_Business_Professor
                 INNER JOIN pmieducar.curso c
                 ON (c.cod_curso = s.ref_cod_curso)
                 WHERE qhh.ref_cod_escola = $1
-                AND qhh.ref_servidor = $2
+                AND (qhh.ref_servidor = $2 OR qhh.ref_cod_servidor_substituto_1 = $2 OR qhh.ref_cod_servidor_substituto_2 = $2)
                 AND qhh.ativo = 1
                 AND qh.ativo = 1
                 ORDER BY c.nm_curso
@@ -180,7 +180,7 @@ class Portabilis_Business_Professor
                 WHERE e.ref_cod_instituicao = $1
                 AND e.cod_escola = $2
                 AND s.ref_cod_curso = $3
-                AND qhh.ref_servidor = $4
+                AND (qhh.ref_servidor = $4 OR qhh.ref_cod_servidor_substituto_1 = $4 OR qhh.ref_cod_servidor_substituto_2 = $4)
                 ORDER BY s.nm_serie
             ';
 
@@ -208,7 +208,7 @@ class Portabilis_Business_Professor
                 ON (t.cod_turma = qh.ref_cod_turma)
                 WHERE qhh.ref_cod_escola = $1
                 AND qhh.ref_cod_serie = $2
-                AND qhh.ref_servidor = $3
+                AND (qhh.ref_servidor = $3 OR qhh.ref_cod_servidor_substituto_1 = $3 OR qhh.ref_cod_servidor_substituto_2 = $3)
                 AND qhh.ativo = 1
                 AND qh.ativo = 1
                 ORDER BY t.nm_turma ASC
@@ -264,7 +264,8 @@ class Portabilis_Business_Professor
                 SELECT
                     cc.id, cc.nome,
                     ac.nome as area_conhecimento,
-                    ac.secao as secao_area_conhecimento
+                    ac.secao as secao_area_conhecimento,
+                    qhh.ref_servidor
                 FROM pmieducar.quadro_horario qh
                 INNER JOIN pmieducar.quadro_horario_horarios qhh
                 ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
@@ -292,11 +293,11 @@ class Portabilis_Business_Professor
     }
 
 
-    public static function quadroHorarioAlocado($turmaId, $userId, $diaSemana = null, $registroDiarioIndividual = null)
+    public static function quadroHorarioAlocado($turmaId, $userId = null, $diaSemana = null, $registroDiarioIndividual = null)
     {
         $quadroHorario = [];
 
-        if (is_numeric($turmaId) && is_numeric($userId)) {
+        if (is_numeric($turmaId)) {
             $sql = '
                 SELECT
                     qhh.*
@@ -304,21 +305,29 @@ class Portabilis_Business_Professor
                 INNER JOIN pmieducar.quadro_horario_horarios qhh
                 ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
                 WHERE qh.ref_cod_turma = $1
-                AND (qhh.ref_servidor = $2 OR qhh.ref_cod_servidor_substituto_1 = $2 OR qhh.ref_cod_servidor_substituto_2 = $2)
                 AND qhh.ativo = 1
                 AND qh.ativo = 1
             ';
 
-            $params = ['params' => [$turmaId, $userId]];
+            $params = ['params' => [$turmaId]];
+
+            $paramNumber = 2;
+            if (!empty($userId)) {
+                $sql .= "AND (qhh.ref_servidor = $".$paramNumber." OR qhh.ref_cod_servidor_substituto_1 = $".$paramNumber." OR qhh.ref_cod_servidor_substituto_2 = $".$paramNumber.")";
+                $params['params'][] = $userId;
+                $paramNumber++;
+            }
 
             if (!empty($diaSemana)) {
-                $sql .= ' AND qhh.dia_semana = $3';
+                $sql .= " AND qhh.dia_semana = $".$paramNumber;
                 $params['params'][] = $diaSemana;
+                $paramNumber++;
             }
 
             if (!empty($registroDiarioIndividual)) {
-                $sql .= ' AND qhh.registra_diario_individual = $4';
+                $sql .= " AND qhh.registra_diario_individual = $".$paramNumber;
                 $params['params'][] = $registroDiarioIndividual;
+                $paramNumber++;
             }
 
             $sql .= ' ORDER BY qhh.qtd_aulas DESC';
@@ -331,9 +340,9 @@ class Portabilis_Business_Professor
 
     protected static function componentesCurricularesTurmaAlocado($turmaId, $anoLetivo, $userId)
     {
-        $sql = '
+        $sql = "
             select
-                cc.id,
+                DISTINCT cc.id,
                 cc.nome,
                 ac.nome as area_conhecimento,
                 ac.secao as secao_area_conhecimento
@@ -348,7 +357,18 @@ class Portabilis_Business_Professor
             and cct.turma_id = turma.cod_turma
             and cct.escola_id = turma.ref_ref_cod_escola
             and cct.componente_curricular_id = cc.id
-            and al.ano = $2
+            and (
+                al.ano = $2
+            OR
+                (select data_fim
+                from pmieducar.turma_modulo
+                where
+                ref_cod_turma = turma.cod_turma
+                AND  (date_part('year', data_inicio) = $2 OR date_part('year', data_fim) = $2)
+                ORDER BY
+                data_fim DESC
+                LIMIT 1) IS NOT NULL
+            )
             and cct.escola_id = al.ref_cod_escola
             and scc.ref_ref_cod_instituicao = turma.ref_cod_instituicao
             and scc.ref_cod_servidor = $3
@@ -356,7 +376,7 @@ class Portabilis_Business_Professor
             and scc.ref_cod_disciplina = cc.id
             and cc.area_conhecimento_id = ac.id
             order by ac.secao, ac.nome, cc.nome
-        ';
+        ";
 
         $options = ['params' => [$turmaId, $anoLetivo, $userId]];
 
@@ -365,9 +385,9 @@ class Portabilis_Business_Professor
 
     protected static function componentesCurricularesCursoAlocado($turmaId, $anoLetivo, $userId)
     {
-        $sql = '
+        $sql = "
             select
-                cc.id as id,
+                DISTINCT cc.id as id,
                 cc.nome as nome,
                 ac.nome as area_conhecimento,
                 ac.secao as secao_area_conhecimento
@@ -384,7 +404,18 @@ class Portabilis_Business_Professor
             and esd.ref_ref_cod_escola = turma.ref_ref_cod_escola
             and esd.ref_ref_cod_serie = serie.cod_serie
             and esd.ref_cod_disciplina = cc.id
-            and al.ano = $2
+            and (
+                al.ano = $2
+            OR
+                (select data_fim
+                from pmieducar.turma_modulo
+                where
+                ref_cod_turma = turma.cod_turma
+                AND (date_part('year', data_inicio) = $2 OR date_part('year', data_fim) = $2)
+                ORDER BY
+                data_fim DESC
+                LIMIT 1) IS NOT NULL
+            )
             and esd.ref_ref_cod_escola = al.ref_cod_escola
             and serie.ativo = 1
             and esd.ativo = 1
@@ -395,7 +426,7 @@ class Portabilis_Business_Professor
             and scc.ref_cod_disciplina = cc.id
             and cc.area_conhecimento_id = ac.id
             order by ac.secao, ac.nome, cc.nome
-        ';
+        ";
 
         $options = ['params' => [$turmaId, $anoLetivo, $userId]];
 

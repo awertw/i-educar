@@ -64,7 +64,7 @@ class clsListagem extends clsCampos
         if (empty($_GET)) {
             if (!empty($previousFilters[$uri])) {
                 list($path, $ts) = explode('|', $previousFilters[$uri]);
-                $diff = ((int) now()) - ((int) $ts);
+                $diff = now() - (int) $ts;
 
                 if ($diff > 7200) { //duas horas
                     return;
@@ -72,7 +72,7 @@ class clsListagem extends clsCampos
 
                 $path = $uri . '?' . $path;
 
-                $this->simpleRedirect($path);
+                return $this->simpleRedirect($path);
             }
         } else {
             $params = http_build_query($_GET) . '|' . now();
@@ -111,7 +111,8 @@ class clsListagem extends clsCampos
         $intPaginasExibidas = 3,
         $var_alteranativa = false,
         $pag_modifier = 0,
-        $add_iniciolimit = false
+        $add_iniciolimit = false,
+        $intTotalRegistrosDuplicidade = 0
     ) {
         if ($intTotalRegistros > 0) {
             $getVar = "pagina_{$nome}";
@@ -161,10 +162,13 @@ class clsListagem extends clsCampos
                 }
             }
 
+            $totalRegistrosExibir =  ($intTotalRegistrosDuplicidade > 0 ? $intTotalRegistrosDuplicidade : $intTotalRegistros);
+
+
             $strReturn = <<<HTML
 <table class="paginacao">
   <tr>
-    <td>Total de registros: {$intTotalRegistros}</td>
+    <td>Total de registros: {$totalRegistrosExibir}</td>
   </tr>
 </table>
 HTML;
@@ -185,7 +189,7 @@ HTML;
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
                 $classe_botao = ($pagina_formulario == ($pagStart + $i)) ? 'nvp_paginador_ativo' : '';
-                $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a página " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
+                $strReturn .= "<td align=\"center\" class=\"{$classe_botao}\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
             }
 
             // Setas de fim e próxima
@@ -280,7 +284,7 @@ HTML;
             if (empty($this->campos)) {
                 $retorno .=  '
                     <tr>
-                        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>Não existem campos definidos para o formulário</span></td>
+                        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>N&atilde;o existem campos definidos para o formul&aacute;rio</span></td>
                     </tr>';
             } else {
                 $retorno .= $this->MakeCampos();
@@ -319,7 +323,7 @@ HTML;
                 </form>';
         }
 
-        $ncols = is_iterable($this->cabecalho) ? count($this->cabecalho) : 0;
+        $ncols = count($this->cabecalho);
         $width = empty($this->largura) ? '' : "width='$this->largura'";
 
         if (empty($this->__titulo)) {
@@ -340,9 +344,13 @@ HTML;
                         <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
                     </tr>";
 
+        $ncols = count($this->cabecalho);
+
         // Cabeçalho
         if (!empty($this->cabecalho)) {
             reset($this->cabecalho);
+
+            $ncols = count($this->cabecalho);
 
             if (!empty($this->colunas)) {
                 reset($this->colunas);
@@ -379,7 +387,7 @@ HTML;
 
         // Lista
         if (empty($this->linhas)) {
-            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>Não há informação para ser apresentada</td></tr>";
+            $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td></tr>";
         } else {
             reset($this->linhas);
 
@@ -427,7 +435,8 @@ HTML;
         $retorno .=  "
             <tr>
                 <td class='formdktd' colspan=\"{$ncols}\">&nbsp;</td>
-            </tr>";
+            </tr></table>";
+
 
         if (!empty($this->paginador2)) {
             $retorno .= "

@@ -575,7 +575,6 @@ class clsModulesProfessorTurma extends Model
             $servidor_id[] = $tupla['servidor_id'];
         }
         return $servidor_id;
-        
     }
 
     private function auditaComponentesVinculados($professor_turma_id, $componentesAntigos, $componentesNovos)
