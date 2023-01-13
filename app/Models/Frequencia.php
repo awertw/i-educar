@@ -20,7 +20,10 @@ class Frequencia extends Model
     protected $fillable = [
         'id',
         'data',
-        'ref_cod_turma'
+        'ref_cod_turma',
+        'ref_componente_curricular',
+        'ordens_aulas',
+        'etapa_sequencial'
     ];
 
     /**
