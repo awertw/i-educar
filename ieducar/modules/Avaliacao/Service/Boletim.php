@@ -3051,7 +3051,19 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
 
             // Salva a média
-            $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
+            $infosMatricula = $this->getOption('matriculaData');
+           
+
+            $serieId = $infosMatricula['ref_ref_cod_serie'];
+            $componenteId = $this->getCurrentComponenteCurricular();
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
+            if ($tipoNota==2) {
+                
+                $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
+            }
+
+            
+           
         } else {
             $turmaId = $this->getOption('ref_cod_turma');
             $infosMatricula = $this->getOption('matriculaData');
@@ -3059,6 +3071,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $serieId = $infosMatricula['ref_ref_cod_serie'];
             $escolaId = $infosMatricula['ref_ref_cod_escola'];
             $notaAlunoId = $this->_getNotaAluno()->id;
+
+
+
+
+
 
             foreach ($this->getNotasComponentes() as $id => $notasComponentes) {
                 //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
@@ -3143,18 +3160,24 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     }
 
                     // Salva a média
-                    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
-
+                    $infosMatricula = $this->getOption('matriculaData');
+                    $serieId = $infosMatricula['ref_ref_cod_serie'];
+                    $componenteId = $this->getCurrentComponenteCurricular();
+                    $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);    
+                    if ($tipoNota==2) {
+                        
+                        $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+                    }
                     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
                     $notaComponenteCurricularMedia->markOld();
                     $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
 
-                    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
                 }
             }
 
             $this->deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId);
         }
+        
     }
 
     /**

@@ -67,6 +67,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => true]);
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
+        
 
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
@@ -141,16 +142,26 @@ return new class extends clsListagem {
         );
 
         $total = $obj_turma->_total;
-        //dump($lista);
+        $totalRemover = 0;
+
         // monta a lista
         if (is_array($lista) && count($lista)) {
-            $ref_cod_escola = '';
-            $nm_escola = '';
             foreach ($lista as $registro) {
+                $bla++;
                 $data_formatada = dataToBrasil($registro['data']);
 
-                if (!$eh_professor && ($registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
+                if (!$eh_professor && (!empty($registro['professor_registro']) && $registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
+                    $totalRemover++;
                     continue;
+                }
+
+                if($eh_professor) {
+                    $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($registro['ref_cod_turma'], $this->pessoa_logada, null, true);
+
+                    if (count($quadroHorario) > 0 && $registro['professor_turma'] != $registro['professor_registro']) {
+                        $totalRemover++;
+                        continue;
+                    }
                 }
 
                 $lista_busca = [
@@ -185,7 +196,19 @@ return new class extends clsListagem {
             }
         }
 
-        $this->addPaginador2('educar_professores_frequencia_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $totalRegistrosDuplicidade = 0;
+        if ($totalRemover > 0) {
+            //TODO: Condição adicionada para resolução imediata do bug de total registros
+            // esse bug ocorre devido as condições do laço acima, como, os registros aparecem "duplicados"
+            // só alterando o professor e nós não podemos exibir isso em alguns casos, temos que fazer a dedução
+            // desse registro do total de registros.
+
+            $totalPaginas = ceil($total / $this->limite);
+            $totalRegistrosDuplicidade = $total - ($totalRemover * $totalPaginas);
+        }
+
+
+        $this->addPaginador2('educar_professores_frequencia_lst.php', $total, $_GET, $this->nome, $this->limite, 3, false, 0, false, $totalRegistrosDuplicidade);
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(58, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_professores_frequencia_cad.php")';
