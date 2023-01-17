@@ -5,26 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Turma extends Model
+class ProfessorTurma extends Model
 {
-  
     /**
      * @var string
      */
-    protected $table = 'pmieducar.turma';
+    protected $table = 'modules.professor_turma';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_turma';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
-        'ref_cod_matricula',
-        'nm_turma',
-        'cod_turma'
-        
+        'id',
+        'servidor_id',
+        'turma_id',
+        'ano'
     
-    ]; 
+    ];
 
     /**
      * @var bool
@@ -34,4 +33,3 @@ class Turma extends Model
     
     use HasFactory;
 }
- 

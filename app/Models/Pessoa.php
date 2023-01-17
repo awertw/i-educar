@@ -5,26 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Turma extends Model
+class Pessoa extends Model
 {
-  
-    /**
+     /**
      * @var string
      */
-    protected $table = 'pmieducar.turma';
+    protected $table = 'cadastro.pessoa';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_turma';
+    protected $primaryKey = 'idpes';
 
     protected $fillable = [
-        'ref_cod_matricula',
-        'nm_turma',
-        'cod_turma'
-        
+        'idpes',
+        'nome'
     
-    ]; 
+    ];
 
     /**
      * @var bool
@@ -34,4 +31,3 @@ class Turma extends Model
     
     use HasFactory;
 }
- 
