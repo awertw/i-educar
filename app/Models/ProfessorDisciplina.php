@@ -5,31 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FrequenciaAluno extends Model
+class ProfessorDisciplina extends Model
 {
-
  /**
      * @var string
      */
-    protected $table = 'modules.frequencia_aluno';
+    protected $table = 'pmieducar.servidor_disciplina';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'ref_cod_disciplina';
 
     protected $fillable = [
-        'id',
-        'ref_frequencia',
-        'ref_cod_matricula', 
-        'aulas_faltou'
+        'ref_cod_disciplina',
+        'ref_ref_cod_instituicao',
+        'ref_cod_servidor',
+        'ref_cod_curso'
+    
     ];
+    
 
     /**
      * @var bool
      */
     public $timestamps = false;
 
-    use HasFactory;
-}
-  
+    
+    use HasFactory;}
