@@ -1135,6 +1135,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $codigosAglutinados = $this->codigoDisciplinasAglutinadas();
 
         foreach ($mediasComponentes as $id => $mediaComponente) {
+            if (empty($situacao->componentesCurriculares[$id])) {
+                continue;
+            }
+
             $mediaComponente = $mediaComponente[0];
             $etapa = $mediaComponente->etapa;
             $qtdComponentes++;
@@ -1198,7 +1202,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 && $this->hasRegraAvaliacaoFormulaRecuperacao()
             ) {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
-            } elseif ($etapa < $lastStage && (string) $etapa != 'Rc') {
+            } elseif (!empty($situacao) && $etapa < $lastStage && (string) $etapa != 'Rc') {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
             } else {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
@@ -3052,18 +3056,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             // Salva a média
             $infosMatricula = $this->getOption('matriculaData');
-           
+
 
             $serieId = $infosMatricula['ref_ref_cod_serie'];
             $componenteId = $this->getCurrentComponenteCurricular();
             $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
             if ($tipoNota==2) {
-                
+
                 $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
             }
 
-            
-           
+
+
         } else {
             $turmaId = $this->getOption('ref_cod_turma');
             $infosMatricula = $this->getOption('matriculaData');
@@ -3163,9 +3167,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $infosMatricula = $this->getOption('matriculaData');
                     $serieId = $infosMatricula['ref_ref_cod_serie'];
                     $componenteId = $this->getCurrentComponenteCurricular();
-                    $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);    
+                    $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
                     if ($tipoNota==2) {
-                        
+
                         $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
                     }
                     //Atualiza a situação de acordo com o que foi inserido na média anteriormente
@@ -3177,7 +3181,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             $this->deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId);
         }
-        
+
     }
 
     /**
