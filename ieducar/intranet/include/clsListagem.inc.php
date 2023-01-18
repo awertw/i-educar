@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
@@ -64,7 +65,11 @@ class clsListagem extends clsCampos
         if (empty($_GET)) {
             if (!empty($previousFilters[$uri])) {
                 list($path, $ts) = explode('|', $previousFilters[$uri]);
-                $diff = now() - (int) $ts;
+
+                $dateNow = Carbon::now();
+                $dateTs = Carbon::createFromFormat('Y-m-d H:i:s', $ts);
+
+                $diff = $dateNow->diffInSeconds($dateTs);
 
                 if ($diff > 7200) { //duas horas
                     return;
@@ -323,6 +328,7 @@ HTML;
                 </form>';
         }
 
+        $this->cabecalho = (is_array($this->cabecalho) ? $this->cabecalho : []);
         $ncols = count($this->cabecalho);
         $width = empty($this->largura) ? '' : "width='$this->largura'";
 
@@ -344,11 +350,10 @@ HTML;
                         <td class='titulo-tabela-listagem' colspan='$ncols'>{$this->__titulo}</td>
                     </tr>";
 
-        $ncols = count($this->cabecalho);
-
         // Cabeçalho
         if (!empty($this->cabecalho)) {
             reset($this->cabecalho);
+            $this->cabecalho = (is_array($this->cabecalho) ? $this->cabecalho : []);
 
             $ncols = count($this->cabecalho);
 
