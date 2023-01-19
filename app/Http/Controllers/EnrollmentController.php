@@ -94,15 +94,19 @@ class EnrollmentController extends Controller
         if (isset($tipoTurma[0]) && !empty($tipoTurma[0]))  {
 
             if ($tipoTurma[0]->case == 0) {
+
                 $dataUltimaFrequencia = DB::table('modules.frequencia')
                     ->where([['ref_cod_turma', '=', $request->input('cod_turma_origem')]])->orderBy('data', 'desc')->get(['data'])->take(1);
 
-                $data_solicitacao = dataToBanco($request->input('enrollment_date'));
+                if (isset($dataUltimaFrequencia[0]) && !empty($dataUltimaFrequencia[0])) {
+                    $data_solicitacao = dataToBanco($request->input('enrollment_date'));
 
-                if ($data_solicitacao <= $dataUltimaFrequencia[0]->data) {
-                    return redirect()->back()->with('error', 'Não é possível realizar a operação, existem frequências registradas no período. Data de enturmação/saída: '.$data_solicitacao.'; Data da frequencia: '.$dataUltimaFrequencia[0]->data.'.');
-                    die();
+                    if ($data_solicitacao <= $dataUltimaFrequencia[0]->data) {
+                        return redirect()->back()->with('error', 'Não é possível realizar a operação, existem frequências registradas no período. Data de enturmação/saída: '.$data_solicitacao.'; Data da frequencia: '.$dataUltimaFrequencia[0]->data.'.');
+                        die();
+                    }
                 }
+
             }
 
             if ($tipoTurma[0]->case == 1) {
@@ -110,11 +114,13 @@ class EnrollmentController extends Controller
                 $dataUltimoAtendimento = DB::table('modules.conteudo_ministrado_aee')
                     ->where([['ref_cod_matricula', '=', $registration['cod_matricula']]])->orderBy('data', 'desc')->get(['data'])->take(1);
 
-                $data_solicitacao = dataToBanco($request->input('enrollment_date'));
+                if (isset($dataUltimoAtendimento[0]) && !empty($dataUltimoAtendimento[0])) {
+                    $data_solicitacao = dataToBanco($request->input('enrollment_date'));
 
-                if ($data_solicitacao <= $dataUltimoAtendimento[0]->data) {
-                    return redirect()->back()->with('error', 'AEE - Não é possível realizar a operação, existem frequências registradas no período. Data de enturmação/saída: '.$data_solicitacao.'; Data da frequencia: '.$dataUltimoAtendimento[0]->data.'.');
-                    die();
+                    if ($data_solicitacao <= $dataUltimoAtendimento[0]->data) {
+                        return redirect()->back()->with('error', 'AEE - Não é possível realizar a operação, existem frequências registradas no período. Data de enturmação/saída: ' . $data_solicitacao . '; Data da frequencia: ' . $dataUltimoAtendimento[0]->data . '.');
+                        die();
+                    }
                 }
             }
         }
