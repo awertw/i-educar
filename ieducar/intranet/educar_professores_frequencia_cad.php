@@ -153,7 +153,7 @@ return new class extends clsCadastro {
 
         if (empty($tipo_presenca) || $tipo_presenca == 2) {
             for ($i = 1; $i <= 5; $i++) {
-                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Quantidade de aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => false, 'label_hint' => 'Aula '.$i]);
+                $this->inputsHelper()->checkbox('ordens_aulas'.$i, ['label' => 'Quantidade de aulas', 'value' => (in_array($i, $this->ordens_aulas) ? $i : ''), 'disabled' => $desabilitado, 'required' => true, 'label_hint' => 'Aula '.$i]);
             }
         }
 
@@ -420,14 +420,14 @@ return new class extends clsCadastro {
 
            // Componente Curricular.
 
-          
+
            $this->inputsHelper()->dynamic('frequenciaComponente', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
-          
-      
-          
-          
+
+
+
+
            //end componente
-  
+
 
 
         $this->campoOculto('ano', explode('/', dataToBrasil(NOW()))[2]);
@@ -635,7 +635,7 @@ return new class extends clsCadastro {
         $this->mensagem = 'Cadastro não realizado.<br>';
 
 
-        
+
 
 
         return false;
