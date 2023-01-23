@@ -542,7 +542,7 @@ class DiarioApiController extends ApiCoreController
                        
                         if(!empty($nota_exame)){
                             $media = ($media + $nota_exame)/2;   
-                            if
+                            
                         }
                         $media = round($media , 2);
 
