@@ -479,6 +479,7 @@ class DiarioApiController extends ApiCoreController
         }
        
         if($tipo_recuperacao_paralela==2){
+            //recuperacao paralela por etapa substituindo a menor nota
                         
                     if($substitui_menor_nota==1){
 
@@ -541,8 +542,44 @@ class DiarioApiController extends ApiCoreController
                        
                         if(!empty($nota_exame)){
                             $media = ($media + $nota_exame)/2;   
+                            if
                         }
                         $media = round($media , 2);
+
+                        //verifica a situação da matricula
+                        $situacao = 0;
+                        $nota_exame_final = 0;
+                        $existe_exames = NotaExame::where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->where('ref_cod_matricula',$this->getRequest()->matricula_id)->get();
+                        foreach($existe_exames as $existe_exame) {
+                           
+                            $nota_exame_final = $existe_exame->nota_exame;
+                        }
+
+                        //Se existir exame
+                        if(!empty($nota_exame_final)){
+
+                            $media_verifica = ($media + $nota_exame_final)/2;
+                            if($media_verifica<5){
+                                //reprovado
+                                $situacao = 2;
+                            }else{
+                                //aprovado após exame
+                                $situacao = 8; 
+                            }   
+                           
+                        }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media<5){
+                              //em exame
+                              $situacao = 7; 
+                        }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media>=5){
+                                //Aprovado
+                                $situacao = 1; 
+                         }else{
+                            //Em andamento
+                            $situacao = 3;
+                         }
+
+
+
                         if($this->getRequest()->etapa==4 and $media<5){
                             //atualiza a nota que falta no exame final
                               $nota_falta_exame = 10 - $media;
@@ -564,7 +601,9 @@ class DiarioApiController extends ApiCoreController
                         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                             'media' => $media,
                             'media_arredondada' => $media,
-                            'etapa' => $this->getRequest()->etapa
+                            'etapa' => $this->getRequest()->etapa,
+                            'situacao' => $situacao
+
 
                         
                         ]);
@@ -574,13 +613,13 @@ class DiarioApiController extends ApiCoreController
                                     'media_arredondada' => $media,
                                     'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
                                     'nota_aluno_id' => $nota_aluno->id,
-                                    'situacao' => 3,
+                                    'situacao' => $situacao,
                                     'etapa' => $this->getRequest()->etapa,
                                     'bloqueada' => false
                                   ]);
                             }
                     }
-
+                    //recuperacao paralela por etapa sem substituir a menor nota
                     }elseif($substitui_menor_nota==0){
                         
                         $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
@@ -646,6 +685,41 @@ class DiarioApiController extends ApiCoreController
                             $media = ($media + $nota_exame)/2;   
                         }
                         $media = round($media , 2);
+                           //verifica a situação da matricula
+                           $situacao = 0;
+                           $nota_exame_final = 0;
+                           $existe_exames = NotaExame::where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->where('ref_cod_matricula',$this->getRequest()->matricula_id)->get();
+                           foreach($existe_exames as $existe_exame) {
+                              
+                               $nota_exame_final = $existe_exame->nota_exame;
+                           }
+   
+                           //Se existir exame
+                           if(!empty($nota_exame_final)){
+   
+                               $media_verifica = ($media + $nota_exame_final)/2;
+                               if($media_verifica<5){
+                                   //reprovado
+                                   $situacao = 2;
+                               }else{
+                                   //aprovado após exame
+                                   $situacao = 8; 
+                               }   
+                              
+                           }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media<5){
+                                 //em exame
+                                 $situacao = 7; 
+                           }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media>=5){
+                                   //Aprovado
+                                   $situacao = 1; 
+                            }else{
+                               //Em andamento
+                               $situacao = 3;
+                            }
+   
+
+
+
                         if($this->getRequest()->etapa==4 and $media<5){
                             //atualiza a nota que falta no exame final
                               $nota_falta_exame = 10 - $media;
@@ -665,7 +739,8 @@ class DiarioApiController extends ApiCoreController
                         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                             'media' => $media,
                             'media_arredondada' => $media,
-                            'etapa' => $this->getRequest()->etapa
+                            'etapa' => $this->getRequest()->etapa,
+                            'situacao'=> $situacao
 
                         
                         ]);
@@ -675,7 +750,7 @@ class DiarioApiController extends ApiCoreController
                                     'media_arredondada' => $media,
                                     'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
                                     'nota_aluno_id' => $nota_aluno->id,
-                                    'situacao' => 3,
+                                    'situacao' => $situacao,
                                     'etapa' => $this->getRequest()->etapa,
                                     'bloqueada' => false
                                   ]);
@@ -722,6 +797,41 @@ class DiarioApiController extends ApiCoreController
                 $media = ($media + $nota_exame)/2;   
             }
             $media = round($media , 2);
+                //verifica a situação da matricula
+                $situacao = 0;
+                $nota_exame_final = 0;
+                $existe_exames = NotaExame::where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->where('ref_cod_matricula',$this->getRequest()->matricula_id)->get();
+                foreach($existe_exames as $existe_exame) {
+                   
+                    $nota_exame_final = $existe_exame->nota_exame;
+                }
+
+                //Se existir exame
+                if(!empty($nota_exame_final)){
+
+                    $media_verifica = ($media + $nota_exame_final)/2;
+                    if($media_verifica<5){
+                        //reprovado
+                        $situacao = 2;
+                    }else{
+                        //aprovado após exame
+                        $situacao = 8; 
+                    }   
+                   
+                }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media<5){
+                      //em exame
+                      $situacao = 7; 
+                }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media>=5){
+                        //Aprovado
+                        $situacao = 1; 
+                 }else{
+                    //Em andamento
+                    $situacao = 3;
+                 }
+
+
+
+
 
             if($this->getRequest()->etapa==4 and $media<5){
                 //atualiza a nota que falta no exame final
@@ -744,7 +854,8 @@ class DiarioApiController extends ApiCoreController
             LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                 'media' => $media,
                 'media_arredondada' => $media,
-                'etapa' => $this->getRequest()->etapa
+                'etapa' => $this->getRequest()->etapa, 
+                'situacao' => $situacao
 
             
             ]);
@@ -754,7 +865,7 @@ class DiarioApiController extends ApiCoreController
                         'media_arredondada' => $media,
                         'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
                         'nota_aluno_id' => $nota_aluno->id,
-                        'situacao' => 3,
+                        'situacao' => $situacao,
                         'etapa' => $this->getRequest()->etapa,
                         'bloqueada' => false
                         ]);
@@ -788,6 +899,41 @@ class DiarioApiController extends ApiCoreController
                     $media = ($media + $nota_exame)/2;   
                 }
                 $media = round($media , 2);
+                    //verifica a situação da matricula
+                    $situacao = 0;
+                    $nota_exame_final = 0;
+                    $existe_exames = NotaExame::where('ref_cod_componente_curricular', $this->getRequest()->componente_curricular_id)->where('ref_cod_matricula',$this->getRequest()->matricula_id)->get();
+                    foreach($existe_exames as $existe_exame) {
+                       
+                        $nota_exame_final = $existe_exame->nota_exame;
+                    }
+
+                    //Se existir exame
+                    if(!empty($nota_exame_final)){
+
+                        $media_verifica = ($media + $nota_exame_final)/2;
+                        if($media_verifica<5){
+                            //reprovado
+                            $situacao = 2;
+                        }else{
+                            //aprovado após exame
+                            $situacao = 8; 
+                        }   
+                       
+                    }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media<5){
+                          //em exame
+                          $situacao = 7; 
+                    }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == 4 and $media>=5){
+                            //Aprovado
+                            $situacao = 1; 
+                     }else{
+                        //Em andamento
+                        $situacao = 3;
+                     }
+
+
+
+
                 if($this->getRequest()->etapa==4 and $media<5){
                   //atualiza a nota que falta no exame final
                     $nota_falta_exame = 10 - $media;
@@ -808,7 +954,8 @@ class DiarioApiController extends ApiCoreController
                 LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                     'media' => $media,
                     'media_arredondada' => $media,
-                    'etapa' => $this->getRequest()->etapa
+                    'etapa' => $this->getRequest()->etapa, 
+                    'situacao' => $situacao
 
                 
                 ]);
@@ -818,7 +965,7 @@ class DiarioApiController extends ApiCoreController
                             'media_arredondada' => $media,
                             'componente_curricular_id' => $this->getRequest()->componente_curricular_id,
                             'nota_aluno_id' => $nota_aluno->id,
-                            'situacao' => 3,
+                            'situacao' => $situacao,
                             'etapa' => $this->getRequest()->etapa,
                             'bloqueada' => false
                             ]);
@@ -2387,3 +2534,4 @@ class DiarioApiController extends ApiCoreController
         }
     }
 }
+ 
