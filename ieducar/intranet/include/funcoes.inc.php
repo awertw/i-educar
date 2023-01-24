@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 
 /**
  * Adiciona zeros a esquerda de um numero
@@ -419,7 +419,7 @@ function convertDateToFormatBrazil($date = null): string
 function getYearFromDate($date = null): string
 {
     if (!empty($date)) {
-        return Carbon::parse($date)->format('Y');
+        return Carbon::createFromFormat('d/m/Y', $date)->format('Y');
     }
 
     return Carbon::now()->format('Y');
