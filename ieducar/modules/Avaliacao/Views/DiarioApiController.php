@@ -704,7 +704,7 @@ class DiarioApiController extends ApiCoreController
                                 //Em andamento
                                 $situacao = 3;
                              }
-   
+    
 
 
 
