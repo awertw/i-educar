@@ -555,7 +555,7 @@ class DiarioApiController extends ApiCoreController
                             
                         }
                         $media = round($media , 2);
-
+                        
                         //verifica a situação da matricula
                         $situacao = 0;
                         $nota_exame_final = $nota_exame;
