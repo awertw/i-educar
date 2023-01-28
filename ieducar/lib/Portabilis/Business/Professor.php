@@ -300,10 +300,11 @@ class Portabilis_Business_Professor
         if (is_numeric($turmaId)) {
             $sql = '
                 SELECT
-                    qhh.*
+                    qhh.*,
+                    cc.abreviatura as componente_abreviatura
                 FROM pmieducar.quadro_horario qh
-                INNER JOIN pmieducar.quadro_horario_horarios qhh
-                ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
+                INNER JOIN pmieducar.quadro_horario_horarios qhh ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
+                INNER JOIN modules.componente_curricular cc ON ( qhh.ref_cod_disciplina = cc.id )
                 WHERE qh.ref_cod_turma = $1
                 AND qhh.ativo = 1
                 AND qh.ativo = 1
@@ -332,6 +333,9 @@ class Portabilis_Business_Professor
 
             $sql .= ' ORDER BY qhh.qtd_aulas DESC';
 
+//            echo $sql;
+//            var_dump($params);
+//            exit;
             $quadroHorario = self::fetchPreparedQuery($sql, $params);
         }
 
