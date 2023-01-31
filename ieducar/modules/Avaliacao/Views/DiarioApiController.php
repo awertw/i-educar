@@ -431,6 +431,7 @@ class DiarioApiController extends ApiCoreController
                
             }
             $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+          
             if($tipoNota==1){
                 $this->updateMedia();
             }
@@ -481,12 +482,14 @@ class DiarioApiController extends ApiCoreController
              $media_aprovacao = $regra_av->media;
              $media_aprovacao = round($media_aprovacao , 2);
         }
+       
         $ultima_etapa_sequencial = 4;
         $turma_modulos = TurmaModulo::where('ref_cod_turma', $this->getRequest()->turma_id)->orderBy('sequencial', 'ASC')->get();
         foreach($turma_modulos as $turma_modulo) {
              $ultima_etapa_sequencial = $turma_modulo->sequencial;
            
         }
+        
        
         if($tipo_recuperacao_paralela==2){
             //recuperacao paralela por etapa substituindo a menor nota
@@ -559,6 +562,7 @@ class DiarioApiController extends ApiCoreController
                         //verifica a situação da matricula
                         $situacao = 0;
                         $nota_exame_final = $nota_exame;
+
                         
                         //Se existir exame
                         if(!empty($nota_exame_final)){
@@ -576,13 +580,15 @@ class DiarioApiController extends ApiCoreController
                               $situacao = 7; 
                         }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media>=$media_aprovacao){
                                 //Aprovado
+                               
+
                                 $situacao = 1; 
                          }else{
                             //Em andamento
                             $situacao = 3;
                          }
 
-
+                        
 
                         if($this->getRequest()->etapa==$ultima_etapa_sequencial and $media<$media_aprovacao){
                             //atualiza a nota que falta no exame final
@@ -601,6 +607,7 @@ class DiarioApiController extends ApiCoreController
                         foreach($existe as $sim){
                             $existe_media = 1;    
                         }
+                     
                         if($existe_media == 1){
                         LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->update([
                             'media' => $media,
@@ -1183,8 +1190,19 @@ class DiarioApiController extends ApiCoreController
             $this->serviceBoletim()->addFalta($falta);
             $this->trySaveServiceBoletimFaltas();
             $this->messenger->append('Falta matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
+
         }
 
+        $serie_id = '';
+        $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
+        foreach($serie as $id) {
+            $serie_id = $id->ref_ref_cod_serie;
+           
+        }
+        $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+        if($tipoNota==1){
+            $this->updateMedia();
+        }
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('situacao', $this->getSituacaoComponente());
