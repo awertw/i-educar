@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.1-fpm-alpine
 
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
@@ -14,6 +14,7 @@ ENV XDEBUG_START_WITH_REQUEST off
 
 RUN apk update
 RUN apk add wget
+RUN apk add --update linux-headers
 
 RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS
 
@@ -31,6 +32,8 @@ RUN docker-php-ext-enable redis
 RUN rm -rf /tmp/pear
 
 RUN docker-php-ext-install bcmath
+
+
 
 RUN apk add unzip
 
