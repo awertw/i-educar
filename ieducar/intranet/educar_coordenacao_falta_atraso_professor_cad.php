@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro {
@@ -11,7 +12,9 @@ return new class extends clsCadastro {
     public $ref_usuario_exc;
     public $ref_usuario_cad;
     public $ref_cod_servidor;
+    public $ref_cod_professor_componente;
     public $tipo;
+    public $tipo_edit;
     public $data_falta_atraso;
     public $qtd_horas;
     public $qtd_min;
@@ -20,13 +23,20 @@ return new class extends clsCadastro {
     public $data_exclusao;
     public $ativo;
     public $ref_cod_servidor_funcao;
+    public $ref_cod_curso;
+    public $ref_cod_serie;
+    public $ref_cod_turma;
+    public $ref_cod_componente_curricular;
+    public $aulas;
+    public $observacao;
+    public $ano;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
 
         $this->cod_falta_atraso    = $_GET['cod_falta_atraso'];
-        $this->ref_cod_servidor    = $_GET['ref_cod_servidor'];
+        $this->ref_cod_professor_componente    = $_GET['ref_cod_professor_componente'];
         $this->ref_cod_escola      = $_GET['ref_cod_escola'];
         $this->ref_cod_instituicao = 1; //Padrão, só existe 1 instituição por base
 
@@ -50,6 +60,12 @@ return new class extends clsCadastro {
 
                 $this->data_falta_atraso = dataFromPgToBr($this->data_falta_atraso);
 
+                $diaSemana =  Carbon::createFromFormat('d/m/Y', $this->data_falta_atraso)->dayOfWeek;
+                $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
+
+                $quadroHorarioArray = Portabilis_Business_Professor::quadroHorarioAlocado($registro['ref_cod_turma'], $registro['ref_cod_servidor'], $diaSemanaConvertido, null, $this->cod_falta_atraso);
+                $this->aulas = $obj->verificarFaltaAtrasoQuadroHorario($quadroHorarioArray);
+
                 $obj_permissoes = new clsPermissoes();
 
                 if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
@@ -60,17 +76,32 @@ return new class extends clsCadastro {
             }
         }
 
-        $this->url_cancelar = sprintf('educar_coordenacao_falta_atraso_professor_lst.php?ref_cod_instituicao=%d', $this->ref_cod_instituicao);
+        $this->url_cancelar = 'educar_coordenacao_falta_atraso_professor_lst.php';
 
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb('Listagem validações de planos de aula', [
-            url('intranet/educar_coordenacao_falta_atraso_professor_lst.php') => 'Professores',
+        $this->breadcrumb($nomeMenu . ' Falta Atraso', [
+            url('intranet/educar_coordenacao_falta_atraso_professor_lst.php') => 'Coordenação',
         ]);
 
         return $retorno;
+    }
+
+    private function converterDiaSemanaQuadroHorario(int $diaSemana)
+    {
+        $arrDiasSemanaIeducar = [
+            0 => 1,
+            1 => 2,
+            2 => 3,
+            3 => 4,
+            4 => 5,
+            5 => 6,
+            6 => 7,
+        ];
+
+        return $arrDiasSemanaIeducar[$diaSemana];
     }
 
     public function Gerar()
@@ -78,14 +109,30 @@ return new class extends clsCadastro {
         // Primary keys
         $this->campoOculto('cod_falta_atraso', $this->cod_falta_atraso);
 
-        if (!isset($_GET['busca'])) {
-            $this->ano = date('Y');
+        if (empty($this->ano)) {
+//            $this->ano = date('Y');
+            $this->ano = '2022';
         }
 
-        $this->inputsHelper()->dynamic(['ano'], ['required' => false]);
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma'], ['required' => true]);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
-        $this->inputsHelper()->dynamic('professorComponente', ['required' => true]);
+        $disabled = false;
+        if (isset($_GET['cod_falta_atraso']) && !empty($_GET['cod_falta_atraso'])) {
+            $this->id = $_GET['cod_falta_atraso'];
+            $disabled = true;
+        }
+
+        $this->campoOculto('id', $this->id);
+        $this->campoOculto('ano', $this->ano);
+
+        if (!empty($this->id)) {
+            $this->campoOculto('tipo_edit', $this->tipo);
+        }
+        $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $disabled]);
+        $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $disabled]);
+        $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $disabled]);
+        $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $disabled]);
+        $this->inputsHelper()->dynamic('todasTurmas', ['required' => true, 'ano' => $this->ano, 'disabled' => $disabled]);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false, 'ano' => $this->ano, 'disabled' => $disabled]);
+        $this->inputsHelper()->dynamic('professorComponente', ['required' => true, 'value' => $this->ref_cod_servidor, 'disabled' => $disabled]);
 
         // Text
         // @todo CoreExt_Enum
@@ -95,13 +142,13 @@ return new class extends clsCadastro {
             2  => 'Falta'
         ];
 
-        $this->campoLista('tipo', 'Tipo', $opcoes, $this->tipo);
+        $this->campoLista('tipo', 'Tipo', $opcoes, $this->tipo, '', false,'', '', $disabled);
 
         // Data
-        $this->campoData('data_falta_atraso', 'Dia', $this->data_falta_atraso, true);
+        $this->campoData('data_falta_atraso', 'Dia', $this->data_falta_atraso, true, '', false, '', $disabled);
 
-        $this->campoNumero('qtd_horas', 'Quantidade de Horas', $this->qtd_horas, 30, 255, false);
-        $this->campoNumero('qtd_min', 'Quantidade de Minutos', $this->qtd_min, 30, 255, false);
+        $this->campoNumero('qtd_horas', 'Quantidade de Horas', $this->qtd_horas, 30, 255, false, '', '', false, false, false, $disabled);
+        $this->campoNumero('qtd_min', 'Quantidade de Minutos', $this->qtd_min, 30, 255, false, '', '', false, false, false, $disabled);
 
         $opcoes = [
             '' => 'Selecione',
@@ -109,22 +156,44 @@ return new class extends clsCadastro {
             1  => 'Não'
         ];
 
-        $this->campoLista('justificada', 'Justificada', $opcoes, $this->justificada);
+        $this->campoLista('justificada', 'Justificada', $opcoes, $this->justificada, '', false,'', '', false, $disabled);
 
         $this->campoMemo('observacao', 'Observação', $this->observacao, 52, 5, false);
 
-        $this->campoRotulo('aulas_lista_', 'Aulas', "<div id='aulas'></div>");
-    }
+        $quadroHorarioAulas = '';
 
-    private function getFuncoesServidor($codServidor)
-    {
-        return DB::table('pmieducar.servidor_funcao')
-            ->select(DB::raw('cod_servidor_funcao, nm_funcao || coalesce( \' - \' || matricula, \'\') as funcao_matricula'))
-            ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
-            ->orderBy('matricula', 'asc')
-            ->get()
-            ->pluck('funcao_matricula', 'cod_servidor_funcao')
-            ->toArray();
+        if (!empty($this->aulas)) {
+            foreach ($this->aulas as $aula) {
+                $quadroHorarioAulas .= '<table cellspacing="0" cellpadding="0" border="0">';
+                $quadroHorarioAulas .= '<tr align="left"><td><p><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
+                $quadroHorarioAulas .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Horário" . '</span></th>';
+                $quadroHorarioAulas .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold">' . "Componente Curricular" . '</span></th>';
+
+                for ($qtd = 1; $qtd <= $aula['qtdAulas']; $qtd++) {
+                    $quadroHorarioAulas .= '  <th><span style="display: block; float: left; width: auto; font-weight: bold"> Aula' . $qtd . '</span></th>';
+                }
+
+                $quadroHorarioAulas .= '</tr>';
+                $quadroHorarioAulas .= '<tr><td class="tableDetalheLinhaSeparador" colspan="3"></td></tr>';
+
+                $quadroHorarioAulas .= ' <td class="sizeFont colorFont"><p>' . $aula['horario'] . '</p></td>';
+                $quadroHorarioAulas .= ' <td class="sizeFont colorFont"><p>' . $aula['componenteCurricular'] . '</p></td>';
+
+                for ($qtd = 1; $qtd <= $aula['qtdAulas']; $qtd++) {
+                    $checked = (in_array($qtd, $aula['aulasFaltou']) ? 'checked' : '');
+
+                    $quadroHorarioAulas .= '<td class="sizeFont colorFont" >';
+                    $quadroHorarioAulas .= "<input type='checkbox' name='aulas[{$aula['ref_cod_quadro_horario_horarios']}][]' $checked value='{$qtd}''>";
+                    $quadroHorarioAulas .= '</td>';
+                }
+
+                $quadroHorarioAulas .= ' </tr></p></td></tr>';
+                $quadroHorarioAulas .= ' </table>';
+            }
+        }
+
+
+        $this->campoRotulo('aulas_lista_', 'Aulas', "<div id='aulas'>$quadroHorarioAulas</div>");
     }
 
     public function Novo()
@@ -138,7 +207,7 @@ return new class extends clsCadastro {
             7,
             sprintf(
                 'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-                $this->ref_cod_servidor,
+                $this->ref_cod_professor_componente,
                 $this->ref_cod_instituicao
             )
         );
@@ -150,7 +219,7 @@ return new class extends clsCadastro {
                 $this->ref_cod_instituicao,
                 null,
                 $this->pessoa_logada,
-                $this->ref_cod_servidor,
+                $this->ref_cod_professor_componente,
                 $this->tipo,
                 $this->data_falta_atraso,
                 $this->qtd_horas,
@@ -166,16 +235,17 @@ return new class extends clsCadastro {
             $dia_semana = $db->CampoUnico(sprintf('(SELECT EXTRACT (DOW FROM date \'%s\') + 1 )', $this->data_falta_atraso));
 
             $obj_ser = new clsPmieducarServidor();
-            $horas   = $obj_ser->qtdhoras($this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_cod_instituicao, $dia_semana);
+            $horas   = $obj_ser->qtdhoras($this->ref_cod_professor_componente, $this->ref_cod_escola, $this->ref_cod_instituicao, $dia_semana);
 
             if ($horas) {
+                $this->ref_cod_servidor_funcao = '';
                 $obj = new clsPmieducarFaltaAtraso(
                     null,
                     $this->ref_cod_escola,
                     $this->ref_cod_instituicao,
                     null,
                     $this->pessoa_logada,
-                    $this->ref_cod_servidor,
+                    $this->ref_cod_professor_componente,
                     $this->tipo,
                     $this->data_falta_atraso,
                     $horas['hora'],
@@ -184,20 +254,22 @@ return new class extends clsCadastro {
                     null,
                     null,
                     1,
-                    $this->ref_cod_servidor_funcao
+                    $this->ref_cod_servidor_funcao,
+                    $this->ref_cod_curso,
+                    $this->ref_cod_serie,
+                    $this->ref_cod_turma,
+                    $this->ref_cod_componente_curricular,
+                    $this->observacao,
+                    $this->ano
                 );
             }
         }
 
-        $cadastrou = $obj->cadastra();
+        $cadastrou = $obj->cadastra($this->aulas);
 
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-            $this->simpleRedirect(sprintf(
-                'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-                $this->ref_cod_servidor,
-                $this->ref_cod_instituicao
-            ));
+            $this->simpleRedirect('educar_coordenacao_falta_atraso_professor_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br />';
@@ -214,10 +286,15 @@ return new class extends clsCadastro {
             7,
             sprintf(
                 'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-                $this->ref_cod_servidor,
+                $this->ref_cod_professor_componente,
                 $this->ref_cod_instituicao
             )
         );
+
+        if (!empty($this->tipo_edit)) {
+            $this->tipo = $this->tipo_edit;
+        }
+
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
         if ($this->tipo == 1) {
             $obj = new clsPmieducarFaltaAtraso(
@@ -226,7 +303,7 @@ return new class extends clsCadastro {
                 $this->ref_cod_instituicao,
                 $this->pessoa_logada,
                 null,
-                $this->ref_cod_servidor,
+                $this->ref_cod_professor_componente,
                 $this->tipo,
                 $this->data_falta_atraso,
                 $this->qtd_horas,
@@ -258,7 +335,7 @@ return new class extends clsCadastro {
                 $this->ref_cod_instituicao,
                 $this->pessoa_logada,
                 null,
-                $this->ref_cod_servidor,
+                $this->ref_cod_professor_componente,
                 $this->tipo,
                 $this->data_falta_atraso,
                 $horas,
@@ -267,17 +344,19 @@ return new class extends clsCadastro {
                 null,
                 null,
                 1,
-                $this->ref_cod_servidor_funcao
+                $this->ref_cod_servidor_funcao,
+                null,
+                null,
+                null,
+                null,
+                $this->observacao
             );
         }
-        $editou = $obj->edita();
+
+        $editou = $obj->edita($this->aulas);
         if ($editou) {
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
-            $this->simpleRedirect(sprintf(
-                'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-                $this->ref_cod_servidor,
-                $this->ref_cod_instituicao
-            ));
+            $this->simpleRedirect('educar_coordenacao_falta_atraso_professor_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br />';
@@ -295,7 +374,7 @@ return new class extends clsCadastro {
             7,
             sprintf(
                 'educar_professores_coordenacao_falta_atraso_professor_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-                $this->ref_cod_servidor,
+                $this->ref_cod_professor_componente,
                 $this->ref_cod_instituicao
             )
         );
@@ -306,7 +385,7 @@ return new class extends clsCadastro {
             $this->ref_ref_cod_instituicao,
             $this->pessoa_logada,
             $this->pessoa_logada,
-            $this->ref_cod_servidor,
+            $this->ref_cod_professor_componente,
             $this->tipo,
             $this->data_falta_atraso,
             $this->qtd_horas,
@@ -319,11 +398,7 @@ return new class extends clsCadastro {
         $excluiu = $obj->excluir();
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
-            $this->simpleRedirect(sprintf(
-                'educar_professores_coordenacao_falta_atraso_professor_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-                $this->ref_cod_servidor,
-                $this->ref_cod_instituicao
-            ));
+            $this->simpleRedirect('educar_coordenacao_falta_atraso_professor_lst.php');
         }
         $this->mensagem = 'Exclusão não realizada.<br>';
 

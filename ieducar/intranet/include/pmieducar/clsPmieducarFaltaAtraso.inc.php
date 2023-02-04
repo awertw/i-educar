@@ -19,6 +19,12 @@ class clsPmieducarFaltaAtraso extends Model
     public $data_exclusao;
     public $ativo;
     public $ref_cod_servidor_funcao;
+    public $ref_cod_curso;
+    public $ref_cod_serie;
+    public $ref_cod_turma;
+    public $ref_cod_componente_curricular;
+    public $observacao;
+    public $qtd_aulas;
 
     public function __construct(
         $cod_falta_atraso = null,
@@ -35,13 +41,19 @@ class clsPmieducarFaltaAtraso extends Model
         $data_cadastro = null,
         $data_exclusao = null,
         $ativo = null,
-        $ref_cod_servidor_funcao = null
+        $ref_cod_servidor_funcao = null,
+        $ref_cod_curso = null,
+        $ref_cod_serie = null,
+        $ref_cod_turma = null,
+        $ref_cod_componente_curricular = null,
+        $observacao = null,
+        $ano = null,
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'falta_atraso';
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_falta_atraso, ref_cod_escola, falta_atraso.ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, falta_atraso.ref_cod_servidor, tipo, data_falta_atraso, qtd_horas, qtd_min, justificada, data_cadastro, data_exclusao, ativo, ref_cod_servidor_funcao';
+        $this->_campos_lista = $this->_todos_campos = 'cod_falta_atraso, ref_cod_escola, ref_cod_curso, ref_cod_serie, ref_cod_turma, ref_cod_componente_curricular, observacao, ano, falta_atraso.ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, falta_atraso.ref_cod_servidor, tipo, data_falta_atraso, qtd_horas, qtd_min, justificada, data_cadastro, data_exclusao, ativo, ref_cod_servidor_funcao';
 
         if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
@@ -99,6 +111,30 @@ class clsPmieducarFaltaAtraso extends Model
         if (is_numeric($ref_cod_servidor_funcao)) {
             $this->ref_cod_servidor_funcao = $ref_cod_servidor_funcao;
         }
+
+        if (is_numeric($ref_cod_curso)) {
+            $this->ref_cod_curso = $ref_cod_curso;
+        }
+
+        if (is_numeric($ref_cod_serie)) {
+            $this->ref_cod_serie = $ref_cod_serie;
+        }
+
+        if (is_numeric($ref_cod_turma)) {
+            $this->ref_cod_turma = $ref_cod_turma;
+        }
+
+        if (is_numeric($ref_cod_componente_curricular)) {
+            $this->ref_cod_componente_curricular = $ref_cod_componente_curricular;
+        }
+
+        if (is_string($observacao)) {
+            $this->observacao = $observacao;
+        }
+
+        if (is_numeric($ano)) {
+            $this->ano = $ano;
+        }
     }
 
     /**
@@ -106,7 +142,7 @@ class clsPmieducarFaltaAtraso extends Model
      *
      * @return bool
      */
-    public function cadastra()
+    public function cadastra($quadro_horario_aulas = null)
     {
         if (is_numeric($this->ref_cod_escola) &&
             is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_cad) &&
@@ -122,6 +158,30 @@ class clsPmieducarFaltaAtraso extends Model
             if (is_numeric($this->ref_cod_escola)) {
                 $campos .= "{$gruda}ref_cod_escola";
                 $valores .= "{$gruda}'{$this->ref_cod_escola}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->ref_cod_curso)) {
+                $campos .= "{$gruda}ref_cod_curso";
+                $valores .= "{$gruda}'{$this->ref_cod_curso}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->ref_cod_serie)) {
+                $campos .= "{$gruda}ref_cod_serie";
+                $valores .= "{$gruda}'{$this->ref_cod_serie}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->ref_cod_turma)) {
+                $campos .= "{$gruda}ref_cod_turma";
+                $valores .= "{$gruda}'{$this->ref_cod_turma}'";
+                $gruda = ', ';
+            }
+
+            if(is_numeric($this->ref_cod_componente_curricular)) {
+                $campos .= "{$gruda}ref_cod_componente_curricular";
+                $valores .= "{$gruda}'{$this->ref_cod_componente_curricular}'";
                 $gruda = ', ';
             }
 
@@ -149,12 +209,6 @@ class clsPmieducarFaltaAtraso extends Model
                 $gruda = ', ';
             }
 
-            if (is_string($this->data_falta_atraso)) {
-                $campos .= "{$gruda}data_falta_atraso";
-                $valores .= "{$gruda}'{$this->data_falta_atraso}'";
-                $gruda = ', ';
-            }
-
             if (is_numeric($this->qtd_horas)) {
                 $campos .= "{$gruda}qtd_horas";
                 $valores .= "{$gruda}'{$this->qtd_horas}'";
@@ -173,9 +227,27 @@ class clsPmieducarFaltaAtraso extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->ref_cod_servidor_funcao)) {
-                $campos .= "{$gruda}ref_cod_servidor_funcao";
-                $valores .= "{$gruda}'{$this->ref_cod_servidor_funcao}'";
+            if (is_numeric($this->qtd_aulas)) {
+                $campos .= "{$gruda}qtd_aulas";
+                $valores .= "{$gruda}'{$this->qtd_aulas}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->data_falta_atraso)) {
+                $campos .= "{$gruda}data_falta_atraso";
+                $valores .= "{$gruda}'{$this->data_falta_atraso}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->ano)) {
+                $campos .= "{$gruda}ano";
+                $valores .= "{$gruda}'{$this->ano}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->observacao)) {
+                $campos .= "{$gruda}observacao";
+                $valores .= "{$gruda}'{$this->observacao}'";
                 $gruda = ', ';
             }
 
@@ -185,11 +257,29 @@ class clsPmieducarFaltaAtraso extends Model
 
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
-            $gruda = ', ';
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES($valores)");
 
-            return $db->InsertId("{$this->_tabela}_cod_falta_atraso_seq");
+            $insertId = $db->InsertId("{$this->_tabela}_cod_falta_atraso_seq");
+
+            if (!empty($quadro_horario_aulas) && is_array($quadro_horario_aulas)) {
+                $qtdAulas = 0;
+                foreach ($quadro_horario_aulas as $ref_cod_horario => $aulas) {
+
+                    $qtdAulas += count($aulas);
+                    $aulas = implode(',', $aulas);
+                    $db->Consulta("INSERT INTO pmieducar.falta_atraso_horarios ( ref_cod_falta_atraso, ref_cod_quadro_horario_horarios, aulas ) VALUES ( '{$insertId}', '{$ref_cod_horario}', '{$aulas}' )");
+                }
+
+                $sqlUpdateQtdAulas =  "
+                UPDATE {$this->_tabela}
+                SET qtd_aulas = '{$qtdAulas}'
+                WHERE cod_falta_atraso = '{$insertId}'";
+
+                $db->Consulta($sqlUpdateQtdAulas);
+            }
+
+            return $insertId;
         }
 
         return false;
@@ -200,7 +290,7 @@ class clsPmieducarFaltaAtraso extends Model
      *
      * @return bool
      */
-    public function edita()
+    public function edita($quadro_horario_aulas = null)
     {
         if (is_numeric($this->cod_falta_atraso) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
@@ -257,8 +347,18 @@ class clsPmieducarFaltaAtraso extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->qtd_aulas)) {
+                $set .= "{$gruda}qtd_aulas = '{$this->qtd_aulas}'";
+                $gruda = ', ';
+            }
+
             if (is_string($this->data_cadastro)) {
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->observacao)) {
+                $set .= "{$gruda}observacao = '{$this->observacao}'";
                 $gruda = ', ';
             }
 
@@ -267,15 +367,76 @@ class clsPmieducarFaltaAtraso extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->ano)) {
+                $set .= "{$gruda}ano = '{$this->ano}'";
+                $gruda = ', ';
+            }
+
             $set .= "{$gruda}data_exclusao = NOW()";
             $gruda = ', ';
 
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ', ';
             }
 
             if ($set) {
+                $qtdAulas = 0;
+                if (!empty($quadro_horario_aulas) && is_array($quadro_horario_aulas)) {
+
+                    $idsRefsQuadroHorario = '';
+                    foreach ($quadro_horario_aulas as $ref_cod_horario => $aulas) {
+                        $qtdAulas += count($aulas);
+                        $aulas = implode(',', $aulas);
+                        $idsRefsQuadroHorario .= $ref_cod_horario.',';
+
+                        $sqlSelect = "
+                            SELECT
+                                fah.*
+                            FROM
+                                pmieducar.falta_atraso_horarios fah
+                            WHERE
+                                ref_cod_falta_atraso = '{$this->cod_falta_atraso}' AND fah.ref_cod_quadro_horario_horarios = '{$ref_cod_horario}'";
+
+                        $db->Consulta($sqlSelect);
+                        $db->ProximoRegistro();
+                        $registroFaltaAtraso = $db->Tupla();
+
+                        if ($registroFaltaAtraso) {
+                            $sqlUpdate = "
+                            UPDATE
+                                pmieducar.falta_atraso_horarios
+                            SET
+                               aulas = '{$aulas}'
+                            WHERE
+                                ref_cod_falta_atraso = '{$this->cod_falta_atraso}' AND ref_cod_quadro_horario_horarios = '{$ref_cod_horario}'";
+
+                            $db->Consulta($sqlUpdate);
+
+                            continue;
+                        }
+
+                        $db->Consulta("INSERT INTO pmieducar.falta_atraso_horarios ( ref_cod_falta_atraso, ref_cod_quadro_horario_horarios, aulas ) VALUES ( '{$this->cod_falta_atraso}', '{$ref_cod_horario}', '{$aulas}' )");
+
+                    }
+
+                    if (!empty($idsRefsQuadroHorario)) {
+                        $inIdsRefsQuadroHorario = rtrim($idsRefsQuadroHorario, ',');
+
+                        $sqlDelete = "
+                        DELETE FROM
+                            pmieducar.falta_atraso_horarios
+                        WHERE
+                            ref_cod_falta_atraso = '{$this->cod_falta_atraso}' AND ref_cod_quadro_horario_horarios NOT IN ({$inIdsRefsQuadroHorario})
+                        ";
+
+                        $db->Consulta($sqlDelete);
+                    }
+                }
+
+                if (is_numeric($qtdAulas)) {
+                    $set .= "{$gruda}qtd_aulas = '{$qtdAulas}'";
+                }
+
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_falta_atraso = '{$this->cod_falta_atraso}'");
 
                 return true;
@@ -307,7 +468,12 @@ class clsPmieducarFaltaAtraso extends Model
         $date_data_cadastro_fim = null,
         $date_data_exclusao_ini = null,
         $date_data_exclusao_fim = null,
-        $int_ativo = null
+        $int_ativo = null,
+        $int_ref_cod_curso = null,
+        $int_ref_cod_serie = null,
+        $int_ref_cod_turma = null,
+        $int_ref_cod_componente_curricular = null,
+        $int_ano = null
     ) {
         $sql = "
             SELECT {$this->_campos_lista}, matricula
@@ -318,6 +484,11 @@ class clsPmieducarFaltaAtraso extends Model
 
         $whereAnd = ' WHERE ';
 
+        if (is_numeric($int_ano)) {
+            $filtros .= "{$whereAnd} EXTRACT(YEAR FROM f.data) = '{$int_ano}'";
+            $whereAnd = ' AND ';
+        }
+
         if (is_numeric($int_cod_falta_atraso)) {
             $filtros .= "{$whereAnd} cod_falta_atraso = '{$int_cod_falta_atraso}'";
             $whereAnd = ' AND ';
@@ -325,6 +496,26 @@ class clsPmieducarFaltaAtraso extends Model
 
         if (is_numeric($int_ref_cod_escola)) {
             $filtros .= "{$whereAnd} ref_cod_escola = '{$int_ref_cod_escola}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_curso)) {
+            $filtros .= "{$whereAnd} c.cod_curso = '{$int_ref_cod_curso}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_serie)) {
+            $filtros .= "{$whereAnd} s.cod_serie = '{$int_ref_cod_serie}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_turma)) {
+            $filtros .= "{$whereAnd} t.cod_turma = '{$int_ref_cod_turma}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_componente_curricular)) {
+            $filtros .= "{$whereAnd} k.id = '{$int_ref_cod_componente_curricular}'";
             $whereAnd = ' AND ';
         }
 
@@ -455,6 +646,40 @@ class clsPmieducarFaltaAtraso extends Model
         return false;
     }
 
+    public function verificarFaltaAtrasoQuadroHorario($quadroHorarioArray)
+    {
+        if (is_numeric($this->cod_falta_atraso)) {
+            $adapterQuadroHorario = [];
+
+            foreach ($quadroHorarioArray as $quadroHorario) {
+                $sql = "
+                SELECT
+                    fah.*
+                FROM
+                    pmieducar.falta_atraso_horarios fah
+                WHERE
+                    ref_cod_falta_atraso = '{$this->cod_falta_atraso}' AND fah.ref_cod_quadro_horario_horarios = '{$quadroHorario['ref_cod_quadro_horario_horarios']}'";
+
+                $db = new clsBanco();
+                $db->Consulta($sql);
+                $db->ProximoRegistro();
+                $faltaAtraso = $db->Tupla();
+
+                $adapterQuadroHorario[] = [
+                    'ref_cod_quadro_horario_horarios' => $quadroHorario['ref_cod_quadro_horario_horarios'],
+                    'horario' =>  substr($quadroHorario['hora_inicial'], 0, 5) . ' - ' .  substr($quadroHorario['hora_final'], 0, 5),
+                    'componenteCurricular' => $quadroHorario['componente_abreviatura'],
+                    'qtdAulas' => (!empty($quadroHorario['qtd_aulas']) ? $quadroHorario['qtd_aulas'] : 1),
+                    'aulasFaltou' => explode(',', $faltaAtraso['aulas']),
+                ];
+            }
+
+            return $adapterQuadroHorario;
+        }
+
+        return false;
+    }
+
     /**
      * Retorna um array com os dados de um registro.
      *
@@ -482,6 +707,17 @@ class clsPmieducarFaltaAtraso extends Model
     {
         if (is_numeric($this->cod_falta_atraso) && is_numeric($this->ref_usuario_exc)) {
             $this->ativo = 0;
+
+
+            $sqlDeleteHorarios = "
+                        DELETE FROM
+                            pmieducar.falta_atraso_horarios
+                        WHERE
+                            ref_cod_falta_atraso = '{$this->cod_falta_atraso}'
+                        ";
+
+            $db = new clsBanco();
+            $db->Consulta($sqlDeleteHorarios);
 
             return $this->edita();
         }
