@@ -1,31 +1,41 @@
 (function($){
   $(document).ready(function(){
-    let obj_tipo = document.getElementById('tipo');
-    setVisibility('tr_qtd_horas', false);
-    setVisibility('tr_qtd_min', false);
+    let verificaAcaoEditar = document.getElementById('ref_cod_turma').value != '';
+    document.getElementById('data_falta_atraso').disabled = verificaAcaoEditar;
+    document.getElementById('justificada').disabled = verificaAcaoEditar;
 
-    obj_tipo.onchange = function()
-    {
+    let obj_tipo = document.getElementById('tipo');
+    obj_tipo.onchange = displayQtdHorasMin;
+
+    if (obj_tipo.value != '2') {
+      hideAulas();
+    }
+
+    function hideAulas() {
+      $('#tr_aulas_lista_').hide();
+    }
+
+    var obj_justificada = document.getElementById('justificada');
+    obj_justificada.onchange = displayJustificada;
+
+    displayQtdHorasMin();
+    displayJustificada();
+
+    function displayQtdHorasMin() {
+      setVisibility('tr_qtd_horas', false);
+      setVisibility('tr_qtd_min', false);
+
       if (document.getElementById('tipo').value == 1) {
         setVisibility('tr_qtd_horas', true);
         setVisibility('tr_qtd_min', true);
       }
-      else if (document.getElementById( 'tipo' ).value == 2) {
-        setVisibility('tr_qtd_horas', false);
-        setVisibility('tr_qtd_min', false);
-      }
     }
 
-    var obj_justificada = document.getElementById('justificada');
-    setVisibility('tr_observacao', false);
+    function displayJustificada() {
+      setVisibility('tr_observacao', false);
 
-    obj_justificada.onchange = function()
-    {
-      if (obj_justificada.value == 0) {
+      if (obj_justificada.value === '0') {
         setVisibility('tr_observacao', true);
-      }
-      else if (obj_justificada.value == 1) {
-        setVisibility('tr_observacao', false);
       }
     }
 
@@ -60,14 +70,8 @@
 
       let html = '';
 
-      console.log('length registros: ' + registrosLength)
-      console.log('registros: ' + responseRegistros)
-      console.log('length: ' + response.length)
-
       for (let i = 0; i < registrosLength; i++) {
         let registro = responseRegistros[i];
-
-        console.log(registro);
 
         html += '<table cellspacing="0" cellpadding="0" border="0">';
         html += '<tr align="left"><td><p><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
@@ -86,7 +90,7 @@
 
         for (let qtd = 1; qtd <= registro.qtdAulas; qtd++) {
           html += ` <td class="sizeFont colorFont" > \
-                                <input type="checkbox" onchange="presencaMudou(this)" id="aulas[]" name='aulas[]' data-aulaid="${qtd}" value="1" Checked>
+                                <input type="checkbox" name="aulas[${registro.ref_cod_quadro_horario_horarios}][]" value="${qtd}">
                      </td>`;
         }
 
@@ -95,12 +99,11 @@
 
       }
 
-      console.log(html)
-      console.log(objAulasQuadroHorario)
       if (html) {
         objAulasQuadroHorario.innerHTML = html;
       }
 
+      $('#tr_aulas_lista_').show();
 
     }
 

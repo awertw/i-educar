@@ -14,7 +14,7 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
         $escolaId = $this->getEscolaId($options['escolaId'] ?? null);
         $serieId = $this->getSerieId($options['serieId'] ?? null);
         $turmaId = $this->getTurmaId($options['turmaId'] ?? null);
-        $anoLetivo = $this->getAno($options['ano'] ?? null);
+        $anoLetivo = $this->getAno($options['options']['ano'] ?? null);
 
         $userId = $this->getCurrentUserId();
 
@@ -22,7 +22,7 @@ class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabili
             $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
             if ($isOnlyProfessor) {
-                $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado($instituicaoId, $turmaId, $ano, $userId);
+                $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado($instituicaoId, $turmaId, $anoLetivo, $userId);
             } else {
                 $sql = "
                         SELECT

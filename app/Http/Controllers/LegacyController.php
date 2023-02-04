@@ -129,6 +129,7 @@ class LegacyController extends Controller
             // Exception nativa do PHP. Isto é feito devido o Exception
             // Handler do Laravel aceitar apenas exceções nativas.
 
+            dd($throwable);
             $exception = new Exception(
                 $throwable->getMessage(),
                 $throwable->getCode(),
@@ -151,7 +152,7 @@ class LegacyController extends Controller
         if (method_exists($viewToRender, 'Formular')) {
             $viewToRender->Formular();
         }
-        
+
         if (property_exists($viewToRender, 'title')) {
             $class->SetTitulo($viewToRender->title);
         }

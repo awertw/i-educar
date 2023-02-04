@@ -18,7 +18,6 @@ class CoordenadorFaltaAtrasoController extends ApiCoreController
 //            var_dump($diaSemana);
             $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
 
-            $diaSemanaConvertido = 5;
             $quadroHorarioArray = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $professorId, $diaSemanaConvertido);
 
 //            echo '<pre>';
@@ -28,6 +27,7 @@ class CoordenadorFaltaAtrasoController extends ApiCoreController
 
             foreach ($quadroHorarioArray as $quadroHorario) {
                 $adapterQuadroHorario[] = [
+                  'ref_cod_quadro_horario_horarios' => $quadroHorario['ref_cod_quadro_horario_horarios'],
                   'horario' =>  substr($quadroHorario['hora_inicial'], 0, 5) . ' - ' .  substr($quadroHorario['hora_final'], 0, 5),
                   'componenteCurricular' => $quadroHorario['componente_abreviatura'],
                   'qtdAulas' => (!empty($quadroHorario['qtd_aulas']) ? $quadroHorario['qtd_aulas'] : 1),
