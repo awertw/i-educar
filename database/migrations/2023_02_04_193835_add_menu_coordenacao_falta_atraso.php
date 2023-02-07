@@ -13,8 +13,8 @@ return new class extends Migration
     public function up()
     {
         DB::table('public.menus')->insert(
-            array(
-                'id' => 3956,
+            [
+                'id' => 3957,
                 'parent_id' => 393,
                 'title' => 'Cadastro Falta/Atraso Professor',
                 'description' => 'Cadastro Falta/Atraso Professor',
@@ -28,7 +28,7 @@ return new class extends Migration
                 'active' => true,
                 'created_at' => NULL,
                 'updated_at' => NULL
-            )
+            ]
         );
     }
 
