@@ -46,6 +46,7 @@ class FrequenciaController extends ApiCoreController
     protected function getQtdAulasQuadroHorario()
     {
         $turmaId = $this->getRequest()->id;
+        $refComponenteCurricularId = $this->getRequest()->refComponenteCurricular;
         $dataFrequencia = $this->getRequest()->data;
         $userId = \Illuminate\Support\Facades\Auth::id();
 
@@ -58,26 +59,58 @@ class FrequenciaController extends ApiCoreController
             $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicao['cod_instituicao'], $userId);
             $diaSemana =  Carbon::createFromFormat('d/m/Y', $dataFrequencia)->dayOfWeek;
 
+            $dataAtraso = Portabilis_Date_Utils::brToPgSQL($dataFrequencia);
+
+            $objFaltaAtraso = new clsPmieducarFaltaAtraso(
+                null,
+                null,
+                $instituicao['cod_instituicao'],
+                null,
+                null,
+                $userId,
+                2,
+                $dataAtraso,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $turmaId,
+                $refComponenteCurricularId,
+            );
+
+            $faltaAtraso = $objFaltaAtraso->detalheParaFrequencia();
+
+            $qtdAulas = 5;
+            $qtdAulasFaltou = 0;
+
+            if (!empty($faltaAtraso)) {
+                $qtdAulasFaltou = $faltaAtraso['qtd_aulas'];
+            }
 
             if ($isOnlyProfessor && !$utilizaSabadoAlternado && $checaQtdAulasQuadroHorario) {
+                $qtdAulas = 0;
                 $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
 
                 $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $userId, $diaSemanaConvertido);
-
-                $qtdAulas = 0;
 
                 if (count($quadroHorario) > 0) {
                     foreach ($quadroHorario as $horario) {
                         $qtdAulas += $horario['qtd_aulas'];
                     }
                 }
-
-                return ['isProfessor' => true,
-                        'qtdAulas' => $qtdAulas];
-            } else {
-                return ['isProfessor' => false,
-                        'qtdAulas' => 5]; //admin/coordenador
             }
+
+            if ($qtdAulasFaltou > 0 && $qtdAulas > 0) {
+                $qtdAulas = $qtdAulas - $qtdAulasFaltou;
+            }
+
+            return ['isProfessor' => $isOnlyProfessor,
+                    'qtdAulas' => $qtdAulas]; //admin/coordenador
         }
 
         return [];
