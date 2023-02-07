@@ -17,8 +17,8 @@ RUN apk add wget
 
 RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS
 
-#RUN pecl install xdebug
-#RUN docker-php-ext-enable xdebug
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
 
 RUN apk --no-cache add postgresql-dev
 RUN docker-php-ext-install pgsql
