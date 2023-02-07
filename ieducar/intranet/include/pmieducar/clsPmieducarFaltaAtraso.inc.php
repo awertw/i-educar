@@ -53,7 +53,7 @@ class clsPmieducarFaltaAtraso extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'falta_atraso';
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_falta_atraso, ref_cod_escola, ref_cod_curso, ref_cod_serie, ref_cod_turma, ref_cod_componente_curricular, observacao, ano, falta_atraso.ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, falta_atraso.ref_cod_servidor, tipo, data_falta_atraso, qtd_horas, qtd_min, justificada, data_cadastro, data_exclusao, ativo, ref_cod_servidor_funcao';
+        $this->_campos_lista = $this->_todos_campos = 'cod_falta_atraso, ref_cod_escola, ref_cod_curso, ref_cod_serie, ref_cod_turma, ref_cod_componente_curricular, observacao, ano, falta_atraso.ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, falta_atraso.ref_cod_servidor, tipo, data_falta_atraso, qtd_horas, qtd_min, justificada, data_cadastro, data_exclusao, ativo, ref_cod_servidor_funcao, qtd_aulas';
 
         if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
@@ -804,5 +804,36 @@ class clsPmieducarFaltaAtraso extends Model
     {
         $db = new clsBanco();
         $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_servidor = '{$codServidor}'");
+    }
+
+    public function detalheParaFrequencia()
+    {
+        if (is_numeric($this->ref_cod_servidor) && is_string($this->data_falta_atraso)) {
+            $db = new clsBanco();
+
+            $sql = "
+                SELECT
+                    {$this->_todos_campos}
+                FROM
+                    {$this->_tabela}
+                WHERE
+                    ref_cod_servidor = '{$this->ref_cod_servidor}'
+                  AND ref_cod_turma = '{$this->ref_cod_turma}'
+                  AND tipo = '2'
+                  AND data_falta_atraso = '{$this->data_falta_atraso}'";
+
+            if (is_numeric($this->ref_cod_componente_curricular)) {
+                $sql .= " AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}' ";
+            }
+
+            $db->Consulta($sql);
+
+
+            $db->ProximoRegistro();
+
+            return $db->Tupla();
+        }
+
+        return false;
     }
 }

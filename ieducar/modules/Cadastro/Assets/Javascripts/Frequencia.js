@@ -156,10 +156,12 @@
 
       if (tipoPresenca == 2 || tipoPresenca == '2') {
         const campoData = document.getElementById('data').value;
+        const campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
 
         let params = {
           id: campoTurma,
-          data: campoData
+          data: campoData,
+          refComponenteCurricular: campoComponenteCurricular
         };
 
         let options = {
