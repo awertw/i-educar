@@ -339,3 +339,21 @@ var modalLoadingUtils = {
     modalLoadingCommon.dialog('destroy');
   }
 }
+
+const buttonUtils = {
+  loading: function (elementId, textLoading = 'Aguarde...') {
+    if (document.getElementById(elementId)) {
+      document.getElementById(elementId).disabled = true;
+      document.getElementById(elementId).value = textLoading;
+      document.getElementById(elementId).className = 'botaolistagemdisabled';
+    }
+  },
+
+  reset: function (elementId, text){
+    if (document.getElementById(elementId)) {
+      document.getElementById(elementId).disabled = false;
+      document.getElementById(elementId).value = text;
+      document.getElementById(elementId).className = 'botaolistagem';
+    }
+  }
+}
