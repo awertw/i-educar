@@ -435,10 +435,11 @@ class DiarioApiController extends ApiCoreController
             if($tipoNota==1){
                 $this->updateMedia();
             }
-           
+            $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($this->getRequest()->componente_curricular_id, $serie_id);
+      
             $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
-
+      
         $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
@@ -490,7 +491,7 @@ class DiarioApiController extends ApiCoreController
            
         }
         
-       
+      
         if($tipo_recuperacao_paralela==2){
             //recuperacao paralela por etapa substituindo a menor nota
                         
@@ -635,6 +636,7 @@ class DiarioApiController extends ApiCoreController
                                     'bloqueada' => false
                                   ]);
                             }
+                          
                     }
                     //recuperacao paralela por etapa sem substituir a menor nota
                     }elseif($substitui_menor_nota==0){
@@ -770,7 +772,7 @@ class DiarioApiController extends ApiCoreController
                                   ]);
                             }
                     }
-
+                    
                     }
         
         }elseif($tipo_recuperacao_paralela==1){
@@ -2107,7 +2109,7 @@ class DiarioApiController extends ApiCoreController
             $etapas = $regraRecuperacao->getEtapas();
             $sumNota = 0;
             foreach ($etapas as $key => $_etapa) {
-                $sumNota += $this->getNotaOriginal($_etapa, $componenteCurricularId);
+                $sumNota += floatval($this->getNotaOriginal($_etapa, $componenteCurricularId));
             }
 
             // caso a média das notas da etapa seja menor que média definida na regra e a última nota tenha sido lançada

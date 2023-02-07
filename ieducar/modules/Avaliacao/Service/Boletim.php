@@ -207,7 +207,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     {
         $qtdFaltasGerais = $this->getFaltaGeraisSemEtapa();
         $qtdFaltasComponentes = $this->getFaltaComponenteSemEtapa($componente_curricular_id);
-        $qtdFaltas = $qtdFaltasGerais + $qtdFaltasComponentes;
+        $qtdFaltas = $qtdFaltasGerais + intval($qtdFaltasComponentes);
 
 
         return $qtdFaltas;
@@ -237,7 +237,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $qtdFaltas = 0;
         foreach ($faltas as $falta) {
-            $qtdFaltas += $falta->quantidade;
+            $qtdFaltas += intval($falta->quantidade);
         }
 
         return $qtdFaltas;
@@ -1143,7 +1143,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $etapa = $mediaComponente->etapa;
             $qtdComponentes++;
             $media = $this->valorMediaSituacao($mediaComponente);
-            $somaMedias += $media;
+            $somaMedias += floatval($media);
 
             $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
@@ -1422,7 +1422,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                 if (!in_array($id, $disciplinasNaoReprovativas)) {
                     // Adiciona a quantidade de falta do componente ao total geral de faltas
-                    $total += $componenteTotal;
+                    $total += intval($componenteTotal);
                 }
             }
 
@@ -1511,7 +1511,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             $etapaNotas = CoreExt_Entity::entityFilterAttr($notasComponentes[$codigo], 'etapa', 'nota');
             foreach ($etapaNotas as $etapa => $nota) {
-                $somaEtapaNotas[$etapa] = ($somaEtapaNotas[$etapa] ?? 0) + $nota;
+                $somaEtapaNotas[$etapa] = ($somaEtapaNotas[$etapa] ?? 0) + floatval($nota);
             }
         }
 
@@ -2559,7 +2559,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 }
 
                 $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
-                $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
+                $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + floatval($notaRecuperacao->notaRecuperacaoEspecifica)) / 2;
 
                 if (!$substituiMenorNota) {
                     $data['Se'] += $data['RSP' . $cont] ?? $somaEtapasRecuperacao;
