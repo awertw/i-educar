@@ -91,13 +91,14 @@ return new class extends clsListagem {
                     $registro['ref_ref_cod_instituicao']
                 );
 
+                $horas_aux   = 0;
+                $minutos_aux = 0;
+
                 if ($horas) {
-                    $horas_aux   = $horas['hora'];
-                    $minutos_aux = $horas['min'];
+                    $horas_aux   = $horas['hora'] - $registro['qtd_horas'];
+                    $minutos_aux = $horas['min'] - $registro['qtd_min'];
                 }
 
-                $horas_aux   = $horas_aux - $registro['qtd_horas'];
-                $minutos_aux = $minutos_aux - $registro['qtd_min'];
 
                 if ($horas_aux > 0 && $minutos_aux < 0) {
                     $horas_aux--;
