@@ -130,8 +130,7 @@ return new class extends clsCadastro {
         $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $disabled]);
         $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $disabled]);
         $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $disabled]);
-        $this->inputsHelper()->dynamic('todasTurmas', ['required' => true, 'ano' => $this->ano, 'disabled' => $disabled]);
-        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false, 'ano' => $this->ano, 'disabled' => $disabled]);
+        $this->inputsHelper()->dynamic('turma', ['required' => true, 'ano' => $this->ano, 'disabled' => $disabled]);
         $this->inputsHelper()->dynamic('professorComponente', ['required' => true, 'value' => $this->ref_cod_servidor, 'disabled' => $disabled]);
 
         // Text
@@ -258,7 +257,7 @@ return new class extends clsCadastro {
                     $this->ref_cod_curso,
                     $this->ref_cod_serie,
                     $this->ref_cod_turma,
-                    $this->ref_cod_componente_curricular,
+                    null,
                     $this->observacao,
                     $this->ano
                 );
