@@ -998,7 +998,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   var $linha = $j('<tr />');
 
   if (componenteCurricularSelected) {
-    $j('<th />').html('Área de Conhecimento').appendTo($linha);
+    $j('<th />').html('&Aacute;rea de Conhecimento').appendTo($linha);
     $j('<th />').html('Componente curricular').appendTo($linha);
   }
 
@@ -1007,9 +1007,9 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   $j('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
   $j('<th />').html('Ano').appendTo($linha);
   $j('<th />').html('Escola').appendTo($linha);
-  $j('<th />').html('Regra avaliação').appendTo($linha);
+  $j('<th />').html('Regra avalia&#231;&#227;o').appendTo($linha);
   $j('<th />').html('Tipo nota').appendTo($linha);
-  $j('<th />').html('Tipo presença').appendTo($linha);
+  $j('<th />').html('Tipo presen&#231;a').appendTo($linha);
   $j('<th />').html('Tipo parecer').appendTo($linha);
   $j('<th />').html(safeUtf8Decode('Recuperação paralela')).appendTo($linha);
   $j('<th />').html(safeUtf8Decode('Nota geral por etapa')).appendTo($linha);
