@@ -29,12 +29,12 @@ return new class extends clsListagem {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $tmp_obj = new clsPmieducarServidor($this->ref_cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
+        $tmp_obj = new clsPmieducarServidor(null, null, null, null, null, null, null, $this->ref_cod_instituicao);
         $registro = $tmp_obj->detalhe();
 
         $this->addCabecalhos([
             'Escola',
-            'Instituição',
+            'Servidor',
             'Matrícula',
             'Tipo',
             'Dia',
@@ -42,14 +42,9 @@ return new class extends clsListagem {
             'Minutos'
         ]);
 
-        $fisica = new clsPessoaFisica($this->ref_cod_servidor);
-        $fisica = $fisica->detalhe();
-
-        $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
-        $this->campoRotulo('nm_servidor', 'Servidor', $fisica['nome']);
-
-        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic('escola', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
+        $this->inputsHelper()->dynamic(['escola', 'curso', 'serie', 'turma'], ['required' => true]);
+        $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
+        $this->inputsHelper()->dynamic('professorComponente', ['required' => true]);
 
         // Paginador
         $this->limite = 20;
@@ -64,7 +59,7 @@ return new class extends clsListagem {
             $this->ref_cod_servidor
         );
 
-        $obj_falta_atraso->setOrderby('tipo ASC');
+        $obj_falta_atraso->setOrderby('data_falta_atraso DESC');
         $obj_falta_atraso->setLimite($this->limite, $this->offset);
 
         // Recupera a lista de faltas/atrasos
@@ -81,8 +76,8 @@ return new class extends clsListagem {
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $registro['nm_escola'] = $det_ref_cod_escola['nome'];
 
-                $obj_ins = new clsPmieducarInstituicao($registro['ref_ref_cod_instituicao']);
-                $det_ins = $obj_ins->detalhe();
+                $obj_pessoa = new clsPessoaFisica($registro['ref_cod_servidor']);
+                $det_pessoa = $obj_pessoa->detalhe();
 
                 $obj_comp = new clsPmieducarFaltaAtrasoCompensado();
                 $horas    = $obj_comp->ServidorHorasCompensadas(
@@ -91,14 +86,13 @@ return new class extends clsListagem {
                     $registro['ref_ref_cod_instituicao']
                 );
 
-                $horas_aux   = 0;
+                $horas_aux = 0;
                 $minutos_aux = 0;
 
                 if ($horas) {
                     $horas_aux   = $horas['hora'] - $registro['qtd_horas'];
                     $minutos_aux = $horas['min'] - $registro['qtd_min'];
                 }
-
 
                 if ($horas_aux > 0 && $minutos_aux < 0) {
                     $horas_aux--;
@@ -121,7 +115,7 @@ return new class extends clsListagem {
                 $tipo = $registro['tipo'] == 1 ? 'Atraso' : 'Falta';
 
                 $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
-                $url       = 'educar_falta_atraso_det.php';
+                $url       = 'educar_coordenacao_falta_atraso_det.php';
                 $options   = ['query' => [
                     'cod_falta_atraso'    => $registro['cod_falta_atraso'],
                     'ref_cod_servidor'    => $registro['ref_cod_servidor'],
@@ -133,7 +127,7 @@ return new class extends clsListagem {
                 $data = $dt->format('d/m/Y');
                 $this->addLinhas([
                     $urlHelper->l($registro['nm_escola'], $url, $options),
-                    $urlHelper->l($det_ins['nm_instituicao'], $url, $options),
+                    $urlHelper->l($det_pessoa['nome'], $url, $options),
                     $urlHelper->l($registro['matricula'], $url, $options),
                     $urlHelper->l($tipo, $url, $options),
                     $urlHelper->l($data, $url, $options),
@@ -144,7 +138,7 @@ return new class extends clsListagem {
         }
 
         $this->addPaginador2(
-            'educar_falta_atraso_lst.php',
+            'educar_coordenacao_falta_atraso_professor_lst.php',
             $total,
             $_GET,
             $this->nome,
@@ -159,8 +153,7 @@ return new class extends clsListagem {
             ];
 
             $this->array_botao_url[] = sprintf(
-                'educar_falta_atraso_cad.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-                $this->ref_cod_servidor,
+                'educar_coordenacao_falta_atraso_professor_cad.php?ref_cod_instituicao=%d',
                 $this->ref_ref_cod_instituicao
             );
         }
