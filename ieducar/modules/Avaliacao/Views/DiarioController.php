@@ -36,6 +36,8 @@ class DiarioController extends Portabilis_Controller_Page_ListController
         $this->loadResourceAssets($this->getDispatcher());
     }
 
+    
+
     protected function _preRender()
     {
         parent::_preRender();

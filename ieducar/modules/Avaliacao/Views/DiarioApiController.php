@@ -35,6 +35,17 @@ class DiarioApiController extends ApiCoreController
     {
         parent::__construct();
         $this->removeHtmlTagsService = new RemoveHtmlTagsStringService();
+        $this->loadAssets();
+    }
+
+
+    public function loadAssets () {
+        $scripts = [
+            
+            '/modules/Avaliacao/Assets/Javascripts/Diario.js',
+        ];
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+      
     }
 
     protected function validatesCanChangeDiarioForAno()
@@ -435,17 +446,27 @@ class DiarioApiController extends ApiCoreController
             if($tipoNota==1){
                 $this->updateMedia();
             }
-           
-            $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
+            $v1 =  $this->getRequest()->matricula_id;
+            $this->messenger->append('Nota matrícula ' . $v1 . ' alterada com sucesso.', 'success');
+            $v2 = $this->shouldShowRecuperacaoEspecifica();
+            $this->appendResponse('should_show_recuperacao_especifica', $v2);
+            $v3 = $this->getRequest()->componente_curricular_id;
+            $this->appendResponse('componente_curricular_id', $v3);
+            $v4 = $this->getRequest()->matricula_id;
+            $this->appendResponse('matricula_id', $v4);
+            $v5 = $this->getSituacaoComponente();
+            $this->appendResponse('situacao', $v5);
+            $v6 = round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 3);
+            $this->appendResponse('media', $v6);
+            $v7 = $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id);
+            $this->appendResponse('media_arredondada', $v7);
+            
+          
+
+            
         }
 
-        $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
-        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-        $this->appendResponse('situacao', $this->getSituacaoComponente());
-        $this->appendResponse('media', round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 3));
-       
-        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+        
 
        
                 
@@ -739,6 +760,7 @@ class DiarioApiController extends ApiCoreController
                               $nota_falta_exame = 10 - $media;
                              
                                   $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $nota_falta_exame);
+                                 
                                   $this->appendResponse('nota_necessaria_exame', $nota_falta_exame);
                               } else {
                                   $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);

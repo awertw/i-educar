@@ -114,9 +114,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
         );
 
         if (!$can) {
+            
             $this->messenger->append("Usuário sem permissão para cadastrar '{$this->getRequest()->resource}'.");
         }
-
+     
         return $can;
     }
 
@@ -176,9 +177,12 @@ class ApiCoreController extends Core_Controller_Page_EditController
         if (is_array($name)) {
             foreach ($name as $k => $v) {
                 $this->response[$k] = $v;
+                
             }
         } elseif (!is_null($name)) {
             $this->response[$name] = $value;
+           
+
         }
     }
 
@@ -198,12 +202,16 @@ class ApiCoreController extends Core_Controller_Page_EditController
         try {
             if (isset($this->getRequest()->oper)) {
                 $this->appendResponse('oper', $this->getRequest()->oper);
+               
+
             }
 
             if (isset($this->getRequest()->resource)) {
                 $this->appendResponse('resource', $this->getRequest()->resource);
-            }
+               
 
+            }
+            
             $this->appendResponse('msgs', $this->messenger->getMsgs());
             $this->appendResponse('any_error_msg', $this->messenger->hasMsgWithType('error'));
 
@@ -231,12 +239,14 @@ class ApiCoreController extends Core_Controller_Page_EditController
         try {
             if ($this->canAcceptRequest()) {
                 $instance->Gerar();
+               
             }
         } catch (iEducarException $exception) {
 
             // Todos os erros do i-Educar serão pegos neste catch para
             // futuramente movermos para um Exception Handler
-
+            
+           
             $this->messenger->append($exception->getMessage(), 'error', true);
 
             $this->appendResponse('error', [
@@ -245,6 +255,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
                 'extra' => $exception->getExtraInfo(),
             ]);
         } catch (Exception $e) {
+            
             $this->messenger->append('Exception: ' . $e->getMessage(), 'error', $encodeToUtf8 = true);
         }
 
@@ -363,6 +374,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function tryGetEntityOf($dataMapper, $id)
     {
+      
         try {
             $entity = $this->getEntityOf($dataMapper, $id);
         } catch (Exception) {
@@ -525,6 +537,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function formatResourceValue($resource)
     {
+        
         return $resource['id'] . ' - ' . $this->toUtf8($resource['name'], ['transform' => true]);
     }
 
