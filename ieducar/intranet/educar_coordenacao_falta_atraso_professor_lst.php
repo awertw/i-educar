@@ -152,10 +152,7 @@ return new class extends clsListagem {
                 'css-extra' => 'btn-green'
             ];
 
-            $this->array_botao_url[] = sprintf(
-                'educar_coordenacao_falta_atraso_professor_cad.php?ref_cod_instituicao=%d',
-                $this->ref_ref_cod_instituicao
-            );
+            $this->array_botao_url[] = 'educar_coordenacao_falta_atraso_professor_cad.php';
         }
 
         $this->array_botao[] = 'Voltar';

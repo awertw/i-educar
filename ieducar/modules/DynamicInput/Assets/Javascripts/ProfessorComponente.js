@@ -39,6 +39,7 @@
 
     };
 
+      $("#ref_cod_turma").change(updateProfessores);
       $("#ref_cod_componente_curricular").change(updateProfessores);
 
     }); // ready

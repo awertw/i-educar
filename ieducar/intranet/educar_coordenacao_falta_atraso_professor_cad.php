@@ -63,7 +63,7 @@ return new class extends clsCadastro {
                 $diaSemana =  Carbon::createFromFormat('d/m/Y', $this->data_falta_atraso)->dayOfWeek;
                 $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
 
-                $quadroHorarioArray = Portabilis_Business_Professor::quadroHorarioAlocado($registro['ref_cod_turma'], $registro['ref_cod_servidor'], $diaSemanaConvertido, null, $this->cod_falta_atraso);
+                $quadroHorarioArray = Portabilis_Business_Professor::quadroHorarioAlocado($registro['ref_cod_turma'], $registro['ref_cod_servidor'], $diaSemanaConvertido);
                 $this->aulas = $obj->verificarFaltaAtrasoQuadroHorario($quadroHorarioArray);
 
                 $obj_permissoes = new clsPermissoes();
@@ -237,7 +237,9 @@ return new class extends clsCadastro {
             $horas   = $obj_ser->qtdhoras($this->ref_cod_professor_componente, $this->ref_cod_escola, $this->ref_cod_instituicao, $dia_semana);
 
             if ($horas) {
-                $this->ref_cod_servidor_funcao = '';
+                $funcoes = $this->getFuncoesServidor($this->ref_cod_componente_curricular);
+                $this->ref_cod_servidor_funcao = $funcoes['cod_servidor_funcao'];
+
                 $obj = new clsPmieducarFaltaAtraso(
                     null,
                     $this->ref_cod_escola,
@@ -402,6 +404,18 @@ return new class extends clsCadastro {
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+    }
+
+    private function getFuncoesServidor($codServidor)
+    {
+        return DB::table('pmieducar.servidor_funcao')
+            ->select(DB::raw('cod_servidor_funcao, nm_funcao || coalesce( \' - \' || matricula, \'\') as funcao_matricula'))
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
+            ->where([['servidor_funcao.ref_cod_servidor', $codServidor]])
+            ->orderBy('matricula', 'asc')
+            ->get()
+            ->pluck('funcao_matricula', 'cod_servidor_funcao')
+            ->toArray();
     }
 
     public function makeExtra()
