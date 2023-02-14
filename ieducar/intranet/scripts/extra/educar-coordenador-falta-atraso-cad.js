@@ -1,13 +1,14 @@
 (function($){
   $(document).ready(function(){
     let verificaAcaoEditar = document.getElementById('ref_cod_turma').value != '';
+    let exibeAulasEditar = document.getElementById('exibe_aulas').value == '1' ? true : false;
     document.getElementById('data_falta_atraso').disabled = verificaAcaoEditar;
     document.getElementById('justificada').disabled = verificaAcaoEditar;
 
     let obj_tipo = document.getElementById('tipo');
     obj_tipo.onchange = displayQtdHorasMin;
 
-    if (obj_tipo.value != '2') {
+    if (obj_tipo.value != '2' || !exibeAulasEditar) {
       hideAulas();
     }
 
@@ -66,6 +67,7 @@
         data: {},
         success: function (response) {
           hideAulas();
+          $('#exibe_aulas').val(response.exibirAulas);
           if (response.exibirAulas) {
             carregarAulasQuadroHorario(response);
           }

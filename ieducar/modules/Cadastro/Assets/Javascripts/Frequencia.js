@@ -22,6 +22,12 @@
     };
 
     document.getElementById('ref_cod_componente_curricular').onchange = function () {
+      const campoTurma = document.getElementById('ref_cod_turma').value;
+      const campoData = document.getElementById('data').value;
+      const campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
+      const tipoPresenca = $('#ref_cod_turma').attr('tipo_presenca');
+
+       delay(500).then(() => verificaFaltas(campoTurma, campoComponenteCurricular, campoData, tipoPresenca));
        delay(1000).then(() => carregaConteudos());
     };
 
@@ -114,12 +120,37 @@
             componenteCurricularRegistrioDiario = response.componentesCurriculares[0];
           }
 
-          carregarAulas(tipoPresenca, campoTurma, componenteCurricularRegistrioDiario);
-
+          verificaFaltas(campoTurma, campoData, tipoPresenca);
         },
       };
 
       getResource(optionsRegistroDiarioQuadroHorario);
+    }
+
+    function verificaFaltas(campoTurma, campoData, tipoPresenca) {
+      let paramsVerificaFaltas = {
+        turmaId: campoTurma,
+        dataFaltaAtraso: campoData,
+      };
+
+      let optionsVerificaFaltaAtraso = {
+        url: getResourceUrlBuilder.buildUrl('/module/Api/CoordenadorFaltaAtraso', 'verificaFaltasAtrasoByFrequencia', paramsVerificaFaltas),
+        dataType: 'json',
+        data: {},
+        success: function (response) {
+
+          if (response.possuiFaltas && response.faltaGeral) {
+            $('#verifica_faltou_dia').val('true')
+            alert('Não é possível prosseguir com o cadastro da frequência porque você possui falta nessa data');
+            return false;
+          } else {
+            carregarAulas(tipoPresenca, campoTurma, componenteCurricularRegistrioDiario, response.qtdFaltas);
+          }
+
+        },
+      };
+
+      getResource(optionsVerificaFaltaAtraso);
     }
 
     $('input[type="checkbox"]').change(function() {
@@ -149,7 +180,7 @@
       }
     }
 
-    function carregarAulas(tipoPresenca, campoTurma, componenteCurricularRegistrioDiario) {
+    function carregarAulas(tipoPresenca, campoTurma, componenteCurricularRegistrioDiario, qtdFaltas = 0) {
       if (tipoPresenca == 1 || tipoPresenca == '1') {
         carregarAlunos(componenteCurricularRegistrioDiario);
       }
@@ -161,7 +192,8 @@
         let params = {
           id: campoTurma,
           data: campoData,
-          refComponenteCurricular: campoComponenteCurricular
+          refComponenteCurricular: campoComponenteCurricular,
+          qtdFaltas: qtdFaltas
         };
 
         let options = {
@@ -180,6 +212,10 @@
                 $('#tr_ordens_aulas' + i).show();
                 $('#ordens_aulas' + i).show();
               }
+            } else if(response.faltouDia) {
+              $('#verifica_faltou_dia').val(response.faltouDia)
+              alert('Não é possível prosseguir com o cadastro da frequência porque você possui falta nessa data');
+              return false;
             } else {
               alert('A data não está alocada no quadro de horário');
               return false;
