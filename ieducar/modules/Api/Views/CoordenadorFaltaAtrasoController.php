@@ -10,33 +10,36 @@ class CoordenadorFaltaAtrasoController extends ApiCoreController
         $turmaId = $this->getRequest()->turmaId;
         $dataFaltaAtraso = $this->getRequest()->dataFaltaAtraso;
         $professorId = $this->getRequest()->professorId;
+        $serieId = $this->getRequest()->serieId;
+        $tipo = $this->getRequest()->tipo;
 
-        if (is_numeric($turmaId) && is_numeric($professorId) && !empty($dataFaltaAtraso)) {
-//            var_dump($dataFaltaAtraso);
-//            var_dump(Carbon::createFromFormat('d/m/Y', $dataFaltaAtraso));
+        if ($tipo == '2' && is_numeric($serieId) && is_numeric($turmaId) && is_numeric($professorId) && !empty($dataFaltaAtraso)) {
+            $obj = new clsPmieducarSerie();
+            $tipoPresenca = $obj->tipoPresencaRegraAvaliacao($serieId);
+            $anosFinais = ($tipoPresenca == 2);
+
             $diaSemana =  Carbon::createFromFormat('d/m/Y', $dataFaltaAtraso)->dayOfWeek;
-//            var_dump($diaSemana);
             $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
 
             $quadroHorarioArray = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $professorId, $diaSemanaConvertido);
 
-//            echo '<pre>';
-//            var_dump($quadroHorarioArray);
-//            exit;
             $adapterQuadroHorario = [];
-
+            $exibirAulas = false;
             foreach ($quadroHorarioArray as $quadroHorario) {
-                $adapterQuadroHorario[] = [
-                  'ref_cod_quadro_horario_horarios' => $quadroHorario['ref_cod_quadro_horario_horarios'],
-                  'horario' =>  substr($quadroHorario['hora_inicial'], 0, 5) . ' - ' .  substr($quadroHorario['hora_final'], 0, 5),
-                  'componenteCurricular' => $quadroHorario['componente_abreviatura'],
-                  'qtdAulas' => (!empty($quadroHorario['qtd_aulas']) ? $quadroHorario['qtd_aulas'] : 1),
-                ];
+                if ((!$anosFinais && dbBool($quadroHorario['registra_diario_individual'])) || $anosFinais) {
+                    $exibirAulas = true;
+                    $adapterQuadroHorario[] = [
+                        'ref_cod_quadro_horario_horarios' => $quadroHorario['ref_cod_quadro_horario_horarios'],
+                        'horario' =>  substr($quadroHorario['hora_inicial'], 0, 5) . ' - ' .  substr($quadroHorario['hora_final'], 0, 5),
+                        'componenteCurricular' => $quadroHorario['componente_abreviatura'],
+                        'qtdAulas' => (!empty($quadroHorario['qtd_aulas']) ? $quadroHorario['qtd_aulas'] : 1),
+                    ];
+                }
+
             }
 
-
-            return ['registros' => $adapterQuadroHorario];
-
+            return ['exibirAulas' => $exibirAulas,
+                    'registros' => $adapterQuadroHorario];
         }
 
         return [];

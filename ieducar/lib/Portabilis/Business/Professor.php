@@ -328,14 +328,10 @@ class Portabilis_Business_Professor
             if (!empty($registroDiarioIndividual)) {
                 $sql .= " AND qhh.registra_diario_individual = $".$paramNumber;
                 $params['params'][] = $registroDiarioIndividual;
-                $paramNumber++;
             }
 
             $sql .= ' ORDER BY qhh.qtd_aulas DESC';
 
-//            echo $sql;
-//            var_dump($params);
-//            exit;
             $quadroHorario = self::fetchPreparedQuery($sql, $params);
         }
 

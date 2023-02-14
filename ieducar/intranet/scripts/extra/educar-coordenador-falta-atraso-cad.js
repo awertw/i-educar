@@ -39,13 +39,23 @@
       }
     }
 
+    document.getElementById('ref_cod_escola').onchange = getAulasQuadroHorario
+    document.getElementById('ref_cod_curso').onchange = getAulasQuadroHorario
+    document.getElementById('ref_cod_turma').onchange = getAulasQuadroHorario
+    document.getElementById('ref_cod_serie').onchange = getAulasQuadroHorario
+    document.getElementById('ref_cod_professor_componente').onchange = getAulasQuadroHorario
+
     function getAulasQuadroHorario() {
+      const tipo = document.getElementById('tipo').value;
       const turmaId = document.getElementById('ref_cod_turma').value;
+      const serieId = document.getElementById('ref_cod_serie').value;
       const dataFaltaAtraso = document.getElementById('data_falta_atraso').value;
       const professorId = document.getElementById('ref_cod_professor_componente').value;
 
       let paramsAulasQuadroHorario = {
+        tipo: tipo,
         turmaId: turmaId,
+        serieId: serieId,
         dataFaltaAtraso: dataFaltaAtraso,
         professorId: professorId
       };
@@ -55,8 +65,10 @@
         dataType: 'json',
         data: {},
         success: function (response) {
-          console.log(response)
-          carregarAulasQuadroHorario(response);
+          hideAulas();
+          if (response.exibirAulas) {
+            carregarAulasQuadroHorario(response);
+          }
         },
       };
 
