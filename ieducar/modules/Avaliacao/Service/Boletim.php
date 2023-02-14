@@ -1628,6 +1628,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             } else {
                 $situacaoFalta = $situacaoFaltas->situacao;
             }
+            
 
             if (is_null($situacaoNota)) {
                 $situacaoNota = App_Model_MatriculaSituacao::EM_ANDAMENTO;

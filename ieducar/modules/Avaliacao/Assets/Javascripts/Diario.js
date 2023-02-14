@@ -1190,7 +1190,7 @@ function handleSearch($resultTable, dataResponse) {
   var $notaRecuperacaoEspecificaFields = $resultTable.find('.nota-recuperacao-especifica-matricula-cc');
   var $notaGeralEtapaFields = $resultTable.find('.nota-geral-etapa');
   var $mediaFields = $resultTable.find('.media-cc');
-  var $situacaoField = $resultTable.find('.situacao-cc');
+  var $situacaoField = $resultTable.find('.situacao-matricula-cc');
   let bloqueioField = $resultTable.find('.bloqueio-matricula');
   var $mediaAtualFields = $resultTable.find('.media-atual-matricula-cc');
 
@@ -1447,7 +1447,7 @@ function mediaField(matriculaId, componenteCurricularId, value, maxLength, tipoN
   return _mediaField(matriculaId,
     componenteCurricularId,
     'media-cc',
-    'media-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+    'media-atual-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
     value,
     0,
     maxLength,
@@ -1746,11 +1746,12 @@ function updateResourceRow(dataResponse) {
   var $fieldNotaExame = $j('#nota_exame-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNotaEspecifica = $j('#nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
-  var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldMedia = $j('#media-atual-matricula-' + matriculaId + '-cc-' + ccId);
 
   var regra = $situacaoField.closest('tr').data('regra');
-
+if(regra.tipo_recuperacao_paralela){
   var habilitaCampoEtapaEspecifica = regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica;
+}
   var usaNotaGeralPorEtapa = regra.nota_geral_por_etapa == 'SIM';
 
   if(usaNotaGeralPorEtapa){
@@ -1783,6 +1784,7 @@ function updateResourceRow(dataResponse) {
     }else
       $fieldNotaEspecifica.hide();
   }
+  
   changeMediaValue($fieldMedia.attr('id'), dataResponse.media, dataResponse.media_arredondada, regra);
 }
 
@@ -1813,7 +1815,7 @@ function situacaoFinalField($matriculaId, $situacao, value){
 
   let situacaoValueAvailable = [1,2,12,13];
   let selectId = 'situacao' + '-matricula-' + $matriculaId + '-cc-';
-  let $selectSituacao               = $j('<select />').attr('id', selectId).addClass('situacao-cc').data('matricula_id', $matriculaId);
+  let $selectSituacao               = $j('<select />').attr('id', selectId).addClass('situacao-matricula-cc').data('matricula_id', $matriculaId);
   let $optionDefault                = $j('<option />').html('').val(0).attr('selected', !situacaoValueAvailable.includes(value.situacao));
   let $optionAprovado               = $j('<option />').html('Aprovado').val(1).attr('selected', value.situacao === 1);
   let $optionRetido                 = $j('<option />').html('Retido').val(2).attr('selected', value.situacao === 2);

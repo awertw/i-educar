@@ -48,9 +48,9 @@ class Portabilis_Controller_Page_ListController extends Core_Controller_Page_Lis
             '/modules/Portabilis/Assets/Javascripts/Utils.js'
         ];
 
-        if (!$this->backwardCompatibility) {
+       
             $scripts[] = '/modules/Portabilis/Assets/Javascripts/Frontend/Process.js';
-        }
+        
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }

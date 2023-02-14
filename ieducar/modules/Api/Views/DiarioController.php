@@ -82,6 +82,7 @@ class DiarioController extends ApiCoreController
 
     protected function trySaveServiceBoletim($turmaId, $alunoId)
     {
+       
         try {
             $this->serviceBoletim($turmaId, $alunoId)->save();
         } catch (CoreExt_Service_Exception) {
@@ -205,6 +206,7 @@ class DiarioController extends ApiCoreController
 
         $etapa = $this->getRequest()->etapa;
         $notas = $this->getRequest()->notas;
+       
 
         foreach ($notas as $turmaId => $notaTurma) {
             foreach ($notaTurma as $alunoId => $notaTurmaAluno) {
@@ -377,6 +379,7 @@ class DiarioController extends ApiCoreController
     private function defineCampoTipoRecuperacao($matriculaId)
     {
         $regra = $this->getRegra($matriculaId);
+     
 
         return match ((int)$regra->get('tipoRecuperacaoParalela')) {
             RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA => 'notaRecuperacaoParalela',
