@@ -30,6 +30,7 @@ return new class extends clsCadastro {
     public $aulas;
     public $observacao;
     public $ano;
+    public $exibe_aulas;
 
     public function Inicializar()
     {
@@ -122,6 +123,7 @@ return new class extends clsCadastro {
 
         $this->campoOculto('id', $this->id);
         $this->campoOculto('ano', $this->ano);
+        $this->campoOculto('exibe_aulas', $this->exibe_aulas);
 
         if (!empty($this->id)) {
             $this->campoOculto('tipo_edit', $this->tipo);
@@ -161,7 +163,7 @@ return new class extends clsCadastro {
 
         $quadroHorarioAulas = '';
 
-        if (!empty($this->aulas)) {
+        if (!empty($this->aulas) && dbBool($this->exibe_aulas)) {
             foreach ($this->aulas as $aula) {
                 $quadroHorarioAulas .= '<table cellspacing="0" cellpadding="0" border="0">';
                 $quadroHorarioAulas .= '<tr align="left"><td><p><td class="tableDetalheLinhaSeparador" colspan="3"></td><tr><td><div class="scroll"><table class="tableDetalhe tableDetalheMobile" width="100%"><tr class="tableHeader">';
@@ -261,7 +263,8 @@ return new class extends clsCadastro {
                     $this->ref_cod_turma,
                     null,
                     $this->observacao,
-                    $this->ano
+                    $this->ano,
+                    dbBool($this->exibe_aulas)
                 );
             }
         }

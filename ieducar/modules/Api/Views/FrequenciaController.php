@@ -46,54 +46,24 @@ class FrequenciaController extends ApiCoreController
     protected function getQtdAulasQuadroHorario()
     {
         $turmaId = $this->getRequest()->id;
-        $refComponenteCurricularId = $this->getRequest()->refComponenteCurricular;
+        $qtdFaltas = $this->getRequest()->qtdFaltas;
         $dataFrequencia = $this->getRequest()->data;
         $userId = \Illuminate\Support\Facades\Auth::id();
 
         if (is_numeric($turmaId)) {
             $clsInstituicao = new clsPmieducarInstituicao();
             $instituicao = $clsInstituicao->primeiraAtiva();
+
             $utilizaSabadoAlternado = $instituicao['utiliza_sabado_alternado'];
             $checaQtdAulasQuadroHorario = $instituicao['checa_qtd_aulas_quadro_horario'];
 
             $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicao['cod_instituicao'], $userId);
             $diaSemana =  Carbon::createFromFormat('d/m/Y', $dataFrequencia)->dayOfWeek;
 
-            $dataAtraso = Portabilis_Date_Utils::brToPgSQL($dataFrequencia);
-
-            $objFaltaAtraso = new clsPmieducarFaltaAtraso(
-                null,
-                null,
-                $instituicao['cod_instituicao'],
-                null,
-                null,
-                $userId,
-                2,
-                $dataAtraso,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $turmaId,
-                $refComponenteCurricularId,
-            );
-
-            $faltaAtraso = $objFaltaAtraso->detalheParaFrequencia();
-
-            $qtdAulas = 5;
-            $qtdAulasFaltou = 0;
-
-            if (!empty($faltaAtraso)) {
-                $qtdAulasFaltou = $faltaAtraso['qtd_aulas'];
-            }
+            $qtdAulas = 0;
 
             if ($isOnlyProfessor && !$utilizaSabadoAlternado && $checaQtdAulasQuadroHorario) {
-                $qtdAulas = 0;
+
                 $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
 
                 $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $userId, $diaSemanaConvertido);
@@ -105,12 +75,22 @@ class FrequenciaController extends ApiCoreController
                 }
             }
 
-            if ($qtdAulasFaltou > 0 && $qtdAulas > 0) {
-                $qtdAulas = $qtdAulas - $qtdAulasFaltou;
+            $qtdAulasPresente = 0;
+            $faltouDia = false;
+            $verificaAulas = $qtdFaltas > 0 && $qtdAulas > 0;
+
+            if ($verificaAulas) {
+                $qtdAulasPresente = $qtdAulas - $qtdFaltas;
+
+                if ($qtdAulasPresente <= 0) {
+                    $qtdAulasPresente = 0;
+                    $faltouDia = true;
+                }
             }
 
             return ['isProfessor' => $isOnlyProfessor,
-                    'qtdAulas' => $qtdAulas]; //admin/coordenador
+                    'qtdAulas' => $qtdAulasPresente,
+                    'faltouDia' => $faltouDia];
         }
 
         return [];
