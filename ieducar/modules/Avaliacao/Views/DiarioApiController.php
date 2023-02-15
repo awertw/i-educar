@@ -454,10 +454,18 @@ class DiarioApiController extends ApiCoreController
             $this->appendResponse('componente_curricular_id', $v3);
             $v4 = $this->getRequest()->matricula_id;
             $this->appendResponse('matricula_id', $v4);
-            $v6 = round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 2);
+            $media_aluno = 0;
+            $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+            foreach($nota_alunos as $nota_aluno) {
+               $medias = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+               foreach($medias as $media) {
+                $media_aluno = $media->media;
+               }            
+            
+            }
+            $v6 = round($media_aluno, 3);
             $this->appendResponse('media', $v6);
-            $v7 = $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id);
-            $this->appendResponse('media_arredondada', $v7);
+            $this->appendResponse('media_arredondada', $v6);
             
           
 
@@ -1039,8 +1047,7 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-        $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
-        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+       
         $serie_id = '';
         $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
         foreach($serie as $id) {
@@ -1051,6 +1058,18 @@ class DiarioApiController extends ApiCoreController
         if($tipoNota==1){
             $this->updateMedia();
         }
+        $media_aluno = 0;
+        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+        foreach($nota_alunos as $nota_aluno) {
+           $medias = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+           foreach($medias as $media) {
+            $media_aluno = $media->media;
+           }            
+        
+        }
+        $v6 = round($media_aluno, 3);
+        $this->appendResponse('media', $v6);
+        $this->appendResponse('media_arredondada', $v6);
     }
 
     protected function postMedia()
@@ -1063,8 +1082,7 @@ class DiarioApiController extends ApiCoreController
              
             $this->messenger->append('Média da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
             $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
-            $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
-            $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+           
         } else {
             $this->messenger->append('Usuário não possui permissão para alterar a média do aluno.', 'error');
         }
@@ -1081,6 +1099,19 @@ class DiarioApiController extends ApiCoreController
         if($tipoNota==1){
             $this->updateMedia();
         }
+
+        $media_aluno = 0;
+        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+        foreach($nota_alunos as $nota_aluno) {
+           $medias = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+           foreach($medias as $media) {
+            $media_aluno = $media->media;
+           }            
+        
+        }
+        $v6 = round($media_aluno, 3);
+        $this->appendResponse('media', $v6);
+        $this->appendResponse('media_arredondada', $v6);
     }
 
     protected function postMediaDesbloqueia()
@@ -1215,10 +1246,18 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('should_show_recuperacao_especifica', true);
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-        $v6 = round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 2);
+        $media_aluno = 0;
+        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+        foreach($nota_alunos as $nota_aluno) {
+           $medias = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+           foreach($medias as $media) {
+            $media_aluno = $media->media;
+           }            
+        
+        }
+        $v6 = round($media_aluno, 3);
         $this->appendResponse('media', $v6);
-        $v7 = $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id);
-        $this->appendResponse('media_arredondada', $v7);
+        $this->appendResponse('media_arredondada', $v6);
 
         
         
@@ -1304,9 +1343,7 @@ class DiarioApiController extends ApiCoreController
 
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-        $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
-        $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
-
+       
 
         $serie_id = '';
         $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
@@ -1318,7 +1355,18 @@ class DiarioApiController extends ApiCoreController
         if($tipoNota==1){
             $this->updateMedia();
         }
-
+        $media_aluno = 0;
+        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+        foreach($nota_alunos as $nota_aluno) {
+           $medias = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+           foreach($medias as $media) {
+            $media_aluno = $media->media;
+           }            
+        
+        }
+        $v6 = round($media_aluno, 3);
+        $this->appendResponse('media', $v6);
+        $this->appendResponse('media_arredondada', $v6);
     }
 
     protected function deleteNotaRecuperacaoParalela()
@@ -1339,8 +1387,18 @@ class DiarioApiController extends ApiCoreController
 
 
             $this->appendResponse('nota_original', $notaOriginal);
-            $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
-            $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+            $media_aluno = 0;
+            $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+            foreach($nota_alunos as $nota_aluno) {
+               $medias = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+               foreach($medias as $media) {
+                $media_aluno = $media->media;
+               }            
+            
+            }
+            $v6 = round($media_aluno, 3);
+            $this->appendResponse('media', $v6);
+            $this->appendResponse('media_arredondada', $v6);
         }
 
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
@@ -1375,8 +1433,7 @@ class DiarioApiController extends ApiCoreController
 
 
             $this->appendResponse('nota_original', $notaOriginal);
-            $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
-            $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
+           
         }
 
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
@@ -1391,6 +1448,19 @@ class DiarioApiController extends ApiCoreController
         if($tipoNota==1){
             $this->updateMedia();
         }
+
+        $media_aluno = 0;
+        $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+        foreach($nota_alunos as $nota_aluno) {
+           $medias = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+           foreach($medias as $media) {
+            $media_aluno = $media->media;
+           }            
+        
+        }
+        $v6 = round($media_aluno, 3);
+        $this->appendResponse('media', $v6);
+        $this->appendResponse('media_arredondada', $v6);
     }
 
     protected function deleteFalta()
