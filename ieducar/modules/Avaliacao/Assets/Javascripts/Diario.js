@@ -1749,9 +1749,10 @@ function updateResourceRow(dataResponse) {
   var $fieldMedia = $j('#media-atual-matricula-' + matriculaId + '-cc-' + ccId);
 
   var regra = $situacaoField.closest('tr').data('regra');
-if(regra.tipo_recuperacao_paralela){
+if(regra?.tipo_recuperacao_paralela){
   var habilitaCampoEtapaEspecifica = regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica;
 }
+console.log(regra);
   var usaNotaGeralPorEtapa = regra.nota_geral_por_etapa == 'SIM';
 
   if(usaNotaGeralPorEtapa){
@@ -1784,7 +1785,7 @@ if(regra.tipo_recuperacao_paralela){
     }else
       $fieldNotaEspecifica.hide();
   }
-  
+  console.log(dataResponse);
   changeMediaValue($fieldMedia.attr('id'), dataResponse.media, dataResponse.media_arredondada, regra);
 }
 
@@ -1807,6 +1808,7 @@ function changeMediaValue(elementId, nota, notaArredondada, regra){
 
     }else{
       $j('#' + elementId).val(notaArredondada);
+      
     }
   }
 }
