@@ -63,14 +63,13 @@ class FrequenciaController extends ApiCoreController
             $qtdAulas = 0;
 
             if ($isOnlyProfessor && !$utilizaSabadoAlternado && $checaQtdAulasQuadroHorario) {
-
                 $diaSemanaConvertido = $this->converterDiaSemanaQuadroHorario($diaSemana);
 
                 $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($turmaId, $userId, $diaSemanaConvertido);
 
                 if (count($quadroHorario) > 0) {
                     foreach ($quadroHorario as $horario) {
-                        $qtdAulas += $horario['qtd_aulas'];
+                        $qtdAulas += (!empty($horario['qtd_aulas']) ? $horario['qtd_aulas'] : 1);
                     }
                 }
             }
