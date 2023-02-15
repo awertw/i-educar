@@ -45,6 +45,46 @@ class CoordenadorFaltaAtrasoController extends ApiCoreController
         return [];
     }
 
+    public function verificaFaltasAtrasoByFrequencia()
+    {
+        $turmaId = $this->getRequest()->turmaId;
+        $dataFaltaAtraso = $this->getRequest()->dataFaltaAtraso;
+        $userId = \Illuminate\Support\Facades\Auth::id();
+
+        if (is_numeric($turmaId) && is_numeric($userId) && !empty($dataFaltaAtraso)) {
+            $clsInstituicao = new clsPmieducarInstituicao();
+            $instituicao = $clsInstituicao->primeiraAtiva();
+
+            $dataFalta = Portabilis_Date_Utils::brToPgSQL($dataFaltaAtraso);
+
+            $objFaltaAtraso = new clsPmieducarFaltaAtraso(
+                null,
+                null,
+                $instituicao['cod_instituicao'],
+                null,
+                null,
+                $userId,
+                2,
+                $dataFalta,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $turmaId,
+                null,
+            );
+
+            return $objFaltaAtraso->getFaltasAtrasoForFrequencia();
+        }
+
+        return [];
+    }
+
     private function converterDiaSemanaQuadroHorario(int $diaSemana)
     {
         $arrDiasSemanaIeducar = [
@@ -64,6 +104,8 @@ class CoordenadorFaltaAtrasoController extends ApiCoreController
     {
         if ($this->isRequestFor('get', 'getAulasQuadroHorario')) {
             $this->appendResponse($this->getAulasQuadroHorario());
+        }else if ($this->isRequestFor('get', 'verificaFaltasAtrasoByFrequencia')) {
+            $this->appendResponse($this->verificaFaltasAtrasoByFrequencia());
         }
     }
 }

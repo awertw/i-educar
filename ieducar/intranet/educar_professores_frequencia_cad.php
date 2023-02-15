@@ -36,6 +36,7 @@ return new class extends clsCadastro {
     public $planejamento_aula_ids;
     public $componente_curricular_registro_individual;
     public $registra_diario_individual;
+    public $verifica_faltou_dia;
 
     public function Inicializar () {
         $this->titulo = 'Frequência - Cadastro';
@@ -145,6 +146,7 @@ return new class extends clsCadastro {
         $this->campoOculto('auth_id', $this->pessoa_logada);
         $this->campoOculto('is_professor', $isProfessor);
         $this->campoOculto('componente_curricular_registro_individual', '');
+        $this->campoOculto('verifica_faltou_dia', 'false');
 
         $this->inputsHelper()->dynamic('data', ['required' => $obrigatorio, 'disabled' => $desabilitado]);  // Disabled não funciona; ação colocada no javascript.
         $this->inputsHelper()->dynamic('todasTurmas', ['required' => $obrigatorio, 'ano' => $this->ano, 'disabled' => $desabilitado]);
@@ -422,14 +424,14 @@ return new class extends clsCadastro {
 
            // Componente Curricular.
 
-          
+
            $this->inputsHelper()->dynamic('frequenciaComponente', ['required' => !$obrigatorio, 'disabled' => !$desabilitado]);
-          
-      
-          
-          
+
+
+
+
            //end componente
-  
+
 
 
         $this->campoOculto('ano', getYearFromDate());
@@ -458,6 +460,7 @@ return new class extends clsCadastro {
             $this->simpleRedirect('educar_professores_frequencia_cad.php');
         }
 
+
         $data_agora = new DateTime('now');
         $data_agora = new \DateTime($data_agora->format('Y-m-d'));
 
@@ -485,6 +488,13 @@ return new class extends clsCadastro {
         $data['fim'] = new \DateTime($obj->pegaEtapaSequenciaDataFim($turma, $sequencia));
 
         $podeRegistrar = false;
+
+
+        if (dbBool($this->verifica_faltou_dia)) {
+            $this->mensagem = 'Cadastro não realizado, pois você possui falta nessa data.<br>';
+            $this->simpleRedirect('educar_professores_frequencia_cad.php');
+        }
+
         if (is_array($data['inicio_periodo_lancamentos']) && is_array($data['fim_periodo_lancamentos'])) {
             for ($i=0; $i < count((array)$data['inicio_periodo_lancamentos']); $i++) {
                 $data_inicio = $data['inicio_periodo_lancamentos'][$i];
@@ -635,10 +645,6 @@ return new class extends clsCadastro {
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-
-
-        
-
 
         return false;
     }
@@ -833,7 +839,7 @@ return new class extends clsCadastro {
         parent::__construct();
         $this->loadAssets();
     }
-  
+
     public function loadAssets () {
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Frequencia.js',
