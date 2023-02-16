@@ -50,6 +50,10 @@ return new class extends clsDetalhe {
         $this->addDetalhe([ 'DDD Telefone', "{$registro['ddd_telefone']}"]);
         $this->addDetalhe([ 'Telefone', "{$registro['telefone']}"]);
         $this->addDetalhe([ 'Nome do Responsável', "{$registro['nm_responsavel']}"]);
+        $this->addDetalhe([ 'Código da Unidade Gestora', "{$registro['cod_unidade_gestora']}" ? "{$registro['cod_unidade_gestora']}" : 'Não Informado']);
+        $this->addDetalhe([ 'Gestor(a)', "{$registro['gestor']}" ? "{$registro['gestor']}" : 'Não Informado']);
+        $this->addDetalhe([ 'Responsável Contábil', "{$registro['responsavel_contabil']}" ? "{$registro['responsavel_contabil']}" : 'Não Informado']);
+        $this->addDetalhe([ 'Coordenador(a) de Transporte', "{$registro['coordenador_transporte']}" ? "{$registro['coordenador_transporte']}" : 'Não Informado']);
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(559, $this->pessoa_logada, 3)) {

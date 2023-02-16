@@ -60,6 +60,9 @@ class clsPmieducarInstituicao extends Model
     public $utilizar_planejamento_aula_aee;
     public $checa_qtd_aulas_quadro_horario;
     public $utiliza_sabado_alternado;
+    public $gestor;
+    public $responsavel_contabil;
+    public $cod_unidade_gestora;
 
     public function __construct(
         $cod_instituicao = null,
@@ -101,7 +104,10 @@ class clsPmieducarInstituicao extends Model
         $obrigatorio_registro_diario_atividade_aee = null,
         $utilizar_planejamento_aula_aee = null,
         $checa_qtd_aulas_quadro_horario = null,
-        $utiliza_sabado_alternado = null
+        $utiliza_sabado_alternado = null,
+        $gestor = null,
+        $responsavel_contabil = null,
+        $cod_unidade_gestora = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -167,7 +173,10 @@ class clsPmieducarInstituicao extends Model
             obrigatorio_registro_diario_atividade_aee,
             utilizar_planejamento_aula_aee,
             checa_qtd_aulas_quadro_horario,
-            utiliza_sabado_alternado
+            utiliza_sabado_alternado,
+            gestor,
+            responsavel_contabil,
+            cod_unidade_gestora
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -323,6 +332,18 @@ class clsPmieducarInstituicao extends Model
 
         if (is_bool($utiliza_sabado_alternado)) {
            $this->utiliza_sabado_alternado = $utiliza_sabado_alternado;
+        }
+
+        if (is_string($gestor)) {
+            $this->gestor = $gestor;
+        }
+
+        if (is_string($responsavel_contabil)) {
+            $this->responsavel_contabil = $responsavel_contabil;
+        }
+
+        if (is_numeric($cod_unidade_gestora)) {
+            $this->$cod_unidade_gestora = $cod_unidade_gestora;
         }
 
     }
@@ -828,6 +849,33 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+
+            if (strripos($this->gestor, '-') and strripos($this->gestor, '(')) {
+                $this->gestor = $this->parteString($this->gestor, '-', '(');
+            }
+
+            if (is_string($this->gestor)) {
+                $campos .= "{$gruda}gestor";
+                $valores .= "{$gruda}'{$this->gestor}'";
+                $gruda = ', ';
+            }
+
+            if (strripos($this->responsavel_contabil, '-') and strripos($this->responsavel_contabil, '(')) {
+                $this->responsavel_contabil = $this->parteString($this->responsavel_contabil, '-', '(');
+            }
+
+            if (is_string($this->responsavel_contabil)) {
+                $campos .= "{$gruda}responsavel_contabil";
+                $valores .= "{$gruda}'{$this->responsavel_contabil}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->cod_unidade_gestora)) {
+                $campos .= "{$gruda}cod_unidade_gestora";
+                $valores .= "{$gruda}'{$this->cod_unidade_gestora}'";
+                $gruda = ', ';
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
             return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
@@ -1267,6 +1315,29 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}utiliza_sabado_alternado = false ";
+                $gruda = ', ';
+            }
+
+            if (strripos($this->gestor, '-') and strripos($this->gestor, '(')) {
+                $this->gestor = $this->parteString($this->gestor, '-', '(');
+            }
+
+            if (is_string($this->gestor)) {
+                $set .= "{$gruda}gestor = '{$this->gestor}'";
+                $gruda = ', ';
+            }
+
+            if (strripos($this->responsavel_contabil, '-') and strripos($this->responsavel_contabil, '(')) {
+                $this->responsavel_contabil = $this->parteString($this->responsavel_contabil, '-', '(');
+            }
+
+            if (is_string($this->responsavel_contabil)) {
+                $set .= "{$gruda}responsavel_contabil = '{$this->responsavel_contabil}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->cod_unidade_gestora)) {
+                $set .= "{$gruda}cod_unidade_gestora = '{$this->cod_unidade_gestora}'";
                 $gruda = ', ';
             }
 

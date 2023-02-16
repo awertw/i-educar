@@ -3,7 +3,8 @@
 use App\Menu;
 use App\Models\State;
 
-return new class extends clsCadastro {
+return new class extends clsCadastro
+{
     public $cod_instituicao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -64,6 +65,9 @@ return new class extends clsCadastro {
     public $utilizar_planejamento_aula_aee;
     public $checa_qtd_aulas_quadro_horario;
     public $utiliza_sabado_alternado;
+    public $gestor;
+    public $responsavel_contabil;
+    public $cod_unidade_gestora;
 
     public function Inicializar()
     {
@@ -150,17 +154,40 @@ return new class extends clsCadastro {
 
         $this->campoTexto('nm_responsavel', 'Nome do Responsável', $this->nm_responsavel, 30, 255, true);
         $this->campoNumero('ddd_telefone', 'DDD Telefone', $this->ddd_telefone, 2, 2);
-        $this->campoNumero('telefone', 'Telefone', $this->telefone, 11, 11);
+        $this->campoNumero('telefone', 'Telefone', $this->telefone, 9, 9);
 
+        /* GESTOR */
+        $options_gestor = [
+            'label'    => 'Gestor(a)',
+            'size'     => 50,
+            'value'    => $this->gestor,
+            'required' => false
+        ];
+        $this->inputsHelper()->simpleSearchPessoa('gestor', $options_gestor);
+
+        /* REPONSÁVEL CONTÁBIL */
+        $options_contabil = [
+            'label'    => 'Responsável Contábil',
+            'size'     => 50,
+            'value'    => $this->responsavel_contabil,
+            'required' => false
+        ];
+        $this->inputsHelper()->simpleSearchPessoa('responsavel_contabil', $options_contabil);
+
+        /* COORDENADOR DE TRANSPORTE */
         $options = [
-            'label' => 'Coordenador(a) de transporte',
-            'size' => 50,
-            'value' => $this->coordenador_transporte,
+            'label'    => 'Coordenador(a) de Transporte',
+            'size'     => 50,
+            'value'    => $this->coordenador_transporte,
             'required' => false
         ];
 
         $this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options);
 
+        /* CÓDIGO DA UNIDADE GESTORA */
+        $this->campoNumero('cod_unidade_gestora', 'Código da Unidade Gestora', $this->cod_unidade_gestora, 6, 6, '', 'somente números com 6 dígitos. EX.: 001234');
+
+        /* CÓDIGO REGIONAL */
         $opcoes = [];
 
         if (!empty($this->ref_sigla_uf)) {
@@ -179,7 +206,7 @@ return new class extends clsCadastro {
             $opcoes = [null => 'Informe uma UF'];
         }
 
-        $options = ['label' => 'Código do órgão regional de ensino', 'resources' => $opcoes, 'value' => $this->orgao_regional, 'required' => false, 'size' => 70,];
+        $options = ['label' => 'Código do Órgão Regional de Ensino', 'resources' => $opcoes, 'value' => $this->orgao_regional, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('orgao_regional', $options);
 
         $this->campoRotulo('gerais', '<b>Gerais</b>');
@@ -506,50 +533,56 @@ return new class extends clsCadastro {
             $this->obrigatorio_registro_diario_atividade_aee,
             $this->utilizar_planejamento_aula_aee,
             $this->checa_qtd_aulas_quadro_horario,
-            $this->utiliza_sabado_alternado
+            $this->utiliza_sabado_alternado,
+            $this->gestor,
+            $this->responsavel_contabil,
+            $this->cod_unidade_gestora
         );
-        $obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
-        $obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
-        $obj->data_expiracao_reserva_vaga = Portabilis_Date_Utils::brToPgSQL($this->data_expiracao_reserva_vaga);
-        $obj->exigir_vinculo_turma_professor = is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
-        $obj->gerar_historico_transferencia = !is_null($this->gerar_historico_transferencia);
-        $obj->controlar_posicao_historicos = !is_null($this->controlar_posicao_historicos);
-        $obj->matricula_apenas_bairro_escola = !is_null($this->matricula_apenas_bairro_escola);
-        $obj->restringir_historico_escolar = !is_null($this->restringir_historico_escolar);
-        $obj->restringir_multiplas_enturmacoes = !is_null($this->restringir_multiplas_enturmacoes);
-        $obj->permissao_filtro_abandono_transferencia = !is_null($this->permissao_filtro_abandono_transferencia);
-        $obj->multiplas_reserva_vaga = !is_null($this->multiplas_reserva_vaga);
-        $obj->permitir_carga_horaria = !is_null($this->permitir_carga_horaria);
-        $obj->componente_curricular_turma = !is_null($this->componente_curricular_turma);
-        $obj->reprova_dependencia_ano_concluinte = !is_null($this->reprova_dependencia_ano_concluinte);
-        $obj->bloqueia_matricula_serie_nao_seguinte = !is_null($this->bloqueia_matricula_serie_nao_seguinte);
-        $obj->reserva_integral_somente_com_renda = !is_null($this->reserva_integral_somente_com_renda);
-        $obj->coordenador_transporte = $this->pessoa_coordenador_transporte;
-        $obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
-        $obj->altera_atestado_para_declaracao = is_null($this->altera_atestado_para_declaracao) ? 0 : 1;
-        $obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
-        $obj->data_base_matricula = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
-        $obj->data_fechamento = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
-        $obj->data_educacenso = $this->data_educacenso;
-        $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
-        $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
-        $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
-        $obj->orgao_regional = $this->orgao_regional;
-        $obj->exigir_lancamentos_anteriores = !is_null($this->exigir_lancamentos_anteriores);
-        $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);
+        $obj->data_base_remanejamento                        = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
+        $obj->data_base_transferencia                        = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
+        $obj->data_expiracao_reserva_vaga                    = Portabilis_Date_Utils::brToPgSQL($this->data_expiracao_reserva_vaga);
+        $obj->exigir_vinculo_turma_professor                 = is_null($this->exigir_vinculo_turma_professor)    ? 0     : 1;
+        $obj->gerar_historico_transferencia                  = !is_null($this->gerar_historico_transferencia);
+        $obj->controlar_posicao_historicos                   = !is_null($this->controlar_posicao_historicos);
+        $obj->matricula_apenas_bairro_escola                 = !is_null($this->matricula_apenas_bairro_escola);
+        $obj->restringir_historico_escolar                   = !is_null($this->restringir_historico_escolar);
+        $obj->restringir_multiplas_enturmacoes               = !is_null($this->restringir_multiplas_enturmacoes);
+        $obj->permissao_filtro_abandono_transferencia        = !is_null($this->permissao_filtro_abandono_transferencia);
+        $obj->multiplas_reserva_vaga                         = !is_null($this->multiplas_reserva_vaga);
+        $obj->permitir_carga_horaria                         = !is_null($this->permitir_carga_horaria);
+        $obj->componente_curricular_turma                    = !is_null($this->componente_curricular_turma);
+        $obj->reprova_dependencia_ano_concluinte             = !is_null($this->reprova_dependencia_ano_concluinte);
+        $obj->bloqueia_matricula_serie_nao_seguinte          = !is_null($this->bloqueia_matricula_serie_nao_seguinte);
+        $obj->reserva_integral_somente_com_renda             = !is_null($this->reserva_integral_somente_com_renda);
+        $obj->coordenador_transporte                         = $this->pessoa_coordenador_transporte;
+        $obj->controlar_espaco_utilizacao_aluno              = is_null($this->controlar_espaco_utilizacao_aluno) ? 0     : 1;
+        $obj->altera_atestado_para_declaracao                = is_null($this->altera_atestado_para_declaracao)   ? 0     : 1;
+        $obj->percentagem_maxima_ocupacao_salas              = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
+        $obj->data_base_matricula                            = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
+        $obj->data_fechamento                                = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
+        $obj->data_educacenso                                = $this->data_educacenso;
+        $obj->exigir_dados_socioeconomicos                   = is_null($this->exigir_dados_socioeconomicos)      ? false : true;
+        $obj->obrigar_campos_censo                           = !is_null($this->obrigar_campos_censo);
+        $obj->obrigar_documento_pessoa                       = !is_null($this->obrigar_documento_pessoa);
+        $obj->orgao_regional                                 = $this->orgao_regional;
+        $obj->exigir_lancamentos_anteriores                  = !is_null($this->exigir_lancamentos_anteriores);
+        $obj->exibir_apenas_professores_alocados             = !is_null($this->exibir_apenas_professores_alocados);
         $obj->bloquear_vinculo_professor_sem_alocacao_escola = !is_null($this->bloquear_vinculo_professor_sem_alocacao_escola);
-        $obj->permitir_matricula_fora_periodo_letivo = !is_null($this->permitir_matricula_fora_periodo_letivo);
-        $obj->ordenar_alunos_sequencial_enturmacao = !is_null($this->ordenar_alunos_sequencial_enturmacao);
-        $obj->obrigar_telefone_pessoa = !is_null($this->obrigar_telefone_pessoa);
-        $obj->permitir_edicao_frequencia = !is_null($this->permitir_edicao_frequencia);
-        $obj->permitir_planeja_conteudos = !is_null($this->permitir_planeja_conteudos);
-        $obj->obrigatorio_registro_diario_atividade = !is_null($this->obrigatorio_registro_diario_atividade);
-        $obj->utilizar_planejamento_aula = !is_null($this->utilizar_planejamento_aula);
-        $obj->permitir_planeja_conteudos_aee = !is_null($this->permitir_planeja_conteudos_aee);
-        $obj->obrigatorio_registro_diario_atividade_aee = !is_null($this->obrigatorio_registro_diario_atividade_aee);
-        $obj->utilizar_planejamento_aula_aee = !is_null($this->utilizar_planejamento_aula_aee);
-        $obj->checa_qtd_aulas_quadro_horario = !is_null($this->checa_qtd_aulas_quadro_horario);
-        $obj->utiliza_sabado_alternado = !is_null($this->utiliza_sabado_alternado);
+        $obj->permitir_matricula_fora_periodo_letivo         = !is_null($this->permitir_matricula_fora_periodo_letivo);
+        $obj->ordenar_alunos_sequencial_enturmacao           = !is_null($this->ordenar_alunos_sequencial_enturmacao);
+        $obj->obrigar_telefone_pessoa                        = !is_null($this->obrigar_telefone_pessoa);
+        $obj->permitir_edicao_frequencia                     = !is_null($this->permitir_edicao_frequencia);
+        $obj->permitir_planeja_conteudos                     = !is_null($this->permitir_planeja_conteudos);
+        $obj->obrigatorio_registro_diario_atividade          = !is_null($this->obrigatorio_registro_diario_atividade);
+        $obj->utilizar_planejamento_aula                     = !is_null($this->utilizar_planejamento_aula);
+        $obj->permitir_planeja_conteudos_aee                 = !is_null($this->permitir_planeja_conteudos_aee);
+        $obj->obrigatorio_registro_diario_atividade_aee      = !is_null($this->obrigatorio_registro_diario_atividade_aee);
+        $obj->utilizar_planejamento_aula_aee                 = !is_null($this->utilizar_planejamento_aula_aee);
+        $obj->checa_qtd_aulas_quadro_horario                 = !is_null($this->checa_qtd_aulas_quadro_horario);
+        $obj->utiliza_sabado_alternado                       = !is_null($this->utiliza_sabado_alternado);
+        $obj->gestor                                         = $this->pessoa_gestor;
+        $obj->responsavel_contabil                           = $this->pessoa_responsavel_contabil;
+        $obj->cod_unidade_gestora                            = $this->cod_unidade_gestora;
 
         $editou = $obj->edita();
 
