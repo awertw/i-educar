@@ -466,6 +466,7 @@ class DiarioApiController extends ApiCoreController
             $v6 = round($media_aluno, 3);
             $this->appendResponse('media', $v6);
             $this->appendResponse('media_arredondada', $v6);
+            $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
             
           
 
@@ -601,27 +602,27 @@ class DiarioApiController extends ApiCoreController
                             if($media<$media_aprovacao){
                                 //reprovado
                                 $situacao = 2;
-                                $this->appendResponse('situacao', 'Retido');
+                                
                             }else{
                                 //aprovado após exame
                                 $situacao = 8;
-                                $this->appendResponse('situacao', 'Aprovado após exame'); 
+                               
                             }   
                            
                         }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                               //em exame
                               $situacao = 7;
-                              $this->appendResponse('situacao', 'Em exame'); 
+                               
                         }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media>=$media_aprovacao){
                                 //Aprovado
                                
 
                                 $situacao = 1;
-                                $this->appendResponse('situacao', 'Aprovado'); 
+                               
                          }else{
                             //Em andamento
                             $situacao = 3;
-                            $this->appendResponse('situacao', 'Cursando');
+                          
                          }
                        
 
@@ -747,25 +748,25 @@ class DiarioApiController extends ApiCoreController
                                 if($media<$media_aprovacao){
                                     //reprovado
                                     $situacao = 2;
-                                    $this->appendResponse('situacao', 'Retido');
+                                    
                                 }else{
                                     //aprovado após exame
                                     $situacao = 8;
-                                    $this->appendResponse('situacao', 'Aprovado após exame'); 
+                                   
                                 }   
                                
                             }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                                   //em exame
                                   $situacao = 7;
-                                  $this->appendResponse('situacao', 'Em exame'); 
+                                   
                             }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media>=$media_aprovacao){
                                     //Aprovado
                                     $situacao = 1;
-                                    $this->appendResponse('situacao', 'Aprovado'); 
+                                   
                              }else{
                                 //Em andamento
                                 $situacao = 3;
-                                $this->appendResponse('situacao', 'Cursando');
+                              
                              }
    
 
@@ -863,25 +864,25 @@ class DiarioApiController extends ApiCoreController
                 if($media<$media_aprovacao){
                     //reprovado
                     $situacao = 2;
-                    $this->appendResponse('situacao', 'Retido');
+                    
                 }else{
                     //aprovado após exame
                     $situacao = 8;
-                    $this->appendResponse('situacao', 'Aprovado após exame'); 
+                   
                 }   
                 
             }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                 //em exame
                 $situacao = 7;
-                $this->appendResponse('situacao', 'Em exame'); 
+                 
             }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media>=$media_aprovacao){
                     //Aprovado
                     $situacao = 1;
-                    $this->appendResponse('situacao', 'Aprovado'); 
+                   
             }else{
                 //Em andamento
                 $situacao = 3;
-                $this->appendResponse('situacao', 'Aprovado após exame');
+              
             }
 
 
@@ -965,25 +966,25 @@ class DiarioApiController extends ApiCoreController
                           if($media<$media_aprovacao){
                               //reprovado
                               $situacao = 2;
-                              $this->appendResponse('situacao', 'Retido');
+                              
                           }else{
                               //aprovado após exame
                               $situacao = 8;
-                              $this->appendResponse('situacao', 'Aprovado após exame'); 
+                             
                           }   
                          
                       }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                             //em exame
                             $situacao = 7;
-                            $this->appendResponse('situacao', 'Em exame'); 
+                             
                       }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media>=$media_aprovacao){
                               //Aprovado
                               $situacao = 1;
-                              $this->appendResponse('situacao', 'Aprovado'); 
+                             
                        }else{
                           //Em andamento
                           $situacao = 3;
-                          $this->appendResponse('situacao', 'Aprovado após exame');
+                         
                        }
 
 
@@ -1301,6 +1302,8 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
+        $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
+
     }
 
     protected function postParecer()
@@ -1323,6 +1326,8 @@ class DiarioApiController extends ApiCoreController
 
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+        $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
+
     }
 
     // delete
@@ -1343,6 +1348,8 @@ class DiarioApiController extends ApiCoreController
 
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+        $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
+
        
 
         $serie_id = '';
@@ -1413,6 +1420,9 @@ class DiarioApiController extends ApiCoreController
             if($tipoNota==1){
                 $this->updateMedia();
             }
+
+            $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
+
     }
 
     protected function deleteNotaRecuperacaoEspecifica()
@@ -1461,6 +1471,8 @@ class DiarioApiController extends ApiCoreController
         $v6 = round($media_aluno, 3);
         $this->appendResponse('media', $v6);
         $this->appendResponse('media_arredondada', $v6);
+        $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
+
     }
 
     protected function deleteFalta()
@@ -1486,6 +1498,8 @@ class DiarioApiController extends ApiCoreController
 
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+        $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
+
     }
 
     protected function deleteParecer()
