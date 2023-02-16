@@ -22,12 +22,6 @@
     };
 
     document.getElementById('ref_cod_componente_curricular').onchange = function () {
-      const campoTurma = document.getElementById('ref_cod_turma').value;
-      const campoData = document.getElementById('data').value;
-      const campoComponenteCurricular = document.getElementById('ref_cod_componente_curricular').value;
-      const tipoPresenca = $('#ref_cod_turma').attr('tipo_presenca');
-
-       delay(500).then(() => verificaFaltas(campoTurma, campoComponenteCurricular, campoData, tipoPresenca));
        delay(1000).then(() => carregaConteudos());
     };
 
