@@ -53,21 +53,34 @@ function modalOpen(thisElement) {
 function fillHiddenInputs() {
     let accessCriteriaId = $j("#managers_access_criteria_id").val(),
         linkTypeId = $j("#managers_link_type_id").val(),
-        email = $j("#managers_email").val();
-
+        email = $j("#managers_email").val(),
+        ato = $j("#managers_ato").val();
     $j('input[id^="managers_access_criteria_id[' + idLastLineUsed + ']').val(accessCriteriaId);
     $j('input[id^="managers_link_type_id[' + idLastLineUsed + ']').val(linkTypeId);
     $j('input[id^="managers_email[' + idLastLineUsed + ']').val(email);
+    $j('input[id^="managers_ato[' + idLastLineUsed + ']').val(ato);
 }
 
 function fillInputs() {
     let accessCriteriaId = $j('input[id^="managers_access_criteria_id[' + idLastLineUsed + ']').val(),
         linkTypeId = $j('input[id^="managers_link_type_id[' + idLastLineUsed + ']').val(),
-        email = $j('input[id^="managers_email[' + idLastLineUsed + ']').val();
-
-    $j("#managers_access_criteria_id").val(accessCriteriaId);
-    $j("#managers_link_type_id").val(linkTypeId);
-    $j("#managers_email").val(email);
+        email = $j('input[id^="managers_email[' + idLastLineUsed + ']').val(),
+        ato = decodeURI($j('input[id^="managers_ato[' + idLastLineUsed + ']').val()).split('+').join(' ')
+                                                                                    .replace(/%2B/g, '+')
+                                                                                    .replace(/%2C/g, ',')
+                                                                                    .replace(/%2F/g, '/')
+                                                                                    .replace(/%3A/g, ':')
+                                                                                    .replace(/%3B/g, ';')
+                                                                                    .replace(/%3D/g, '=')
+                                                                                    .replace(/%3F/g, '?')
+                                                                                    .replace(/%23/g, '#')
+                                                                                    .replace(/%24/g, '$')
+                                                                                    .replace(/%26/g, '&')
+                                                                                    .replace(/%40/g, '@');
+        $j("#managers_access_criteria_id").val(accessCriteriaId);
+        $j("#managers_link_type_id").val(linkTypeId);
+        $j("#managers_email").val(email);
+        $j("#managers_ato").val(ato);
 }
 
 function htmlFormModal() {
@@ -93,7 +106,9 @@ function htmlFormModal() {
                         <option value="4">Contrato CLT</option>
                     </select>
                     <label for="managers_email">E-mail</label>
-                    <input type="text" name="managers_email" id="managers_email" size="62" maxlength="50" class="text">
+                    <input type="text" name="managers_email" id="managers_email" size="50" maxlength="50" class="text">
+                    <label for="managers_ato">Ato de Nomeação</label>
+                    <input type="text" name="managers_ato" id="managers_ato" size="50" placeholder="Ex: Portaria 10/2022" class="text">
                 </form>
             </div>`;
 }
@@ -117,7 +132,7 @@ function changeManagerRole(field) {
 }
 
 function validateAccessCriteriaId() {
-    if (!obrigarCamposCenso){
+    if (!obrigarCamposCenso) {
         return true;
     }
 
@@ -138,7 +153,7 @@ function validateAccessCriteriaId() {
 }
 
 function validateLinkType() {
-    if (!obrigarCamposCenso){
+    if (!obrigarCamposCenso) {
         return true;
     }
 
