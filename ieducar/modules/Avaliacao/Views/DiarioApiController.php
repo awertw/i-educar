@@ -1197,11 +1197,7 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('nota_nova', ($notaNova > $notaOriginal ? $notaNova : null));
-        $v6 = round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 2);
-        $this->appendResponse('media', $v6);
-        $v7 = $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id);
-        $this->appendResponse('media_arredondada', $v7);
-
+       
        
         $serie_id = '';
             $serie = SerieTurma::where('cod_turma', $this->getRequest()->turma_id)->get();
@@ -1213,6 +1209,21 @@ class DiarioApiController extends ApiCoreController
             if($tipoNota==1){
                 $this->updateMedia();
             }
+
+            $media_aluno = 0;
+            $nota_alunos = LegacyDisciplineScoreStudent::where('matricula_id', $this->getRequest()->matricula_id)->get();
+            foreach($nota_alunos as $nota_aluno) {
+               $medias = LegacyDisciplineScoreAverage::where('nota_aluno_id',$nota_aluno->id)->where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->get();
+               foreach($medias as $media) {
+                $media_aluno = $media->media;
+               }            
+            
+            }
+            $v6 = round($media_aluno, 3);
+            $this->appendResponse('media', $v6);
+            $this->appendResponse('media_arredondada', $v6);
+            $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
+
     }
 
     protected function postNotaRecuperacaoEspecifica()
@@ -1259,6 +1270,8 @@ class DiarioApiController extends ApiCoreController
         $v6 = round($media_aluno, 3);
         $this->appendResponse('media', $v6);
         $this->appendResponse('media_arredondada', $v6);
+        $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
+
 
         
         
