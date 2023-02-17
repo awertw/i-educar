@@ -27,7 +27,7 @@ class LegacyPerson extends Model
      * @var array
      */
     protected $fillable = [
-        'nome', 'data_cad', 'tipo', 'situacao', 'origem_gravacao', 'operacao', 'email'
+        'nome', 'data_cad', 'tipo', 'situacao', 'origem_gravacao', 'operacao', 'email', 'ato'
     ];
 
     /**
