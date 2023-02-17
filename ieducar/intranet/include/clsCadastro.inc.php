@@ -98,9 +98,10 @@ class clsCadastro extends clsCampos
                 }
             } elseif ($this->tipoacao == 'Editar') {
                 $this->sucesso = $this->Editar();
-                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
-                    $this->_mensagem = 'Não foi possível editar a informação. [CAD02]';
-                }
+                /** Trecho do código abaixo comentado temporariamente */
+//                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+//                    $this->_mensagem = 'Não foi possível editar a informação. [CAD02]';
+//                }
             } elseif ($this->tipoacao == 'Excluir') {
                 $this->sucesso = $this->Excluir();
                 if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
@@ -299,6 +300,8 @@ class clsCadastro extends clsCampos
                 reset($componente);
 
                 $ct_campo = 0;
+//                $retorno .= "console.log($nome)\n\n";
+                $retorno .= "if($nome)\n{\n";
                 $retorno .= "for(var id_campo=0;id_campo<$nome.getId();id_campo++)\n{\n";
 
                 foreach ($componente as $name => $componente_campo) {
@@ -375,7 +378,7 @@ class clsCadastro extends clsCampos
                     $ct_campo++;
                 }
 
-                $retorno .= "\n}\n";
+                $retorno .= "\n}\n\n}\n";
                 continue;
             }
 
@@ -480,9 +483,7 @@ class clsCadastro extends clsCampos
       ';
 
             $retorno .= "\ndocument.$this->__nome.submit(); ";
-        } elseif ($this->acao_executa_submit_ajax) {
-            $retorno .= " \n doAjax(); \n";
-        } else {
+        }  else {
             $retorno .= " \n return true; \n";
         }
 

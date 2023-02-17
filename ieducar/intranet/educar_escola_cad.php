@@ -169,6 +169,7 @@ return new class extends clsCadastro {
     public $managers_link_type_id;
     public $managers_chief;
     public $managers_email;
+    public $managers_ato;
     public $qtd_secretario_escolar;
     public $qtd_auxiliar_administrativo;
     public $qtd_apoio_pedagogico;
@@ -2260,6 +2261,7 @@ return new class extends clsCadastro {
                     old('managers_access_criteria_id')[$key],
                     old('managers_link_type_id')[$key],
                     old('managers_email')[$key],
+                    old('managers_ato')[$key]
                 ];
             }
         } else {
@@ -2289,11 +2291,14 @@ return new class extends clsCadastro {
             'resources' => SelectOptions::schoolManagerRoles(),
             'required' => false,
         ];
+        
         $this->inputsHelper()->select('managers_role_id', $options);
         $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do(a) gestor(a)</a>');
         $this->campoOculto('managers_access_criteria_id', null);
         $this->campoOculto('managers_link_type_id', null);
         $this->campoOculto('managers_email', null);
+        $this->campoOculto('managers_ato', null);
+
 
         $resources = [
                 0 => 'Não',
@@ -2325,7 +2330,8 @@ return new class extends clsCadastro {
             $this->servidor_id[$key] ?? $schoolManager->employee_id,
             $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
             $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
-            $this->managers_email[$key] ?? $schoolManager->individual->person->email,
+            $this->managers_email[$key] ?? trim($schoolManager->individual->person->email),
+            $this->managers_ato[$key] ?? trim($schoolManager->individual->person->ato)
         ];
     }
 
@@ -2357,6 +2363,10 @@ return new class extends clsCadastro {
                 $this->storeManagerEmail($employeeId, $this->managers_email[$key]);
             }
 
+            if ($this->managers_ato[$key]) {
+                $this->storeManagerAto($employeeId, $this->managers_ato[$key]);
+            }
+
             if ($this->managers_inep_id[$key]) {
                 $this->storeInepCode($employeeId, $this->managers_inep_id[$key]);
             }
@@ -2367,6 +2377,13 @@ return new class extends clsCadastro {
     {
         $person = LegacyPerson::find($employeeId);
         $person->email = $email;
+        $person->save();
+    }
+
+    protected function storeManagerAto($employeeId, $ato)
+    {
+        $person = LegacyPerson::find($employeeId);
+        $person->ato = $ato;
         $person->save();
     }
 
