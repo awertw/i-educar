@@ -578,38 +578,45 @@ class DiarioApiController extends ApiCoreController
                        if($contador>0){
                         $media = $soma_notas / $contador;
                        }
+                       $contador_exame =0;
                         $nota_exame = 0;
-                        $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', '=', 'Rc')->get();
+                        $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'like', "Rc")->get();
                         foreach($nota_exames as $nota_ex) {
                            
                             $nota_exame = $nota_ex->nota_arredondada;
+                            $contador_exame++;
                         }
                        
                         if(!empty($nota_exame)){
                             $media = ($media + $nota_exame)/2;   
-                            
                         }
                         $media = round($media , 2);
-                        
-                        //verifica a situação da matricula
-                        $situacao = 0;
-                        $nota_exame_final = $nota_exame;
-
-                         
-                        //Se existir exame
-                        if(!empty($nota_exame_final)){
-
-                            if($media<$media_aprovacao){
-                                //reprovado
-                                $situacao = 2;
-                                
-                            }else{
-                                //aprovado após exame
-                                $situacao = 8;
+                            //verifica a situação da matricula
+                            $situacao = 0;
+                            $nota_exame_final = $nota_exame;
+                            
+                            //Se existir exame
+                            if(!empty($nota_exame_final)){
+    
+                                if($media<$media_aprovacao){
+                                    //reprovado
+                                    $situacao = 2;
+                                    
+                                }else{
+                                    //aprovado após exame
+                                    $situacao = 8;
+                                   
+                                }   
                                
-                            }   
-                           
-                        }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
+                            }elseif($contador_exame>0 and $nota_exame_final==0){
+    
+                                
+                                    //reprovado
+                                    $situacao = 2;
+                                    
+                                
+                               
+                            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                               //em exame
                               $situacao = 7;
                                
@@ -727,11 +734,13 @@ class DiarioApiController extends ApiCoreController
 
                            
                         }
+                        $contador_exame =0;
                         $nota_exame = 0;
                         $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'like', "Rc")->get();
                         foreach($nota_exames as $nota_ex) {
                            
                             $nota_exame = $nota_ex->nota_arredondada;
+                            $contador_exame++;
                         }
                        
                         if(!empty($nota_exame)){
@@ -754,6 +763,14 @@ class DiarioApiController extends ApiCoreController
                                     $situacao = 8;
                                    
                                 }   
+                               
+                            }elseif($contador_exame>0 and $nota_exame_final==0){
+    
+                                
+                                    //reprovado
+                                    $situacao = 2;
+                                    
+                                
                                
                             }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                                   //em exame
@@ -843,35 +860,42 @@ class DiarioApiController extends ApiCoreController
            if($contador>0){
             $media = $soma_notas / $contador;
            }
-            $nota_exame = 0;
-            $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', '=', 'Rc')->get();
-            foreach($nota_exames as $nota_ex) {
-                
-                $nota_exame = $nota_ex->nota_arredondada;
-            }
-        
-            if(!empty($nota_exame)){
-                $media = ($media + $nota_exame)/2;   
-            }
-            $media = round($media , 2);
-            //verifica a situação da matricula
-            $situacao = 0;
-            $nota_exame_final = $nota_exame;
-            
-            //Se existir exame
-            if(!empty($nota_exame_final)){
+           $contador_exame =0;
+           $nota_exame = 0;
+           $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'like', "Rc")->get();
+           foreach($nota_exames as $nota_ex) {
+              
+               $nota_exame = $nota_ex->nota_arredondada;
+               $contador_exame++;
+           }
+          
+           if(!empty($nota_exame)){
+               $media = ($media + $nota_exame)/2;   
+           }
+           $media = round($media , 2);
+               //verifica a situação da matricula
+               $situacao = 0;
+               $nota_exame_final = $nota_exame;
+               
+               //Se existir exame
+               if(!empty($nota_exame_final)){
 
-                if($media<$media_aprovacao){
-                    //reprovado
-                    $situacao = 2;
-                    
-                }else{
-                    //aprovado após exame
-                    $situacao = 8;
-                   
-                }   
-                
-            }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
+                   if($media<$media_aprovacao){
+                       //reprovado
+                       $situacao = 2;
+                       
+                   }else{
+                       //aprovado após exame
+                       $situacao = 8;
+                      
+                   }   
+                  
+               }elseif($contador_exame>0 and $nota_exame_final==0){
+
+                       //reprovado
+                       $situacao = 2;
+                  
+               }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                 //em exame
                 $situacao = 7;
                  
@@ -945,35 +969,45 @@ class DiarioApiController extends ApiCoreController
                if($contador>0){
                 $media = $soma_notas / $contador;
                }
-                $nota_exame = 0;
-                $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', '=', 'Rc')->get();
-                foreach($nota_exames as $nota_ex) {
-                    
-                    $nota_exame = $nota_ex->nota_arredondada;
-                }
-            
-                if(!empty($nota_exame)){
-                    $media = ($media + $nota_exame)/2;   
-                }
-                $media = round($media , 2);
-                      //verifica a situação da matricula
-                      $situacao = 0;
-                      $nota_exame_final = $nota_exame;
-                      
-                      //Se existir exame
-                      if(!empty($nota_exame_final)){
+               $contador_exame =0;
+               $nota_exame = 0;
+               $nota_exames = LegacyDisciplineScore::where('componente_curricular_id', $this->getRequest()->componente_curricular_id)->where('nota_aluno_id', $nota_aluno->id)->where('etapa', 'like', "Rc")->get();
+               foreach($nota_exames as $nota_ex) {
+                  
+                   $nota_exame = $nota_ex->nota_arredondada;
+                   $contador_exame++;
+               }
+              
+               if(!empty($nota_exame)){
+                   $media = ($media + $nota_exame)/2;   
+               }
+               $media = round($media , 2);
+                   //verifica a situação da matricula
+                   $situacao = 0;
+                   $nota_exame_final = $nota_exame;
+                   
+                   //Se existir exame
+                   if(!empty($nota_exame_final)){
 
-                          if($media<$media_aprovacao){
-                              //reprovado
-                              $situacao = 2;
-                              
-                          }else{
-                              //aprovado após exame
-                              $situacao = 8;
-                             
-                          }   
-                         
-                      }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
+                       if($media<$media_aprovacao){
+                           //reprovado
+                           $situacao = 2;
+                           
+                       }else{
+                           //aprovado após exame
+                           $situacao = 8;
+                          
+                       }   
+                      
+                   }elseif($contador_exame>0 and $nota_exame_final==0){
+
+                       
+                           //reprovado
+                           $situacao = 2;
+                           
+                       
+                      
+                   }elseif(empty($nota_exame_final) and $this->getRequest()->etapa == $ultima_etapa_sequencial and $media<$media_aprovacao){
                             //em exame
                             $situacao = 7;
                              
