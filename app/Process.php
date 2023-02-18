@@ -42,4 +42,6 @@ class Process
 
     public const PORTAL_ALUNO = 144;
     public const MENU_TEACHERS = 58;
+
+    public const SAGRES_EXPORT = 4000;
 }
