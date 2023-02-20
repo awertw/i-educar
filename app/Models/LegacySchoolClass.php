@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacySchoolClass
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int                $course_id
  * @property int                $grade_id
  * @property int                $vacancies
+ * @property bool               $multiseriada
  * @property int                $exempted_discipline_id
  * @property Carbon             $begin_academic_year
  * @property Carbon             $end_academic_year
@@ -46,18 +48,17 @@ class LegacySchoolClass extends Model
      */
     protected $fillable = [
         'ref_usuario_cad',
+        'ref_ref_cod_serie',
+        'ref_ref_cod_escola',
+        'ref_cod_infra_predio_comodo',
         'nm_turma',
         'sgl_turma',
         'max_aluno',
-        'data_cadastro',
-        'ref_cod_turma_tipo',
-        'ref_ref_cod_escola',
-        'ref_ref_cod_serie',
-        'ref_cod_curso',
-        'ref_cod_infra_predio_comodo',
-        'visivel',
         'multiseriada',
+        'data_cadastro',
+        'data_exclusao',
         'ativo',
+        'ref_cod_turma_tipo',
         'hora_inicial',
         'hora_final',
         'hora_inicio_intervalo',
@@ -65,20 +66,49 @@ class LegacySchoolClass extends Model
         'ref_cod_regente',
         'ref_cod_instituicao_regente',
         'ref_cod_instituicao',
+        'ref_cod_curso',
         'ref_ref_cod_serie_mult',
         'ref_ref_cod_escola_mult',
+        'visivel',
         'tipo_boletim',
         'turma_turno_id',
         'ano',
         'tipo_atendimento',
+        'turma_mais_educacao',
+        'atividade_complementar_1',
+        'atividade_complementar_2',
+        'atividade_complementar_3',
+        'atividade_complementar_4',
+        'atividade_complementar_5',
+        'atividade_complementar_6',
+        'aee_braille',
+        'aee_recurso_optico',
+        'aee_estrategia_desenvolvimento',
+        'aee_tecnica_mobilidade',
+        'aee_libras',
+        'aee_caa',
+        'aee_curricular',
+        'aee_soroban',
+        'aee_informatica',
+        'aee_lingua_escrita',
+        'aee_autonomia',
+        'cod_curso_profissional',
+        'etapa_educacenso',
+        'ref_cod_disciplina_dispensada',
+        'parecer_1_etapa',
+        'parecer_2_etapa',
+        'parecer_3_etapa',
+        'parecer_4_etapa',
+        'nao_informar_educacenso',
+        'tipo_mediacao_didatico_pedagogico',
+        'tipo_boletim_diferenciado',
+        'dias_semana',
         'atividades_complementares',
         'atividades_aee',
         'local_funcionamento_diferenciado',
-        'dias_semana',
-        'tipo_boletim_diferenciado',
-        'tipo_mediacao_didatico_pedagogico',
-        'ref_cod_disciplina_dispensada',
-        'etapa_educacenso',
+        'estrutura_curricular',
+        'formas_organizacao_turma',
+        'unidade_curricular',
     ];
 
     /**
@@ -237,6 +267,31 @@ class LegacySchoolClass extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function schoolClassStages()
+    {
+        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
+    }
+
+    public function multigrades()
+    {
+        return $this->hasMany(LegacySchoolClassGrade::class, 'turma_id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function timeTable()
+    {
+        return $this->hasOne(LegacyTimeTable::class, 'ref_cod_turma');
+    }
+
+    public function getActiveTimeTable() {
+        return $this->timeTable()->where('ativo', '=', 1);
+    }
+
+    /**
      * Retorna os dias da semana em um array
      *
      * @param string $value
@@ -377,16 +432,33 @@ class LegacySchoolClass extends Model
      */
     public function getDisciplines()
     {
-        if ($this->course->is_standard_calendar) {
-            return $this->gradeDisciplines()
+        if ((bool) $this->multiseriada) {
+            $multigrades = $this->multigrades->pluck('serie_id')->toArray();
+
+            return LegacySchoolGradeDiscipline::query()
+                ->where('ref_ref_cod_escola', $this->school_id)
+                ->whereIn('ref_ref_cod_serie', $multigrades)
                 ->whereRaw('? = ANY(anos_letivos)', [$this->year])
-                ->get();
+                ->get()
+                ->map(function ($schoolGrade) {
+                    return $schoolGrade->discipline;
+                });
         }
 
-        return $this->disciplines()
-            ->where('ano_escolar_id', $this->grade_id)
-            ->where('escola_id', $this->school_id)
-            ->get();
+        $disciplinesOfSchoolClass = $this->disciplines()->get();
+
+        if ($disciplinesOfSchoolClass->count() > 0) {
+            return $disciplinesOfSchoolClass;
+        }
+
+        return LegacySchoolGradeDiscipline::query()
+            ->where('ref_ref_cod_escola', $this->school_id)
+            ->where('ref_ref_cod_serie', $this->grade_id)
+            ->whereRaw('? = ANY(anos_letivos)', [$this->year])
+            ->get()
+            ->map(function ($schoolGrade) {
+                return $schoolGrade->discipline;
+            });
     }
 
     /**
