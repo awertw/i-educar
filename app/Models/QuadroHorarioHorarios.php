@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class QuadroHorarioHorarios extends Model
 {
 
-      
+
     /**
      * @var string
      */
@@ -24,15 +24,18 @@ class QuadroHorarioHorarios extends Model
         'ref_cod_serie',
         'ref_servidor',
         'ativo'
-        
-    
-    ]; 
+    ];
 
     /**
      * @var bool
      */
     public $timestamps = false;
 
-    
+
     use HasFactory;
+
+    public function timeTable()
+    {
+        return $this->belongsTo(LegacyTimeTable::class, 'ref_cod_quadro_horario');
+    }
 }

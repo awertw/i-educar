@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacySchoolClass
@@ -276,6 +277,18 @@ class LegacySchoolClass extends Model
     public function multigrades()
     {
         return $this->hasMany(LegacySchoolClassGrade::class, 'turma_id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function timeTable()
+    {
+        return $this->hasOne(LegacyTimeTable::class, 'ref_cod_turma');
+    }
+
+    public function getActiveTimeTable() {
+        return $this->timeTable()->where('ativo', '=', 1);
     }
 
     /**
