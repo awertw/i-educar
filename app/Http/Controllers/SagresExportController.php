@@ -26,7 +26,7 @@ class SagresExportController extends Controller
         $exportContent = $exportService->export($request->all());
 
         $headers = [
-            'Content-type' => 'text/plain',
+            'Content-type' => 'text/xml',
             'Content-Disposition' => 'attachment; filename="exportacao_sagres.xml"',
             'Content-Length' => strlen($exportContent),
         ];

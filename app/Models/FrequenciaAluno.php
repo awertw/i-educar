@@ -21,7 +21,8 @@ class FrequenciaAluno extends Model
     protected $fillable = [
         'id',
         'ref_frequencia',
-        'ref_cod_matricula'
+        'ref_cod_matricula',
+        'aulas_faltou'
     ];
 
     /**
@@ -30,4 +31,9 @@ class FrequenciaAluno extends Model
     public $timestamps = false;
 
     use HasFactory;
+
+    public function frequency()
+    {
+        return $this->belongsTo(Frequencia::class, 'ref_frequencia');
+    }
 }
