@@ -188,7 +188,7 @@ class clsModulesBNCC extends Model
                     ON (bncc.serie_id = t.etapa_educacenso
                     AND {$modo}
         ";
-        $whereAnd = 'WHERE ';
+        $whereAnd = ' WHERE ';
         $filtros = "";
 
         if (is_numeric($int_turma)) {
@@ -283,7 +283,7 @@ class clsModulesBNCC extends Model
                 OR (bncc.componente_curricular_id = cc.codigo_educacenso)      
         ";
 
-        $whereAnd = 'WHERE ';
+        $whereAnd = ' WHERE ';
         $filtros = "";
 
         if (is_numeric($int_turma)) {
@@ -384,7 +384,7 @@ class clsModulesBNCC extends Model
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
-        $filtros = 'WHERE ';
+        $filtros = '  ';
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
