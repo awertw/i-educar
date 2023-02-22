@@ -18,6 +18,7 @@ class clsPmieducarServidor extends Model
     public $tipo_ensino_medio_cursado;
     public $_campos_lista2;
     public $_todos_campos2;
+    public $recurso_fundeb;
 
     public function __construct(
         $cod_servidor = null,
@@ -34,10 +35,10 @@ class clsPmieducarServidor extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor';
         $this->_campos_lista = $this->_todos_campos = 'cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel,
-    pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado
+    pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado, recurso_fundeb
     ';
         $this->_campos_lista2 = $this->_todos_campos2 = 's.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
-    s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado,
+    s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado, recurso_fundeb,
     (SELECT replace(textcat_all(matricula),\' <br>\',\',\')
           FROM pmieducar.servidor_funcao sf
          WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
@@ -139,6 +140,16 @@ class clsPmieducarServidor extends Model
                 $valores .= "{$gruda} FALSE ";
                 $gruda = ', ';
             }
+
+            if (dbBool($this->recurso_fundeb)) {
+                $campos .= "{$gruda}recurso_fundeb";
+                $valores .= "{$gruda} TRUE ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}recurso_fundeb";
+                $valores .= "{$gruda} FALSE ";
+                $gruda = ', ';
+            }
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
             return $this->cod_servidor;
@@ -205,6 +216,13 @@ class clsPmieducarServidor extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}multi_seriado = FALSE ";
+                $gruda = ', ';
+            }
+            if (dbBool($this->recurso_fundeb)) {
+                $set .= "{$gruda}recurso_fundeb = TRUE ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}recurso_fundeb = FALSE ";
                 $gruda = ', ';
             }
             if ($set) {

@@ -25,6 +25,7 @@ return new class extends clsCadastro {
     public $tipo_ensino_medio_cursado;
     public $matricula = [];
     public $cod_servidor_funcao = [];
+    public $recurso_fundeb;
 
     public $total_horas_alocadas;
 
@@ -82,6 +83,7 @@ return new class extends clsCadastro {
                 }
 
                 $this->multi_seriado = dbBool($this->multi_seriado);
+                $this->recurso_fundeb = dbBool($this->recurso_fundeb);
 
                 $obj_permissoes = new clsPermissoes();
                 if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
@@ -346,6 +348,7 @@ return new class extends clsCadastro {
         );
 
         $this->inputsHelper()->checkbox('multi_seriado', ['label' => 'Multisseriado', 'value' => $this->multi_seriado]);
+        $this->inputsHelper()->checkbox('recurso_fundeb', ['label' => 'Recurso Fundeb', 'value' => $this->recurso_fundeb]);
 
         // Dados do docente no Inep/Educacenso.
         if ($this->docente) {
@@ -494,6 +497,7 @@ JS;
             $obj = new clsPmieducarServidor($this->cod_servidor, null, $this->ref_idesco, $this->carga_horaria, null, null, 1, $this->ref_cod_instituicao);
             $obj = $this->addCamposCenso($obj);
             $obj->multi_seriado = !is_null($this->multi_seriado);
+            $obj->recurso_fundeb = !is_null($this->recurso_fundeb);
 
             $editou = $obj->edita();
 
@@ -518,6 +522,7 @@ JS;
             $obj_2 = new clsPmieducarServidor($this->cod_servidor, null, $this->ref_idesco, $this->carga_horaria, null, null, 1, $this->ref_cod_instituicao);
             $obj_2 = $this->addCamposCenso($obj_2);
             $obj_2->multi_seriado = !is_null($this->multi_seriado);
+            $obj_2->recurso_fundeb = !is_null($this->recurso_fundeb);
             $obj_2->cod_servidor = $this->cod_servidor;
 
             $cadastrou = $obj_2->cadastra();
@@ -561,6 +566,7 @@ JS;
             $obj = new clsPmieducarServidor($this->cod_servidor, null, $this->ref_idesco, $this->carga_horaria, null, null, 1, $this->ref_cod_instituicao);
             $obj = $this->addCamposCenso($obj);
             $obj->multi_seriado = !is_null($this->multi_seriado);
+            $obj->recurso_fundeb = !is_null($this->recurso_fundeb);
             $editou = $obj->edita();
 
             if ($editou) {
@@ -638,6 +644,7 @@ JS;
                     );
                     $obj = $this->addCamposCenso($obj);
                     $obj->multi_seriado = !is_null($this->multi_seriado);
+                    $obj->recurso_fundeb = !is_null($this->recurso_fundeb);
                     $editou = $obj->edita();
 
                     if ($editou) {
