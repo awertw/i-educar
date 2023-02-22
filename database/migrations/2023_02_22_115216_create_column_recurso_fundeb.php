@@ -14,7 +14,7 @@ class CreateColumnRecursoFundeb extends Migration
     public function up()
     {
         Schema::table('pmieducar.servidor', function (Blueprint $table) {
-            $table->boolean('recurso_fundeb')->nullable();
+            $table->boolean('recurso_fundeb')->default(true);
         });
     }
 
