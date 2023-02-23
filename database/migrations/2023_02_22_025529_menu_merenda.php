@@ -19,7 +19,7 @@ return new class extends Migration
                 'parent_id' => NULL,
                 'title' => 'Merenda Escolar',
                 'description' => ' ',
-                'link' => '/intranet/educar_merenda_escolar_index.php.php',
+                'link' => '/intranet/educar_merenda_escolar_index.php',
                 'icon' => 'fa-cutlery',
                 'order' => 8,
                 'type' => 1,
