@@ -48,7 +48,12 @@ function loadJson($file)
 
     return json_decode($jsonFile, true);
 }
+function loadJsonBncc($file)
+{
+    $jsonFile = file_get_contents($file);
 
+    return json_decode($jsonFile);
+}
 function int2CNPJ($int)
 {
     $int = preg_replace('/[\D]/', '', $int );

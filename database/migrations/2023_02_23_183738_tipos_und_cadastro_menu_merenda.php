@@ -15,22 +15,22 @@ return new class extends Migration
     {
         DB::table('public.menus')->insert(
             [
-                'id' => 6318,
-                'parent_id' => 6317,
-                'title' => 'Cadastros',
-                'description' => ' ',
-                'link' => NULL,
+                'id' => 6324,
+                'parent_id' => 6323,
+                'title' => 'Cadastro de Unidades',
+                'description' => 'Cadastro de unidades de peso e medida',
+                'link' => '/intranet/educar_unidade_lst.php',
                 'icon' => NULL,
                 'order' => 1,
-                'type' => 2,
-                'process' => NULL,
-                'old' => 154875,
+                'type' => 4,
+                'process' => 9211,
+                'old' => 9853,
                 'parent_old' => NULL,
                 'active' => true,
                 'created_at' => NULL,
                 'updated_at' => NULL
             ]
-        );
+        );   
     }
 
     /**
