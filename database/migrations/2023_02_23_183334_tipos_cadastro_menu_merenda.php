@@ -15,24 +15,22 @@ return new class extends Migration
     {
         DB::table('public.menus')->insert(
             [
-                'id' => 6322,
-                'parent_id' => 6320,
-                'title' => 'Cardápio das turmas',
-                'description' => 'Cadastro de cardápios em turmas',
-                'link' => '/intranet/educar_cardapio_turma_lst.php',
+                'id' => 6323,
+                'parent_id' => 6318,
+                'title' => 'Tipos',
+                'description' => NULL,
+                'link' => NULL,
                 'icon' => NULL,
                 'order' => 2,
                 'type' => 3,
-                'process' => 9208,
-                'old' => 687314,
+                'process' => 9210,
+                'old' => 3697,
                 'parent_old' => NULL,
                 'active' => true,
                 'created_at' => NULL,
                 'updated_at' => NULL
             ]
-        );   
-    
-    
+        );
     }
 
     /**

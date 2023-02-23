@@ -1,11 +1,10 @@
 <?php
  
 use iEducar\Legacy\Model;
-use App\Models\Produto;
 use App\Models\Unidade;
 use App\Models\Serie;
 use App\Models\ComponenteCurricular;
-use App\Models\produtoSeries;
+use App\Models\unidadeSeries;
 use App\Models\EspecificacaoBncc;
 
 return new class extends clsCadastro {
@@ -27,17 +26,17 @@ return new class extends clsCadastro {
             9206,
             $this->pessoa_logada,
             3,
-            'educar_produto_lst.php'
+            'educar_unidade_lst.php'
         );
 
         if (is_numeric($this->id)) {
             $retorno = 'Editar';
 
-            $produto = Produto::find($this->id);
+            $unidade = Unidade::find($this->id);
 
-            if ($produto) {
-                    $this->descricao = $produto->descricao;
-                    $this->unidade = $produto->unidade;
+            if ($unidade) {
+                    $this->descricao = $unidade->descricao;
+                    $this->unidade = $unidade->unidade;
                    
            }
          
@@ -50,9 +49,9 @@ return new class extends clsCadastro {
             }
         
 
-        $this->url_cancelar = 'educar_produto_lst.php';
+        $this->url_cancelar = 'educar_unidade_lst.php';
 
-        $this->breadcrumb('produto', [
+        $this->breadcrumb('unidade', [
         url('intranet/educar_index.php') => 'Merenda Escolar',
     ]);
 
@@ -67,40 +66,23 @@ return new class extends clsCadastro {
     public function Gerar()
     {
        
-      
+        $this->campoTexto('unidade', 'Unidade', $this->unidade, '50', '255', true); 
         $this->campoTexto('descricao', 'Descrição', $this->descricao, '50', '255', true);
        
-        $selectOptionsUnidade = [];
- 
-        $unidades = Unidade::all();
-        foreach($unidades as $unidade){
-      
-            $selectOptionsUnidade[$unidade['unidade']] = $unidade['descricao']." - ".$unidade['unidade'];
-           
-         }
-      
-  
-        $selectOptionsUnidade = Portabilis_Array_Utils::sortByValue($selectOptionsUnidade);
-        $selectOptionsUnidade = array_replace([null => 'Selecione'], $selectOptionsUnidade);
-  
-  
-     
-  
-        $this->campoLista('unidade', 'Unidade', $selectOptionsUnidade, $this->unidade, '', true, '', '', '', '');
-   
+       
        
      
  
     }
 
     public function Novo(){
-        $data = Produto::latest('id')->first();
-        $id_produto = $data->id + 1;
+        $data = Unidade::latest('id')->first();
+        $id_unidade = $data->id + 1;
 
 
    
-            $cadastrou =   Produto::create( [
-                'id' => $id_produto,
+            $cadastrou =   Unidade::create( [
+                'id' => $id_unidade,
                 'descricao' => $this->descricao,
                 'unidade' => $this->unidade
                
@@ -120,7 +102,7 @@ return new class extends clsCadastro {
        
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-            $this->simpleRedirect('educar_produto_lst.php' . $this->ref_cod_matricula);
+            $this->simpleRedirect('educar_unidade_lst.php' . $this->ref_cod_matricula);
         }
 
         
@@ -131,7 +113,7 @@ return new class extends clsCadastro {
     {
      
        
-        Produto::where('id', $_GET['id'])->update([
+        Unidade::where('id', $_GET['id'])->update([
             'descricao' => $this->descricao,
             'unidade' => $this->unidade
           
@@ -140,20 +122,20 @@ return new class extends clsCadastro {
         
 
       
-        $this->simpleRedirect('educar_produto_lst.php');
+        $this->simpleRedirect('educar_unidade_lst.php');
     }
 
     public function Excluir()
     {
        
-        Produto::where('id', $_GET['id'])->delete(); 
+        Unidade::where('id', $_GET['id'])->delete(); 
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-        $this->simpleRedirect('educar_produto_lst.php');
+        $this->simpleRedirect('educar_unidade_lst.php');
     }
 
     public function Formular()
     {
-        $this->title = 'Produto';
+        $this->title = 'Unidade';
         $this->processoAp = '9204';
     }
 };

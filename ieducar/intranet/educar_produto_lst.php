@@ -4,6 +4,7 @@ use App\Models\Produto;
 use App\Models\Serie;
 use App\Models\ComponenteCurricular;
 use App\Models\produtoSeries;
+use App\Models\Unidade;
  
 return new class extends clsListagem {
   
@@ -26,11 +27,29 @@ return new class extends clsListagem {
        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
            $this->$var = ($val === '') ? null: $val;
        }
- 
-     
-       $this->campoTexto('unidade', 'Unidade', $this->id, '50', '255', false);
- 
        $this->campoTexto('descricao', 'Descrição', $this->descricao, '50', '255', false);
+     
+       $selectOptionsUnidade = [];
+ 
+       $unidades = Unidade::all();
+       foreach($unidades as $unidade){
+     
+           $selectOptionsUnidade[$unidade['unidade']] = $unidade['descricao']." - ".$unidade['unidade'];
+          
+        }
+     
+ 
+       $selectOptionsUnidade = Portabilis_Array_Utils::sortByValue($selectOptionsUnidade);
+       $selectOptionsUnidade = array_replace([null => 'Selecione'], $selectOptionsUnidade);
+ 
+ 
+    
+ 
+       $this->campoLista('unidade', 'Unidade', $selectOptionsUnidade, $this->unidade, '', true, '', '', '', '');
+  
+
+ 
+      
  
   
  
