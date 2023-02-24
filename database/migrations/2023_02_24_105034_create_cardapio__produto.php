@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cardapio', function (Blueprint $table) {
+        Schema::create('modules.cardapio_produto', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->text('cod_cardapio')->nullable();
+            $table->text('cod_produto')->nullable();
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cardapio');
+        Schema::dropIfExists('modules.cardapio_produto');
     }
 };

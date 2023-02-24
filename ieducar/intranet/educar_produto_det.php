@@ -3,10 +3,7 @@ use iEducar\Legacy\Model;
 use App\Models\Produto;
 use App\Models\Unidade;
 use App\Models\UnidadeProduto;
-use App\Models\Serie;
-use App\Models\ComponenteCurricular;
-use App\Models\produtoSeries;
-use App\Models\EspecificacaoBncc;
+
 
 return new class extends clsDetalhe {
     /**
@@ -18,12 +15,6 @@ return new class extends clsDetalhe {
     public $id;
     public $unidade;
     public $descricao;
-
-    public $idpes_exc;
-    public $idpes_cad;
-    public $nm_raca;
-    public $data_cadastro;
-    public $data_exclusao;
     public $ativo;
     public $pessoa_logada;
 

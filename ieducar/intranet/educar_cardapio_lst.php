@@ -1,11 +1,10 @@
 <?php
 use iEducar\Legacy\Model;
-use App\Models\Produto;
+use App\Models\MerendaCardapio;
 use App\Models\Serie;
 use App\Models\ComponenteCurricular;
-use App\Models\produtoSeries;
-use App\Models\Unidade;
-use App\Models\UnidadeProduto;
+use App\Models\Produto;
+use App\Models\CardapioProduto;
  
 return new class extends clsListagem {
   
@@ -14,7 +13,7 @@ return new class extends clsListagem {
    public $inativo;
    public $pessoa_logada;
    public $id;
-   public $unidade;
+   public $produto;
    public $descricao;
    public $retorno;
  
@@ -23,7 +22,7 @@ return new class extends clsListagem {
    public function Gerar()
    {
    
-       $this->titulo = 'Produto - Listagem';
+       $this->titulo = 'Cardápio - Listagem';
  
        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
            $this->$var = ($val === '') ? null: $val;
@@ -44,9 +43,9 @@ return new class extends clsListagem {
  
 
        $lista_busca = [
-           'Codigo do Produto',
+           'Codigo do Cardápio',
            'Descrição',
-           'Unidades'
+           'Produtos'
           
        ];
  
@@ -67,31 +66,25 @@ return new class extends clsListagem {
        $limite = 20;
        $iniciolimit = ($this->getQueryString("pagina_{$this->nome}")) ? $this->getQueryString("pagina_{$this->nome}")*$limite-$limite: 0;
  
-       $obj_Produto = new clsModulesMerendaProduto();
-       $obj_Produto->setOrderby('merenda_produto.id ASC');
-       $obj_Produto->setLimite($limite, $iniciolimit);
+       $obj_MerendaCardapio = new clsModulesMerendaCardapio();
+       $obj_MerendaCardapio->setOrderby('merenda_cardapio.id ASC');
+       $obj_MerendaCardapio->setLimite($limite, $iniciolimit);
  
-       $lista = $obj_Produto->lista_produtos();
+       $lista = $obj_MerendaCardapio->lista_cardapios();
      
  
      
  
-       if(!empty($_GET['unidade'])){
-           $produtos = Produto::where('unidade', $_GET['unidade'])->get();
-          
-       }elseif(!empty($_GET['descricao'])  ){
-               $produtos = Produto::where('descricao', $_GET['descricao'])->get();
+        if(!empty($_GET['descricao'])  ){
+               $cardapios = MerendaCardapio::where('descricao', $_GET['descricao'])->get();
               
-       }elseif(!empty($_GET['unidade']) and empty($_GET['descricao'])  ){
-           $produtos = Produto::where('unidade', $_GET['unidade'])->where('descricao', $_GET['descricao'])->get();
-          
        }else{
            $total = 0;
-           $produtos_total =  Produto::all();
-           foreach($produtos_total as $produto_total){
+           $cardapios_total =  MerendaCardapio::all();
+           foreach($cardapios_total as $cardapio_total){
                $total ++;
            }
-            $produtos =  $obj_Produto->lista_produtos();
+            $cardapios =  $obj_MerendaCardapio->lista_cardapios();
   
     
  
@@ -100,31 +93,31 @@ return new class extends clsListagem {
  
     
      
-       foreach($produtos as $produto){
+       foreach($cardapios as $cardapio){
 
-        $lista_unidades = "<ul>";
-        $unidadesProdutos = UnidadeProduto::where('cod_produto', $produto['id'])->get();
+        $lista_produtos = "<ul style='list-style-type: none;'>";
+        $cardapioProdutos = CardapioProduto::where('cod_cardapio', $cardapio['id'])->get();
         $contador_unidades= 0;
 
-        foreach($unidadesProdutos as $unidade_prod){
+        foreach($cardapioProdutos as $cardapioProduto){
 
-            $unidades = Unidade::where('id', $unidade_prod['cod_unidade'])->get();
+            $produtos = Produto::where('id', $cardapioProduto['cod_produto'])->get();
 
-            foreach($unidades as $unidade){
-                $lista_unidades .= "<li>".$unidade['unidade']."</li>";
+            foreach($produtos as $produto){
+                $lista_produtos .= "<li  style='border: 1px solid grey; padding: 5px; background:white;'><b>".$produto['descricao']."</b></li>";
             }
         
         
         }
-        $lista_unidades .= "</ul>";
+        $lista_produtos .= "</ul>";
   
 
          
          
                $lista_busca = [
-                   "<a href='educar_produto_det.php?id=".$produto['id']."' >".$produto['id']." </a>",
-                   "<a href='educar_produto_det.php?id=".$produto['id']."' >".$produto['descricao']."</a>",
-                   "<a href='educar_produto_det.php?id=".$produto['id']."' >".$lista_unidades."</a>"
+                   "<a href='educar_cardapio_det.php?id=".$cardapio['id']."' >".$cardapio['id']." </a>",
+                   "<a href='educar_cardapio_det.php?id=".$cardapio['id']."' >".$cardapio['descricao']."</a>",
+                   "<div >".$lista_produtos."</div>"
                   
                  
                ];
@@ -138,15 +131,15 @@ return new class extends clsListagem {
   
        $obj_permissoes = new clsPermissoes();
        if ($obj_permissoes->permissao_cadastra(9204, $this->pessoa_logada, 3)) {
-           $this->acao = 'go("educar_produto_cad.php")';
+           $this->acao = 'go("educar_cardapio_cad.php")';
            $this->nome_acao = 'Novo';
        }
  
      
        $this->largura = '100%';
-       $this->addPaginador2('educar_produto_lst.php', $total, $_GET, $this->nome, $limite);
-       $this->breadcrumb('Listagem de Produto', [
-           url('intranet/educar_produto_lst.php') => 'Produto',
+       $this->addPaginador2('educar_cardapio_lst.php', $total, $_GET, $this->nome, $limite);
+       $this->breadcrumb('Listagem de Cardápios', [
+           url('intranet/educar_cardapio_lst.php') => 'Cardápio',
        ]);
       
    }
@@ -156,7 +149,7 @@ return new class extends clsListagem {
  
    public function Formular()
    {
-       $this->title = 'Produtos da Merenda';
+       $this->title = 'Cardápio';
        $this->processoAp = '9204';
    }
 };
