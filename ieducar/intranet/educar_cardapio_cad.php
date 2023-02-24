@@ -50,7 +50,7 @@ return new class extends clsCadastro {
 
         $this->url_cancelar = 'educar_cardapio_lst.php';
 
-        $this->breadcrumb('produto', [
+        $this->breadcrumb('Cardápio', [
         url('intranet/educar_index.php') => 'Cardápio',
     ]);
 
