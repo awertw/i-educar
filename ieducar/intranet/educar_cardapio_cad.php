@@ -1,22 +1,18 @@
 <?php
  
 use iEducar\Legacy\Model;
+use App\Models\MerendaCardapio;
+use App\Models\CardapioProduto;
 use App\Models\Produto;
-use App\Models\Unidade;
-use App\Models\UnidadeProduto;
-use App\Models\Serie;
-use App\Models\ComponenteCurricular;
-use App\Models\produtoSeries;
-use App\Models\EspecificacaoBncc;
 
 return new class extends clsCadastro {
 
     public $pessoa_logada;
     public $instituicao_id;
     public $id;
-    public $unidade;
+    public $produto;
     public $descricao;
-    public $unidade_ids;
+    public $produto_ids;
 
    
     public function Inicializar(){
@@ -29,17 +25,17 @@ return new class extends clsCadastro {
             9206,
             $this->pessoa_logada,
             3,
-            'educar_produto_lst.php'
+            'educar_cardapio_lst.php'
         );
 
         if (is_numeric($this->id)) {
             $retorno = 'Editar';
 
-            $produto = Produto::find($this->id);
+            $cardapio = MerendaCardapio::find($this->id);
 
-            if ($produto) {
-                    $this->descricao = $produto->descricao;
-                    $this->unidade = $produto->unidade;
+            if ($cardapio) {
+                    $this->descricao = $cardapio->descricao;
+                    $this->unidade = $cardapio->unidade;
                    
            }
          
@@ -52,10 +48,10 @@ return new class extends clsCadastro {
             }
         
 
-        $this->url_cancelar = 'educar_produto_lst.php';
+        $this->url_cancelar = 'educar_cardapio_lst.php';
 
-        $this->breadcrumb('produto', [
-        url('intranet/educar_index.php') => 'Merenda Escolar',
+        $this->breadcrumb('Cardápio', [
+        url('intranet/educar_index.php') => 'Cardápio',
     ]);
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -72,15 +68,15 @@ return new class extends clsCadastro {
       
         $this->campoTexto('descricao', 'Descrição', $this->descricao, '50', '255', true);
        
-        $selectOptionsUnidade = [];
+        $selectOptionsProduto = [];
  
-        $unidades = Unidade::all();
+        $produtos = Produto::all();
         $a = array();
         $b = array();
 
-        foreach($unidades as $unidade){
-            array_push($a, $unidade['id']);
-            array_push($b, $unidade['descricao']." - ".$unidade['unidade']);
+        foreach($produtos as $produto){
+            array_push($a, $produto['id']);
+            array_push($b, $produto['id']." - ".$produto['descricao']);
           
          }
        
@@ -89,10 +85,10 @@ return new class extends clsCadastro {
         
         $c = array_combine($a, $b);
         $options = [
-            'label' => 'Unidades',
+            'label' => 'Produtos',
             'required' => true,
             'size' => 50,
-            'value' => $this->$unidade_ids,
+            'value' => $this->$produto_ids,
             'options' => [
                 'all_values' =>$c
             ]
@@ -108,25 +104,25 @@ return new class extends clsCadastro {
     }
 
     public function Novo(){
-        $data = Produto::latest('id')->first();
-        $id_produto = $data->id + 1;
+        $data = MerendaCardapio::latest('id')->first();
+        $id_cardapio = $data->id + 1;
 
 
    
-            $cadastrou =   Produto::create( [
-                'id' => $id_produto,
+            $cadastrou =   MerendaCardapio::create( [
+                'id' => $id_cardapio,
                 'descricao' => $this->descricao
                
               ]);
        
-              $this->unidade_ids  = $_POST['custom'];
+              $this->produto_ids  = $_POST['custom'];
               
-              foreach ($this->unidade_ids as $unidade_id ) {
+              foreach ($this->produto_ids as $produto_id ) {
           
-                  UnidadeProduto::create([
+                CardapioProduto::create([
                      
-                      'cod_produto' => $id_produto,
-                      'cod_unidade' => $unidade_id
+                      'cod_cardapio' => $id_cardapio,
+                      'cod_produto' => $produto_id
                      
                     ]);
                 
@@ -145,7 +141,7 @@ return new class extends clsCadastro {
        
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-            $this->simpleRedirect('educar_produto_det.php?id='.$id_produto);
+            $this->simpleRedirect('educar_cardapio_det.php?id='.$id_cardapio);
         }
 
         
@@ -156,22 +152,22 @@ return new class extends clsCadastro {
     {
      
        
-        Produto::where('id', $_GET['id'])->update([
+        MerendaCardapio::where('id', $_GET['id'])->update([
             'descricao' => $this->descricao
           
           
         ]);
 
-        UnidadeProduto::where('cod_produto', $_GET['id'])->delete(); 
+        CardapioProduto::where('cod_cardapio', $_GET['id'])->delete(); 
         
         $this->unidade_ids  = $_POST['custom'];
               
-        foreach ($this->unidade_ids as $unidade_id ) {
+        foreach ($this->unidade_ids as $produto_id ) {
     
-            UnidadeProduto::create([
+            CardapioProduto::create([
                
-                'cod_produto' => $_GET['id'],
-                'cod_unidade' => $unidade_id
+                'cod_cardapio' => $_GET['id'],
+                'cod_produto' => $produto_id
                
               ]);
           
@@ -179,7 +175,7 @@ return new class extends clsCadastro {
         
 
       
-        $this->simpleRedirect('educar_produto_det.php?id='.$_GET['id']);
+        $this->simpleRedirect('educar_cardapio_det.php?id='.$_GET['id']);
     }
 
     public function Excluir()
@@ -187,12 +183,12 @@ return new class extends clsCadastro {
        
         Produto::where('id', $_GET['id'])->delete(); 
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-        $this->simpleRedirect('educar_produto_lst.php');
+        $this->simpleRedirect('educar_cardapio_lst.php');
     }
 
     public function Formular()
     {
-        $this->title = 'Produto';
+        $this->title = 'Cardápio';
         $this->processoAp = '9204';
     }
 };

@@ -5,6 +5,7 @@ use App\Models\Serie;
 use App\Models\ComponenteCurricular;
 use App\Models\produtoSeries;
 use App\Models\Unidade;
+use App\Models\UnidadeProduto;
  
 return new class extends clsListagem {
   
@@ -29,23 +30,7 @@ return new class extends clsListagem {
        }
        $this->campoTexto('descricao', 'Descrição', $this->descricao, '50', '255', false);
      
-       $selectOptionsUnidade = [];
- 
-       $unidades = Unidade::all();
-       foreach($unidades as $unidade){
-     
-           $selectOptionsUnidade[$unidade['unidade']] = $unidade['descricao']." - ".$unidade['unidade'];
-          
-        }
-     
- 
-       $selectOptionsUnidade = Portabilis_Array_Utils::sortByValue($selectOptionsUnidade);
-       $selectOptionsUnidade = array_replace([null => 'Selecione'], $selectOptionsUnidade);
- 
- 
-    
- 
-       $this->campoLista('unidade', 'Unidade', $selectOptionsUnidade, $this->unidade, '', true, '', '', '', '');
+      
   
 
  
@@ -61,7 +46,7 @@ return new class extends clsListagem {
        $lista_busca = [
            'Codigo do Produto',
            'Descrição',
-           'Unidade'
+           'Unidades'
           
        ];
  
@@ -117,12 +102,29 @@ return new class extends clsListagem {
      
        foreach($produtos as $produto){
 
+        $lista_unidades = "<ul>";
+        $unidadesProdutos = UnidadeProduto::where('cod_produto', $produto['id'])->get();
+        $contador_unidades= 0;
+
+        foreach($unidadesProdutos as $unidade_prod){
+
+            $unidades = Unidade::where('id', $unidade_prod['cod_unidade'])->get();
+
+            foreach($unidades as $unidade){
+                $lista_unidades .= "<li>".$unidade['unidade']."</li>";
+            }
+        
+        
+        }
+        $lista_unidades .= "</ul>";
+  
+
          
          
                $lista_busca = [
                    "<a href='educar_produto_det.php?id=".$produto['id']."' >".$produto['id']." </a>",
                    "<a href='educar_produto_det.php?id=".$produto['id']."' >".$produto['descricao']."</a>",
-                   "<a href='educar_produto_det.php?id=".$produto['id']."' >".$produto['unidade']."</a>"
+                   "<a href='educar_produto_det.php?id=".$produto['id']."' >".$lista_unidades."</a>"
                   
                  
                ];

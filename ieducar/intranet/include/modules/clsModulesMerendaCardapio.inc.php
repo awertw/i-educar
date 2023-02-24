@@ -1,8 +1,8 @@
 <?php
 use iEducar\Legacy\Model;
-use App\Models\Unidade;
+use App\Models\MerendaCardapio;
 
-class clsModulesUnidade extends Model
+class clsModulesMerendaCardapio extends Model
 {
     public $id;
     public $unidade;
@@ -10,21 +10,19 @@ class clsModulesUnidade extends Model
 
     public function __construct(
         $id = null,
-        $unidade = null,
         $descricao = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
-        $this->_tabela = "{$this->_schema}unidade";
+        $this->_tabela = "{$this->_schema}merenda_cardapio";
 
         $this->_from = "
-            modules.unidade as unidade
+            modules.merenda_cardapio as merenda_cardapio
         ";
 
         $this->_campos_lista = $this->_todos_campos = '
-            unidade.id,
-            unidade.unidade,
-            unidade.descricao
+            merenda_cardapio.id,
+            merenda_cardapio.descricao
          
         ';
 
@@ -33,9 +31,7 @@ class clsModulesUnidade extends Model
             $this->id = $id;
         }
 
-        if (is_string($unidade)) {
-            $this->unidade = $unidade;
-        }
+      
 
         if (is_string($descricao)) {
             $this->descricao = $descricao;
@@ -62,7 +58,7 @@ class clsModulesUnidade extends Model
                 FROM
                     {$this->_from}
                 WHERE
-                    unidade.id = {$this->id}
+                    merenda_cardapio.id = {$this->id}
             ");
 
             $db->ProximoRegistro();
@@ -176,9 +172,9 @@ class clsModulesUnidade extends Model
 
 
 
-    public function lista_unidades()
+    public function lista_cardapios()
     {
-        $sql = "SELECT * FROM modules.unidade";
+        $sql = "SELECT * FROM modules.merenda_cardapio";
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
@@ -186,7 +182,7 @@ class clsModulesUnidade extends Model
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM modules.unidade");
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM modules.merenda_cardapio");
 
         $db->Consulta($sql);
 
