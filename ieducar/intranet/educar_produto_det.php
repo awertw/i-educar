@@ -1,6 +1,8 @@
 <?php
 use iEducar\Legacy\Model;
 use App\Models\Produto;
+use App\Models\Unidade;
+use App\Models\UnidadeProduto;
 use App\Models\Serie;
 use App\Models\ComponenteCurricular;
 use App\Models\produtoSeries;
@@ -35,11 +37,28 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_produto_lst.php');
         }
 
+        $lista_unidades = "<ul>";
+        $unidadesProdutos = UnidadeProduto::where('cod_produto', $produto->id)->get();
+        $contador_unidades= 0;
+
+        foreach($unidadesProdutos as $unidade_prod){
+
+            $unidades = Unidade::where('id', $unidade_prod['cod_unidade'])->get();
+
+            foreach($unidades as $unidade){
+                $lista_unidades .= "<li>".$unidade['unidade']."</li>";
+            }
+        
+        
+        }
+        $lista_unidades .= "</ul>";
+  
+
     
 
 
            $this->addDetalhe([ 'Código', $produto->id]);
-           $this->addDetalhe([ 'Unidade', $produto->unidade]);
+           $this->addDetalhe([ 'Unidades', $lista_unidades]);
            $this->addDetalhe([ 'Descrição', $produto->descricao]);
            
        

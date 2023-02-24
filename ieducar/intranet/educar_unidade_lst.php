@@ -3,8 +3,7 @@ use iEducar\Legacy\Model;
 use App\Models\Unidade;
 use App\Models\Serie;
 use App\Models\UnidadeCurricular;
-use App\Models\unidadeSeries;
- 
+
 return new class extends clsListagem {
   
    public $limite;
@@ -97,9 +96,7 @@ return new class extends clsListagem {
     
      
        foreach($unidades as $unidade){
-
-         
-         
+             
                $lista_busca = [
                    "<a href='educar_unidade_det.php?id=".$unidade['id']."' >".$unidade['id']." </a>",
                    "<a href='educar_unidade_det.php?id=".$unidade['id']."' >".$unidade['descricao']."</a>",

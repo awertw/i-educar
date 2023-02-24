@@ -3,6 +3,7 @@
 use iEducar\Legacy\Model;
 use App\Models\Produto;
 use App\Models\Unidade;
+use App\Models\UnidadeProduto;
 use App\Models\Serie;
 use App\Models\ComponenteCurricular;
 use App\Models\produtoSeries;
@@ -15,6 +16,7 @@ return new class extends clsCadastro {
     public $id;
     public $unidade;
     public $descricao;
+    public $unidade_ids;
 
    
     public function Inicializar(){
@@ -73,20 +75,32 @@ return new class extends clsCadastro {
         $selectOptionsUnidade = [];
  
         $unidades = Unidade::all();
+        $a = array();
+        $b = array();
+
         foreach($unidades as $unidade){
-      
-            $selectOptionsUnidade[$unidade['unidade']] = $unidade['descricao']." - ".$unidade['unidade'];
-           
+            array_push($a, $unidade['id']);
+            array_push($b, $unidade['descricao']." - ".$unidade['unidade']);
+          
          }
+       
+           
+                
+        
+        $c = array_combine($a, $b);
+        $options = [
+            'label' => 'Unidades',
+            'required' => true,
+            'size' => 50,
+            'value' => $this->$unidade_ids,
+            'options' => [
+                'all_values' =>$c
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
       
   
-        $selectOptionsUnidade = Portabilis_Array_Utils::sortByValue($selectOptionsUnidade);
-        $selectOptionsUnidade = array_replace([null => 'Selecione'], $selectOptionsUnidade);
-  
-  
-     
-  
-        $this->campoLista('unidade', 'Unidade', $selectOptionsUnidade, $this->unidade, '', true, '', '', '', '');
+       
    
        
      
@@ -101,12 +115,23 @@ return new class extends clsCadastro {
    
             $cadastrou =   Produto::create( [
                 'id' => $id_produto,
-                'descricao' => $this->descricao,
-                'unidade' => $this->unidade
+                'descricao' => $this->descricao
                
               ]);
        
-        
+              $this->unidade_ids  = $_POST['custom'];
+              
+              foreach ($this->unidade_ids as $unidade_id ) {
+          
+                  UnidadeProduto::create([
+                     
+                      'cod_produto' => $id_produto,
+                      'cod_unidade' => $unidade_id
+                     
+                    ]);
+                
+              }
+
        
         
 
@@ -120,7 +145,7 @@ return new class extends clsCadastro {
        
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-            $this->simpleRedirect('educar_produto_lst.php' . $this->ref_cod_matricula);
+            $this->simpleRedirect('educar_produto_det.php?id='.$id_produto);
         }
 
         
@@ -132,15 +157,29 @@ return new class extends clsCadastro {
      
        
         Produto::where('id', $_GET['id'])->update([
-            'descricao' => $this->descricao,
-            'unidade' => $this->unidade
+            'descricao' => $this->descricao
+          
           
         ]);
-       
+
+        UnidadeProduto::where('cod_produto', $_GET['id'])->delete(); 
+        
+        $this->unidade_ids  = $_POST['custom'];
+              
+        foreach ($this->unidade_ids as $unidade_id ) {
+    
+            UnidadeProduto::create([
+               
+                'cod_produto' => $_GET['id'],
+                'cod_unidade' => $unidade_id
+               
+              ]);
+          
+        }
         
 
       
-        $this->simpleRedirect('educar_produto_lst.php');
+        $this->simpleRedirect('educar_produto_det.php?id='.$_GET['id']);
     }
 
     public function Excluir()
