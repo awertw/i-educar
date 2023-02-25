@@ -13,6 +13,9 @@ return new class extends clsCadastro {
     public $produto;
     public $descricao;
     public $produto_ids;
+    public $dia_semana;
+    public $preparo;
+    
 
    
     public function Inicializar(){
@@ -67,6 +70,8 @@ return new class extends clsCadastro {
        
       
         $this->campoTexto('descricao', 'Descrição', $this->descricao, '50', '255', true);
+           
+
        
         $selectOptionsProduto = [];
  
@@ -95,9 +100,38 @@ return new class extends clsCadastro {
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
       
-  
+        
+     
+       
+        $obs_options = [
+            'required' => false,
+            'label' => 'Preparo',
+            'value' => $this->preparo
+        ];
+        $this->inputsHelper()->textArea('preparo', $obs_options);
+
+       
+        $selectOptionsdiaSemana = [];
+
+       
        
    
+        $selectOptionsdiaSemana[1] = "Segunda-Feira";
+        $selectOptionsdiaSemana[2] = "Terça-Feira";
+        $selectOptionsdiaSemana[3] = "Quarta-Feira";
+        $selectOptionsdiaSemana[4] = "Quinta-Feira";
+        $selectOptionsdiaSemana[5] = "Sexta-Feira";
+        $selectOptionsdiaSemana[6] = "Sábado";
+        $selectOptionsdiaSemana[7] = "Domingo";
+ 
+   
+   
+
+
+    $selectOptionsdiaSemana = array_replace([null => 'Selecione'], $selectOptionsdiaSemana);
+
+  
+    $this->campoLista('dia_semana', 'Dia da Semana', $selectOptionsdiaSemana, $this->dia_semana, '', true, '', '', '', true);
        
      
  
@@ -107,11 +141,27 @@ return new class extends clsCadastro {
         $data = MerendaCardapio::latest('id')->first();
         $id_cardapio = $data->id + 1;
 
-
-   
+        $dia = "";
+        if($this->dia_semana==1){
+            $dia = "Segunda-Feira";
+        }elseif($this->dia_semana==2){
+            $dia = "Terça-Feira";
+        }elseif($this->dia_semana==3){
+            $dia = "Quarta-Feira";
+        }elseif($this->dia_semana==4){
+            $dia = "Quinta-Feira";
+        }elseif($this->dia_semana==5){
+            $dia = "Sexta-Feira";
+        }elseif($this->dia_semana==6){
+            $dia = "Sábado";
+        }elseif($this->dia_semana==7){
+            $dia = "Domingo";
+        }
             $cadastrou =   MerendaCardapio::create( [
                 'id' => $id_cardapio,
-                'descricao' => $this->descricao
+                'descricao' => $this->descricao,
+                'dia_semana' => $dia,
+                'preparo' => $this->preparo
                
               ]);
        
@@ -151,9 +201,27 @@ return new class extends clsCadastro {
     public function Editar()
     {
      
-       
+        $dia = "";
+        if($this->dia_semana==1){
+            $dia = "Segunda-Feira";
+        }elseif($this->dia_semana==2){
+            $dia = "Terça-Feira";
+        }elseif($this->dia_semana==3){
+            $dia = "Quarta-Feira";
+        }elseif($this->dia_semana==4){
+            $dia = "Quinta-Feira";
+        }elseif($this->dia_semana==5){
+            $dia = "Sexta-Feira";
+        }elseif($this->dia_semana==6){
+            $dia = "Sábado";
+        }elseif($this->dia_semana==7){
+            $dia = "Domingo";
+        }
         MerendaCardapio::where('id', $_GET['id'])->update([
-            'descricao' => $this->descricao
+            'descricao' => $this->descricao,
+            'dia_semana' => $dia,
+            'preparo' => $this->preparo
+           
           
           
         ]);
@@ -181,7 +249,8 @@ return new class extends clsCadastro {
     public function Excluir()
     {
        
-        Produto::where('id', $_GET['id'])->delete(); 
+        MerendaCardapio::where('id', $_GET['id'])->delete(); 
+        CardapioProduto::where('cod_cardapio', $_GET['id'])->delete(); 
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
         $this->simpleRedirect('educar_cardapio_lst.php');
     }

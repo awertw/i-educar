@@ -20,7 +20,9 @@ class MerendaCardapio extends Model
     protected $fillable = [
         
         'id',
-        'descricao'
+        'descricao',
+        'dia_semana',
+        'preparo'
         
     
     ];

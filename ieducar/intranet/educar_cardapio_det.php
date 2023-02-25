@@ -50,8 +50,10 @@ return new class extends clsDetalhe {
 
 
            $this->addDetalhe([ 'Código', $cardapio->id]);
-           $this->addDetalhe([ 'Produtos', $lista_produtos]);
+           $this->addDetalhe([ 'Dia da Semana', $cardapio->dia_semana]);
            $this->addDetalhe([ 'Descrição', $cardapio->descricao]);
+           $this->addDetalhe([ 'Produtos', $lista_produtos]);
+           $this->addDetalhe([ 'Preparo', $cardapio->preparo]);
            
        
 
