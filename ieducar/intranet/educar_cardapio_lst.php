@@ -63,7 +63,7 @@ return new class extends clsListagem {
  
 
        $lista_busca = [
-           'Codigo do Cardápio',
+           'Código do Cardápio',
            'Dia da Semana',
            'Descrição',
            'Produtos',
@@ -180,7 +180,7 @@ return new class extends clsListagem {
                    "<a href='educar_cardapio_det.php?id=".$cardapio['id']."' >".$cardapio['dia_semana']." </a>",
                    "<a href='educar_cardapio_det.php?id=".$cardapio['id']."' >".$cardapio['descricao']."</a>",
                    "<div >".$lista_produtos."</div>",  
-                   "<a style='max-width:350px' href='educar_cardapio_det.php?id=".$cardapio['id']."' >".mb_strimwidth($cardapio['preparo'], 0, 255, "...")."</a>",
+                   "<a style='max-width:350px' href='educar_cardapio_det.php?id=".$cardapio['id']."' >".$cardapio['preparo']."</a>",
                   
                  
                ];
