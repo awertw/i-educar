@@ -39,7 +39,9 @@ return new class extends clsCadastro {
             if ($cardapio) {
                     $this->descricao = $cardapio->descricao;
                     $this->unidade = $cardapio->unidade;
-                   
+                    $this->preparo = $cardapio->preparo;
+                    $this->dia_semana = $cardapio->dia_semana;
+                 
            }
          
               
