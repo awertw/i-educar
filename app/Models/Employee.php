@@ -82,6 +82,11 @@ class Employee extends Model
         return $this->hasMany(EmployeeGraduation::class, 'employee_id');
     }
 
+    public function employeeRoles()
+    {
+        return $this->hasMany(LegacyEmployeeRole::class, 'ref_cod_servidor');
+    }
+
     /**
      * @return BelongsToMany
      */
@@ -98,6 +103,11 @@ class Employee extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('servidor.ativo', 1);
+    }
+
+    public function scopeNotInTimeTable(Builder $query, array $servidoresTimeTable): Builder
+    {
+        return $query->whereNotIn('servidor.cod_servidor', $servidoresTimeTable);
     }
 
     public function scopeProfessor(Builder $query): Builder

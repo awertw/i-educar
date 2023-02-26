@@ -139,6 +139,11 @@ class LegacyInstitution extends Model implements RelocationDateProvider
         return $this->hasMany(LegacySchool::class, 'ref_cod_instituicao', 'cod_instituicao');
     }
 
+    public function employees()
+    {
+        return $this->hasMany(Employee::class, 'ref_cod_instituicao', 'cod_instituicao');
+    }
+
     public function getRelocationDate()
     {
         if ($this->getRelocationDateAttribute()) {

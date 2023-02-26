@@ -42,4 +42,9 @@ class LegacyEmployeeRole extends Model
     {
         return $this->belongsTo('App\\Models\\LegacyRole', 'ref_cod_funcao');
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id', 'ref_cod_servidor');
+    }
 }
