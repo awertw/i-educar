@@ -1319,20 +1319,22 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
-            if (strripos($this->gestor, '-') and strripos($this->gestor, '(')) {
-                $this->gestor = $this->parteString($this->gestor, '-', '(');
+            if (strripos($this->gestor, '-')) {
+                $strArray = explode('-', $this->gestor);
+                $this->gestor = (int) trim($strArray[0]);
             }
 
-            if (is_string($this->gestor)) {
+            if (is_int($this->gestor)) {
                 $set .= "{$gruda}gestor = '{$this->gestor}'";
                 $gruda = ', ';
             }
 
-            if (strripos($this->responsavel_contabil, '-') and strripos($this->responsavel_contabil, '(')) {
-                $this->responsavel_contabil = $this->parteString($this->responsavel_contabil, '-', '(');
+            if (strripos($this->responsavel_contabil, '-')) {
+                $strArray = explode('-', $this->responsavel_contabil);
+                $this->responsavel_contabil = (int) trim($strArray[0]);
             }
 
-            if (is_string($this->responsavel_contabil)) {
+            if (is_int($this->responsavel_contabil)) {
                 $set .= "{$gruda}responsavel_contabil = '{$this->responsavel_contabil}'";
                 $gruda = ', ';
             }
