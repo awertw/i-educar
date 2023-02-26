@@ -2,6 +2,7 @@
 
 namespace App\Services\SagresExport;
 
+use App\Models\Employee;
 use App\Queries\SagresExport\ExportQuery;
 use Carbon\Carbon;
 use DOMDocument;
@@ -63,6 +64,7 @@ class ExportService
 
         $schools = $institution->schools;
 
+        $teachersTimeTable = [];
         foreach ($schools as $school) {
             $idEscola = $dom->createElement("edu:idEscola", $school['cod_escola']);
 
@@ -143,6 +145,11 @@ class ExportService
                     $horarysTimeTable = $schoolTimeTable->horarys;
 
                     foreach ($horarysTimeTable as $horaryTimeTable) {
+
+                        if (!in_array($horaryTimeTable->ref_servidor, $teachersTimeTable)) {
+                            $teachersTimeTable[] = $horaryTimeTable->ref_servidor;
+                        }
+
                         $schoolClassHoraryDom = $dom->createElement("edu:horario");
 
                         $horaryDayWeekend  = $dom->createElement("edu:dia_semana", $horaryTimeTable->dia_semana); //VERIFICAR converter
@@ -168,18 +175,46 @@ class ExportService
                 }
 
                 //END TURMA
-                $schoolsDom->append($idEscola, $schoolClassesDom);
+
+                //DIRETOR
+                $directorSchool = $school->schoolManagers()->where('role_id', 1)->first();
+                $directorSchoolDom = $dom->createElement("edu:diretor");
+
+                $cpfDirector  = $dom->createElement("edu:cpfDiretor", $directorSchool->employee->person->individual->cpf);
+                $nrAtoDirector  = $dom->createElement("edu:nrAto", $directorSchool->employee->person->ato);
+
+                $directorSchoolDom->append($cpfDirector, $nrAtoDirector);
+
+                $schoolsDom->append($idEscola, $schoolClassesDom, $directorSchoolDom);
              }
 
-            //DIRETOR
             //CARDAPIO
 
             //END ESCOLAS
-
         }
 
         //PROFISSIONAL
 
+        $employees = $institution->employees()->active()->notInTimeTable($teachersTimeTable)->get();
+
+        foreach ($employees as $employee) {
+            $employeesSchoolDom = $dom->createElement("edu:profissional");
+
+            $cpfEmployee  = $dom->createElement("edu:cpfProfissional", $employee->person->individual->cpf);
+            $specialtyEmployee  = $dom->createElement("edu:especialidade", $employee->employeeRoles()->first()->role->nm_funcao);
+
+            $employeesSchoolDom->append($cpfEmployee, $specialtyEmployee);
+
+            $schoolsEmployee = $employee->schools;
+
+            foreach ($schoolsEmployee as $schoolEmployee) {
+                $schoolEmployee  = $dom->createElement("edu:idEscola", $schoolEmployee->cod_escola);
+                $employeesSchoolDom->appendChild($schoolEmployee);
+            }
+
+            $fundebEmployee  = $dom->createElement("edu:fundeb", $employee->fundeb);
+
+        }
         //END
 
         $root->appendChild($prestacaoContas);
