@@ -2,11 +2,9 @@
 
 namespace App\Services\SagresExport;
 
-use App\Models\Employee;
 use App\Queries\SagresExport\ExportQuery;
 use Carbon\Carbon;
 use DOMDocument;
-use Illuminate\Database\Eloquent\Collection;
 
 class ExportService
 {
@@ -38,9 +36,9 @@ class ExportService
         $institution = $this->exportQuery->getInstitution($adapterFilters['institutionId']);
 
         $codigoUnidGestora = $dom->createElement("edu:codigoUnidGestora", $institution['cod_unidade_gestora']);
-        $nomeUnidGestora = $dom->createElement("edu:nomeUnidGestora", $institution['nm_instituicao']); //CONFIRMAR SE É O NOME DA INSITUIÇÃO
-        $cpfResponsavel = $dom->createElement("edu:cpfResponsavel", "000.000.000-00"); //verificar com valdinei
-        $cpfGestor = $dom->createElement("edu:cpfGestor", "000.000.000-00"); //verificar com valdinei
+        $nomeUnidGestora = $dom->createElement("edu:nomeUnidGestora", $institution['nm_responsavel']);
+        $cpfResponsavel = $dom->createElement("edu:cpfResponsavel", $this->dataConverter->cpfInstitutionConverter($institution->manager->individual->cpf));
+        $cpfGestor = $dom->createElement("edu:cpfGestor", $this->dataConverter->cpfInstitutionConverter($institution->accountingOfficer->individual->cpf));
         $anoReferencia = $dom->createElement("edu:anoReferencia", $adapterFilters['year']);
         $mesReferencia = $dom->createElement("edu:mesReferencia", $adapterFilters['month']);
         $versaoXml = $dom->createElement("edu:versaoXml", 0); //CONFIRMAR
@@ -69,29 +67,35 @@ class ExportService
             $idEscola = $dom->createElement("edu:idEscola", $school['cod_escola']);
 
             //START TURMA
-            $schoolClasses = $school->schoolClasses; //RETIRAR OS HORARIOS COM DATA DE EXCLUSÃO OU ATIVO 0
+            $schoolClasses = $school->schoolClasses;
 
             foreach ($schoolClasses as $schoolClass) {
                 $schoolClassesDom = $dom->createElement("edu:turma");
 
                 $periodo = $dom->createElement("edu:periodo", 0); //VERIFICAR
                 $descricao = $dom->createElement("edu:descricao", $schoolClass['nm_turma']);
-                $turno = $dom->createElement("edu:turno", $schoolClass->turma_turno_id); //VERIFICAR - FAZER CONVERSÃO
+                $turno = $dom->createElement("edu:turno", $this->dataConverter->schoolClassTurnConverter($schoolClass->turma_turno_id));
 
                 $schoolClassesDom->append($periodo, $descricao, $turno);
 
                 //SERIES
+                $duration = 4;
+                $finalYear = false;
                 if (empty($schoolClass->multiseriado)) {
                     $schoolGrade = $schoolClass->schoolGrade;
 
                     $schoolGradeDom = $dom->createElement("edu:serie");
 
                     $descricaoSerie = $dom->createElement("edu:descricao", $schoolGrade->grade->name);
-                    $modalidade = $dom->createElement("edu:modalidade", $schoolGrade->grade->course->modalidade_curso); //Verificar - CONVERTER
+                    $modalidade = $dom->createElement("edu:modalidade", 0);
 
                     $schoolGradeDom->append($descricaoSerie, $modalidade);
 
                     $schoolClassesDom->appendChild($schoolGradeDom);
+
+                    $schoolGradeRule = $schoolGrade->grade->evaluationRules()->first();
+
+                    $finalYear = $schoolGradeRule->tipo_presenca == 2;
                 }
 
                 if ($schoolClass->multiseriado != 0) {
@@ -101,7 +105,7 @@ class ExportService
                         $schoolGradeDom = $dom->createElement("edu:serie");
 
                         $descricaoSerie = $dom->createElement("edu:descricao", $schoolMultigrade->grade->name);
-                        $modalidade = $dom->createElement("edu:modalidade", $schoolMultigrade->grade->course->modalidade_curso);
+                        $modalidade = $dom->createElement("edu:modalidade", 0);
 
                         $schoolGradeDom->append($descricaoSerie, $modalidade);
                         $schoolClassesDom->appendChild($schoolGradeDom);
@@ -114,15 +118,15 @@ class ExportService
                 foreach ($schoolClassEnrollments as $schoolClassEnrollment) {
                     $schoolEnrollmentsDom = $dom->createElement("edu:matricula");
 
-                    $matriculaNumero = $dom->createElement("edu:numero", $schoolClassEnrollment->ref_cod_matricula); //VERIFICAR
-                    $matriculaData = $dom->createElement("edu:data_matricula", dataFromPgToBr($schoolClassEnrollment->registration->data_matricula, 'Y-m-d')); // VERIFICAR data matricula ou data enturmação
+                    $matriculaNumero = $dom->createElement("edu:numero", $schoolClassEnrollment->ref_cod_matricula);
+                    $matriculaData = $dom->createElement("edu:data_matricula", dataFromPgToBr($schoolClassEnrollment->registration->data_matricula, 'Y-m-d'));
                     $matriculaFaltas = $dom->createElement("edu:numero_faltas", $this->exportQuery->getTotalEnrollmentAbsencesByFrequency($schoolClassEnrollment->ref_cod_matricula, $adapterFilters['startDate'], $adapterFilters['endDate']));
-                    $matriculaAprovado = $dom->createElement("edu:aprovado", 'false'); //VERIFICAR SE É O DA MATRICULA E QUAL É A EQUIVALÊNCIA
+                    $matriculaAprovado = $dom->createElement("edu:aprovado", 0);
 
                     //ALUNO
                     $schoolStudentsDom = $dom->createElement("edu:aluno");
 
-                    $studentCpf  = $dom->createElement("edu:cpfAluno", $schoolClassEnrollment->registration->student->person->individual->cpf); //VERIFICAR quando o aluno não tem CPF oq fazer
+                    $studentCpf  = $dom->createElement("edu:cpfAluno", (!empty($schoolClassEnrollment->registration->student->person->individual->cpf) ? $schoolClassEnrollment->registration->student->person->individual->cpf : '000.000.000-00'));
                     $studenDateNascimento  = $dom->createElement("edu:data_nascimento", $schoolClassEnrollment->registration->student->person->individual->data_nasc);
                     $studentName  = $dom->createElement("edu:nome", $schoolClassEnrollment->registration->student->person->name);
                     $studentPcd  = $dom->createElement("edu:pcd", ($schoolClassEnrollment->registration->student->person->deficiencies->isEmpty() ? 0 : 1));
@@ -139,10 +143,11 @@ class ExportService
 
 
                 //HORARIOS
-                $schoolTimeTable = $schoolClass->timeTable;
+                $schoolTimeTable = $schoolClass->timeTable()->whereNull('data_exclusao')->where('ativo', 1)->first();
 
                 if ($schoolTimeTable) {
-                    $horarysTimeTable = $schoolTimeTable->horarys;
+
+                    $horarysTimeTable = $schoolTimeTable->horarys()->whereNull('data_exclusao')->where('ativo', 1)->get();
 
                     foreach ($horarysTimeTable as $horaryTimeTable) {
 
@@ -152,11 +157,11 @@ class ExportService
 
                         $schoolClassHoraryDom = $dom->createElement("edu:horario");
 
-                        $horaryDayWeekend  = $dom->createElement("edu:dia_semana", $horaryTimeTable->dia_semana); //VERIFICAR converter
-                        $horaryDuration  = $dom->createElement("edu:duracao", 4); //VERIFICAR quando turma por componente
+                        $horaryDayWeekend  = $dom->createElement("edu:dia_semana", $horaryTimeTable->dia_semana);
+                        $horaryDuration  = $dom->createElement("edu:duracao", ($finalYear ? $horaryTimeTable->qtd_atulas : 4));
                         $horaryInitialHour  = $dom->createElement("edu:hora_inicio", $horaryTimeTable->hora_inicial);
                         $horaryDiscipline  = $dom->createElement("edu:disciplina", $horaryTimeTable->ref_cod_disciplina);
-                        $horaryServidor  = $dom->createElement("edu:cpfProfessor", $horaryTimeTable->ref_servidor); //VERIFICAR buscar da pessoa
+                        $horaryServidor  = $dom->createElement("edu:cpfProfessor", $horaryTimeTable->employee->person->individual->cpf);
 
                         $schoolClassHoraryDom->append($horaryDayWeekend, $horaryDuration, $horaryInitialHour, $horaryDiscipline, $horaryServidor);
 
@@ -193,78 +198,51 @@ class ExportService
             //END ESCOLAS
         }
 
+        $root->appendChild($prestacaoContas);
+        $root->appendChild($schoolsDom);
+
         //PROFISSIONAL
 
         $employees = $institution->employees()->active()->notInTimeTable($teachersTimeTable)->get();
 
         foreach ($employees as $employee) {
-            $employeesSchoolDom = $dom->createElement("edu:profissional");
+            $employeesDom = $dom->createElement("edu:profissional");
 
             $cpfEmployee  = $dom->createElement("edu:cpfProfissional", $employee->person->individual->cpf);
             $specialtyEmployee  = $dom->createElement("edu:especialidade", $employee->employeeRoles()->first()->role->nm_funcao);
 
-            $employeesSchoolDom->append($cpfEmployee, $specialtyEmployee);
+            $employeesDom->append($cpfEmployee, $specialtyEmployee);
 
             $schoolsEmployee = $employee->schools;
 
+            $schoolIdExist = [];
             foreach ($schoolsEmployee as $schoolEmployee) {
-                $schoolEmployee  = $dom->createElement("edu:idEscola", $schoolEmployee->cod_escola);
-                $employeesSchoolDom->appendChild($schoolEmployee);
+                if (!in_array($schoolEmployee->cod_escola, $schoolIdExist)) {
+                    $schoolIdExist[] = $schoolEmployee->cod_escola;
+                    $schoolEmployee  = $dom->createElement("edu:idEscola", $schoolEmployee->cod_escola);
+                    $employeesDom->appendChild($schoolEmployee);
+                }
             }
 
-            $fundebEmployee  = $dom->createElement("edu:fundeb", $employee->fundeb);
+            $fundebEmployee  = $dom->createElement("edu:fundeb", ($employee->recurso_fundeb ? 'true' : $employee->recurso_fundeb));
 
+            $employeesDom->appendChild($fundebEmployee);
+
+            $serviceEmployee  = $dom->createElement("edu:atendimento");
+            $serviceDataEmployee  = $dom->createElement("edu:data", '0000-00-00');
+            $serviceLocalEmployee  = $dom->createElement("edu:local", '-');
+
+            $serviceEmployee->append($serviceDataEmployee, $serviceLocalEmployee);
+
+            $employeesDom->appendChild($serviceEmployee);
+
+            $root->appendChild($employeesDom);
         }
         //END
-
-        $root->appendChild($prestacaoContas);
-        $root->appendChild($schoolsDom);
         $dom->appendChild($root);
-
-//        foreach ($this->records($filters) as $record) {
-//            $export .= $this->makeLine($record) . "\n";
-//        }
-
 
 
         return $dom->saveXML();
-    }
-
-    private function makeLine($record): string
-    {
-        $line = "{$record->ano};";
-        $line .= "{$record->inep_escola};";
-        $line .= "{$record->cpf};";
-        $line .= "{$record->nome_social};";
-        $line .= "{$record->cod_matricula};";
-        $line .= ($record->emancipado ? 1 : 0) . ';';
-
-        $countResponsibles = 0;
-        if ($record->cpf_mae) {
-            $countResponsibles++;
-            $line .= "{$record->cpf_mae};1;";
-        }
-
-        if ($record->cpf_pai) {
-            $countResponsibles++;
-            $line .= "{$record->cpf_pai};2;";
-        }
-
-        if ($record->cpf_responsavel) {
-            $countResponsibles++;
-            $line .= "{$record->cpf_responsavel};3;";
-        }
-
-        for ($i = $countResponsibles; $i < 3; $i++) {
-            $line .= ';;';
-        }
-
-        return substr($line, 0, -1);
-    }
-
-    private function records(array $filters): Collection
-    {
-        return (new ExportQuery())->query($filters)->get();
     }
 
     private function adatperFilters(array $filters): array
