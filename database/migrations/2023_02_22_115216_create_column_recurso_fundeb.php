@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnActOnPessoa extends Migration
+class CreateColumnRecursoFundeb extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddColumnActOnPessoa extends Migration
      */
     public function up()
     {
-        Schema::table('cadastro.pessoa', function (Blueprint $table) {
-            $table->string('ato')->nullable();
+        Schema::table('pmieducar.servidor', function (Blueprint $table) {
+            $table->boolean('recurso_fundeb')->default(true);
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnActOnPessoa extends Migration
      */
     public function down()
     {
-        Schema::table('cadastro.pessoa', function (Blueprint $table) {
-            $table->dropColumn('ato');
+        Schema::table('pmieducar.servidor', function (Blueprint $table) {
+            $table->dropColumn('recurso_fundeb');
         });
     }
 }

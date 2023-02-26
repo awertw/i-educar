@@ -153,6 +153,13 @@ return new class extends clsDetalhe {
             ]
         );
 
+        $this->addDetalhe(
+            [
+                'Recurso Fundeb',
+                dbBool($registro['recurso_fundeb']) ? 'Sim' : 'Não'
+            ]
+        );
+
         $serverfunction = $this->getEmployeeFunctions($this->cod_servidor);
 
         if (count($serverfunction) > 0) {

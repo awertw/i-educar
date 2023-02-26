@@ -2,6 +2,7 @@
 
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 return new class () extends Migration {
     use AsView;
@@ -12,10 +13,11 @@ return new class () extends Migration {
      */
     public function up()
     {
+
         $this->dropView('public.exporter_teacher');
         $this->dropView('public.exporter_social_assistance');
         $this->dropView('public.exporter_student');
-        $this->dropView('public.exporter_person');
+        DB::statement("DROP VIEW IF EXISTS public.exporter_person CASCADE;");
 
         $this->createView('public.exporter_person', '2022-06-15');
         $this->createView('public.exporter_student', '2022-06-15');
@@ -33,7 +35,7 @@ return new class () extends Migration {
         $this->dropView('public.exporter_teacher');
         $this->dropView('public.exporter_social_assistance');
         $this->dropView('public.exporter_student');
-        $this->dropView('public.exporter_person');
+        DB::statement("DROP VIEW IF EXISTS public.exporter_person CASCADE;");
 
         $this->createView('public.exporter_person', '2022-04-14');
         $this->createView('public.exporter_student', '2022-04-28');

@@ -117,7 +117,7 @@
             "@composer plug-and-play:update",
             "@set-permissions",
             "@php artisan legacy:link --ansi",
-            "@php artisan migrate --force --ansi",
+            "@php artisan migrate -v --force",
             "@npm"
         ],
         "post-install-cmd": [

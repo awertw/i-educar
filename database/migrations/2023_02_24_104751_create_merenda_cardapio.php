@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnActOnPessoa extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class AddColumnActOnPessoa extends Migration
      */
     public function up()
     {
-        Schema::table('cadastro.pessoa', function (Blueprint $table) {
-            $table->string('ato')->nullable();
+        Schema::create('modules.merenda_cardapio', function (Blueprint $table) {
+            $table->id();
+            $table->text('descricao')->nullable();
+            
         });
     }
 
@@ -25,8 +27,6 @@ class AddColumnActOnPessoa extends Migration
      */
     public function down()
     {
-        Schema::table('cadastro.pessoa', function (Blueprint $table) {
-            $table->dropColumn('ato');
-        });
+        Schema::dropIfExists('modules.merenda_cardapio');
     }
-}
+};
