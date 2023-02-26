@@ -33,6 +33,12 @@ class QuadroHorarioHorarios extends Model
 
     use HasFactory;
 
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'cod_servidor', 'ref_servidor');
+    }
+
     public function timeTable()
     {
         return $this->belongsTo(LegacyTimeTable::class, 'ref_cod_quadro_horario');
