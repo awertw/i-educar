@@ -9,12 +9,7 @@ class ExportQuery
 {
     public function getInstitution(int $institutionId): LegacyInstitution
     {
-        $teste = LegacyInstitution::where('cod_instituicao', $institutionId)->with(['schools' => function($query) {
-            $query->where('cod_escola', 8);
-        }])->get();
-
-//        return LegacyInstitution::find($institutionId);
-        return $teste[0];
+        return LegacyInstitution::find($institutionId);
     }
 
     public function getTotalEnrollmentAbsencesByFrequency(int $enrollmentId, string $startDate, string $endDate): int
