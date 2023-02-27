@@ -35,10 +35,20 @@ class ExportService
 
         $institution = $this->exportQuery->getInstitution($adapterFilters['institutionId']);
 
+        $cpfGestor = '';
+        $cpfResponsavel = '';
+        if (!empty($institution->gestor)) {
+            $cpfGestor = $institution->manager->individual->cpf;
+        }
+
+        if (!empty($institution->responsavel_contabil)) {
+            $cpfResponsavel = $institution->accountingOfficer->individual->cpf;
+        }
+
         $codigoUnidGestora = $dom->createElement("edu:codigoUnidGestora", $institution['cod_unidade_gestora']);
         $nomeUnidGestora = $dom->createElement("edu:nomeUnidGestora", $institution['nm_responsavel']);
-        $cpfResponsavel = $dom->createElement("edu:cpfResponsavel", $this->dataConverter->cpfInstitutionConverter($institution->manager->individual->cpf));
-        $cpfGestor = $dom->createElement("edu:cpfGestor", $this->dataConverter->cpfInstitutionConverter($institution->accountingOfficer->individual->cpf));
+        $cpfResponsavel = $dom->createElement("edu:cpfResponsavel", $this->dataConverter->cpfInstitutionConverter($cpfResponsavel));
+        $cpfGestor = $dom->createElement("edu:cpfGestor", $this->dataConverter->cpfInstitutionConverter($cpfGestor));
         $anoReferencia = $dom->createElement("edu:anoReferencia", $adapterFilters['year']);
         $mesReferencia = $dom->createElement("edu:mesReferencia", $adapterFilters['month']);
         $versaoXml = $dom->createElement("edu:versaoXml", 0); //CONFIRMAR
