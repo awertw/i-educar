@@ -131,8 +131,14 @@ class ExportService
                 foreach ($schoolClassEnrollments as $schoolClassEnrollment) {
                     $schoolEnrollmentsDom = $dom->createElement("edu:matricula");
 
+                    $matriculaDate = '000-00-00';
+
+                    if ($schoolClassEnrollment->registration) {
+                        $matriculaDate = dataFromPgToBr($schoolClassEnrollment->registration->data_matricula, 'Y-m-d');
+                    }
+
                     $matriculaNumero = $dom->createElement("edu:numero", $schoolClassEnrollment->ref_cod_matricula);
-                    $matriculaData = $dom->createElement("edu:data_matricula", dataFromPgToBr($schoolClassEnrollment->registration->data_matricula, 'Y-m-d'));
+                    $matriculaData = $dom->createElement("edu:data_matricula", $matriculaDate);
                     $matriculaFaltas = $dom->createElement("edu:numero_faltas", $this->exportQuery->getTotalEnrollmentAbsencesByFrequency($schoolClassEnrollment->ref_cod_matricula, $adapterFilters['startDate'], $adapterFilters['endDate']));
                     $matriculaAprovado = $dom->createElement("edu:aprovado", 0);
 
