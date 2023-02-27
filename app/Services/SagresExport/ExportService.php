@@ -214,8 +214,16 @@ class ExportService
                 $directorSchool = $school->schoolManagers()->where('role_id', 1)->first();
                 $directorSchoolDom = $dom->createElement("edu:diretor");
 
-                $cpfDirector  = $dom->createElement("edu:cpfDiretor", $directorSchool->employee->person->individual->cpf);
-                $nrAtoDirector  = $dom->createElement("edu:nrAto", $directorSchool->employee->person->ato);
+                $cpfDirectorSchool = '000.000.000-00';
+                $nrAto = '';
+
+                if ($directorSchool) {
+                    $cpfDirectorSchool = $directorSchool->employee->person->individual->cpf;
+                    $nrAto = $directorSchool->employee->person->ato;
+                }
+
+                $cpfDirector  = $dom->createElement("edu:cpfDiretor", $cpfDirectorSchool);
+                $nrAtoDirector  = $dom->createElement("edu:nrAto", $nrAto);
 
                 $directorSchoolDom->appendChild($cpfDirector);
                 $directorSchoolDom->appendChild($nrAtoDirector);
