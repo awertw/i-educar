@@ -75,7 +75,7 @@ class ExportService
             $idEscola = $dom->createElement("edu:idEscola", $school['cod_escola']);
 
             //START TURMA
-            $schoolClasses = $school->schoolClasses;
+            $schoolClasses = $school->schoolClasses()->active()->get();
 
             foreach ($schoolClasses as $schoolClass) {
                 $schoolClassesDom = $dom->createElement("edu:turma");
