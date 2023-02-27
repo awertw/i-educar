@@ -64,17 +64,6 @@ class ExportService
         $prestacaoContas->appendChild($versaoXml);
         $prestacaoContas->appendChild($diaInicPresContas);
         $prestacaoContas->appendChild($diaFinaPresContas);
-//        $prestacaoContas->append(
-//            $codigoUnidGestora,
-//            $nomeUnidGestora,
-//            $cpfResponsavel,
-//            $cpfGestor,
-//            $anoReferencia,
-//            $mesReferencia,
-//            $versaoXml,
-//            $diaInicPresContas,
-//            $diaFinaPresContas
-//        );
 
         //START ESCOLAS
         $schoolsDom = $dom->createElement("edu:escola");
@@ -95,7 +84,9 @@ class ExportService
                 $descricao = $dom->createElement("edu:descricao", $schoolClass['nm_turma']);
                 $turno = $dom->createElement("edu:turno", $this->dataConverter->schoolClassTurnConverter($schoolClass->turma_turno_id));
 
-                $schoolClassesDom->append($periodo, $descricao, $turno);
+                $schoolClassesDom->appendChild($periodo);
+                $schoolClassesDom->appendChild($descricao);
+                $schoolClassesDom->appendChild($turno);
 
                 //SERIES
                 $duration = 4;
@@ -108,7 +99,8 @@ class ExportService
                     $descricaoSerie = $dom->createElement("edu:descricao", $schoolGrade->grade->name);
                     $modalidade = $dom->createElement("edu:modalidade", 0);
 
-                    $schoolGradeDom->append($descricaoSerie, $modalidade);
+                    $schoolGradeDom->appendChild($descricaoSerie);
+                    $schoolGradeDom->appendChild($modalidade);
 
                     $schoolClassesDom->appendChild($schoolGradeDom);
 
@@ -126,7 +118,9 @@ class ExportService
                         $descricaoSerie = $dom->createElement("edu:descricao", $schoolMultigrade->grade->name);
                         $modalidade = $dom->createElement("edu:modalidade", 0);
 
-                        $schoolGradeDom->append($descricaoSerie, $modalidade);
+                        $schoolGradeDom->appendChild($descricaoSerie);
+                        $schoolGradeDom->appendChild($modalidade);
+
                         $schoolClassesDom->appendChild($schoolGradeDom);
                     }
                 }
@@ -151,10 +145,19 @@ class ExportService
                     $studentPcd  = $dom->createElement("edu:pcd", ($schoolClassEnrollment->registration->student->person->deficiencies->isEmpty() ? 0 : 1));
                     $studentSexo  = $dom->createElement("edu:sexo", $this->dataConverter->sexoConverter($schoolClassEnrollment->registration->student->person->individual->sexo));
 
-                    $schoolStudentsDom->append($studentCpf, $studenDateNascimento, $studentName, $studentPcd, $studentSexo);
+                    $schoolStudentsDom->appendChild($studentCpf);
+                    $schoolStudentsDom->appendChild($studenDateNascimento);
+                    $schoolStudentsDom->appendChild($studentName);
+                    $schoolStudentsDom->appendChild($studentPcd);
+                    $schoolStudentsDom->appendChild($studentSexo);
                     //END ALUNO
 
-                    $schoolEnrollmentsDom->append($matriculaNumero, $matriculaData, $matriculaFaltas, $matriculaAprovado, $schoolStudentsDom);
+
+                    $schoolEnrollmentsDom->appendChild($matriculaNumero);
+                    $schoolEnrollmentsDom->appendChild($matriculaData);
+                    $schoolEnrollmentsDom->appendChild($matriculaFaltas);
+                    $schoolEnrollmentsDom->appendChild($matriculaAprovado);
+                    $schoolEnrollmentsDom->appendChild($schoolStudentsDom);
 
                     $schoolClassesDom->appendChild($schoolEnrollmentsDom);
                 }
@@ -182,7 +185,12 @@ class ExportService
                         $horaryDiscipline  = $dom->createElement("edu:disciplina", $horaryTimeTable->ref_cod_disciplina);
                         $horaryServidor  = $dom->createElement("edu:cpfProfessor", $horaryTimeTable->employee->person->individual->cpf);
 
-                        $schoolClassHoraryDom->append($horaryDayWeekend, $horaryDuration, $horaryInitialHour, $horaryDiscipline, $horaryServidor);
+                        $schoolClassHoraryDom->appendChild($horaryDayWeekend);
+                        $schoolClassHoraryDom->appendChild($horaryDuration);
+                        $schoolClassHoraryDom->appendChild($horaryInitialHour);
+                        $schoolClassHoraryDom->appendChild($horaryDiscipline);
+                        $schoolClassHoraryDom->appendChild($horaryServidor);
+
 
                         if (!empty($horaryTimeTable->ref_cod_servidor_substituto_1)) {
                             $horaryServidorSubstituto  = $dom->createElement("edu:cpfProfessor", $horaryTimeTable->ref_cod_servidor_substituto_1);
@@ -207,9 +215,12 @@ class ExportService
                 $cpfDirector  = $dom->createElement("edu:cpfDiretor", $directorSchool->employee->person->individual->cpf);
                 $nrAtoDirector  = $dom->createElement("edu:nrAto", $directorSchool->employee->person->ato);
 
-                $directorSchoolDom->append($cpfDirector, $nrAtoDirector);
+                $directorSchoolDom->appendChild($cpfDirector);
+                $directorSchoolDom->appendChild($nrAtoDirector);
 
-                $schoolsDom->append($idEscola, $schoolClassesDom, $directorSchoolDom);
+                $schoolsDom->appendChild($idEscola);
+                $schoolsDom->appendChild($schoolClassesDom);
+                $schoolsDom->appendChild($directorSchoolDom);
              }
 
             //CARDAPIO
@@ -230,7 +241,8 @@ class ExportService
             $cpfEmployee  = $dom->createElement("edu:cpfProfissional", $employee->person->individual->cpf);
             $specialtyEmployee  = $dom->createElement("edu:especialidade", $employee->employeeRoles()->first()->role->nm_funcao);
 
-            $employeesDom->append($cpfEmployee, $specialtyEmployee);
+            $employeesDom->appendChild($cpfEmployee);
+            $employeesDom->appendChild($specialtyEmployee);
 
             $schoolsEmployee = $employee->schools;
 
@@ -251,7 +263,8 @@ class ExportService
             $serviceDataEmployee  = $dom->createElement("edu:data", '0000-00-00');
             $serviceLocalEmployee  = $dom->createElement("edu:local", '-');
 
-            $serviceEmployee->append($serviceDataEmployee, $serviceLocalEmployee);
+            $serviceEmployee->appendChild($serviceDataEmployee);
+            $serviceEmployee->appendChild($serviceLocalEmployee);
 
             $employeesDom->appendChild($serviceEmployee);
 
