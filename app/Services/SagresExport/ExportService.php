@@ -129,43 +129,39 @@ class ExportService
                 $schoolClassEnrollments = $schoolClass->enrollments;
 
                 foreach ($schoolClassEnrollments as $schoolClassEnrollment) {
-                    $schoolEnrollmentsDom = $dom->createElement("edu:matricula");
-
-                    $matriculaDate = '000-00-00';
-
                     if ($schoolClassEnrollment->registration) {
-                        $matriculaDate = dataFromPgToBr($schoolClassEnrollment->registration->data_matricula, 'Y-m-d');
+                        $schoolEnrollmentsDom = $dom->createElement("edu:matricula");
+
+                        $matriculaNumero = $dom->createElement("edu:numero", $schoolClassEnrollment->ref_cod_matricula);
+                        $matriculaData = $dom->createElement("edu:data_matricula", dataFromPgToBr($schoolClassEnrollment->registration->data_matricula, 'Y-m-d'));
+                        $matriculaFaltas = $dom->createElement("edu:numero_faltas", $this->exportQuery->getTotalEnrollmentAbsencesByFrequency($schoolClassEnrollment->ref_cod_matricula, $adapterFilters['startDate'], $adapterFilters['endDate']));
+                        $matriculaAprovado = $dom->createElement("edu:aprovado", 0);
+
+                        //ALUNO
+                        $schoolStudentsDom = $dom->createElement("edu:aluno");
+
+                        $studentCpf = $dom->createElement("edu:cpfAluno", (!empty($schoolClassEnrollment->registration->student->person->individual->cpf) ? $schoolClassEnrollment->registration->student->person->individual->cpf : '000.000.000-00'));
+                        $studenDateNascimento = $dom->createElement("edu:data_nascimento", $schoolClassEnrollment->registration->student->person->individual->data_nasc);
+                        $studentName = $dom->createElement("edu:nome", $schoolClassEnrollment->registration->student->person->name);
+                        $studentPcd = $dom->createElement("edu:pcd", ($schoolClassEnrollment->registration->student->person->deficiencies->isEmpty() ? 0 : 1));
+                        $studentSexo = $dom->createElement("edu:sexo", $this->dataConverter->sexoConverter($schoolClassEnrollment->registration->student->person->individual->sexo));
+
+                        $schoolStudentsDom->appendChild($studentCpf);
+                        $schoolStudentsDom->appendChild($studenDateNascimento);
+                        $schoolStudentsDom->appendChild($studentName);
+                        $schoolStudentsDom->appendChild($studentPcd);
+                        $schoolStudentsDom->appendChild($studentSexo);
+                        //END ALUNO
+
+
+                        $schoolEnrollmentsDom->appendChild($matriculaNumero);
+                        $schoolEnrollmentsDom->appendChild($matriculaData);
+                        $schoolEnrollmentsDom->appendChild($matriculaFaltas);
+                        $schoolEnrollmentsDom->appendChild($matriculaAprovado);
+                        $schoolEnrollmentsDom->appendChild($schoolStudentsDom);
+
+                        $schoolClassesDom->appendChild($schoolEnrollmentsDom);
                     }
-
-                    $matriculaNumero = $dom->createElement("edu:numero", $schoolClassEnrollment->ref_cod_matricula);
-                    $matriculaData = $dom->createElement("edu:data_matricula", $matriculaDate);
-                    $matriculaFaltas = $dom->createElement("edu:numero_faltas", $this->exportQuery->getTotalEnrollmentAbsencesByFrequency($schoolClassEnrollment->ref_cod_matricula, $adapterFilters['startDate'], $adapterFilters['endDate']));
-                    $matriculaAprovado = $dom->createElement("edu:aprovado", 0);
-
-                    //ALUNO
-                    $schoolStudentsDom = $dom->createElement("edu:aluno");
-
-                    $studentCpf  = $dom->createElement("edu:cpfAluno", (!empty($schoolClassEnrollment->registration->student->person->individual->cpf) ? $schoolClassEnrollment->registration->student->person->individual->cpf : '000.000.000-00'));
-                    $studenDateNascimento  = $dom->createElement("edu:data_nascimento", $schoolClassEnrollment->registration->student->person->individual->data_nasc);
-                    $studentName  = $dom->createElement("edu:nome", $schoolClassEnrollment->registration->student->person->name);
-                    $studentPcd  = $dom->createElement("edu:pcd", ($schoolClassEnrollment->registration->student->person->deficiencies->isEmpty() ? 0 : 1));
-                    $studentSexo  = $dom->createElement("edu:sexo", $this->dataConverter->sexoConverter($schoolClassEnrollment->registration->student->person->individual->sexo));
-
-                    $schoolStudentsDom->appendChild($studentCpf);
-                    $schoolStudentsDom->appendChild($studenDateNascimento);
-                    $schoolStudentsDom->appendChild($studentName);
-                    $schoolStudentsDom->appendChild($studentPcd);
-                    $schoolStudentsDom->appendChild($studentSexo);
-                    //END ALUNO
-
-
-                    $schoolEnrollmentsDom->appendChild($matriculaNumero);
-                    $schoolEnrollmentsDom->appendChild($matriculaData);
-                    $schoolEnrollmentsDom->appendChild($matriculaFaltas);
-                    $schoolEnrollmentsDom->appendChild($matriculaAprovado);
-                    $schoolEnrollmentsDom->appendChild($schoolStudentsDom);
-
-                    $schoolClassesDom->appendChild($schoolEnrollmentsDom);
                 }
                 //END MATRICULA
 
