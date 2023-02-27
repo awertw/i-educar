@@ -55,17 +55,26 @@ class ExportService
         $diaInicPresContas = $dom->createElement("edu:diaInicPresContas", $adapterFilters['startDay']);
         $diaFinaPresContas = $dom->createElement("edu:diaFinaPresContas", $adapterFilters['endDay']);
 
-        $prestacaoContas->append(
-            $codigoUnidGestora,
-            $nomeUnidGestora,
-            $cpfResponsavel,
-            $cpfGestor,
-            $anoReferencia,
-            $mesReferencia,
-            $versaoXml,
-            $diaInicPresContas,
-            $diaFinaPresContas
-        );;
+        $prestacaoContas->appendChild($codigoUnidGestora);
+        $prestacaoContas->appendChild($nomeUnidGestora);
+        $prestacaoContas->appendChild($cpfResponsavel);
+        $prestacaoContas->appendChild($cpfGestor);
+        $prestacaoContas->appendChild($anoReferencia);
+        $prestacaoContas->appendChild($mesReferencia);
+        $prestacaoContas->appendChild($versaoXml);
+        $prestacaoContas->appendChild($diaInicPresContas);
+        $prestacaoContas->appendChild($diaFinaPresContas);
+//        $prestacaoContas->append(
+//            $codigoUnidGestora,
+//            $nomeUnidGestora,
+//            $cpfResponsavel,
+//            $cpfGestor,
+//            $anoReferencia,
+//            $mesReferencia,
+//            $versaoXml,
+//            $diaInicPresContas,
+//            $diaFinaPresContas
+//        );
 
         //START ESCOLAS
         $schoolsDom = $dom->createElement("edu:escola");
