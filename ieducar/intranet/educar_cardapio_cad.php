@@ -2,17 +2,17 @@
  
 use iEducar\Legacy\Model;
 use App\Models\MerendaCardapio;
-use App\Models\CardapioProduto;
-use App\Models\Produto;
+use App\Models\CardapioCurso;
+use App\Models\Curso;
 
 return new class extends clsCadastro {
 
     public $pessoa_logada;
     public $instituicao_id;
     public $id;
-    public $produto;
+    public $curso;
     public $descricao;
-    public $produto_ids;
+    public $curso_ids;
     public $dia_semana;
     public $preparo;
     
@@ -75,15 +75,15 @@ return new class extends clsCadastro {
            
 
        
-        $selectOptionsProduto = [];
+        $selectOptionsCurso = [];
  
-        $produtos = Produto::all();
+        $cursos = Curso::all();
         $a = array();
         $b = array();
 
-        foreach($produtos as $produto){
-            array_push($a, $produto['id']);
-            array_push($b, $produto['id']." - ".$produto['descricao']);
+        foreach($cursos as $curso){
+            array_push($a, $curso['cod_curso']);
+            array_push($b, $curso['cod_curso']." - ".$curso['nm_curso']);
           
          }
        
@@ -92,10 +92,10 @@ return new class extends clsCadastro {
         
         $c = array_combine($a, $b);
         $options = [
-            'label' => 'Produtos',
+            'label' => 'Cursos',
             'required' => true,
             'size' => 50,
-            'value' => $this->$produto_ids,
+            'value' => $this->$curso_ids,
             'options' => [
                 'all_values' =>$c
             ]
@@ -167,14 +167,14 @@ return new class extends clsCadastro {
                
               ]);
        
-              $this->produto_ids  = $_POST['custom'];
+              $this->curso_ids  = $_POST['custom'];
               
-              foreach ($this->produto_ids as $produto_id ) {
+              foreach ($this->curso_ids as $curso_id ) {
           
-                CardapioProduto::create([
+                CardapioCurso::create([
                      
                       'cod_cardapio' => $id_cardapio,
-                      'cod_produto' => $produto_id
+                      'cod_curso' => $curso_id
                      
                     ]);
                 
@@ -228,16 +228,16 @@ return new class extends clsCadastro {
           
         ]);
 
-        CardapioProduto::where('cod_cardapio', $_GET['id'])->delete(); 
+        CardapioCurso::where('cod_cardapio', $_GET['id'])->delete(); 
         
         $this->unidade_ids  = $_POST['custom'];
               
-        foreach ($this->unidade_ids as $produto_id ) {
+        foreach ($this->unidade_ids as $curso_id ) {
     
-            CardapioProduto::create([
+            CardapioCurso::create([
                
                 'cod_cardapio' => $_GET['id'],
-                'cod_produto' => $produto_id
+                'cod_curso' => $curso_id
                
               ]);
           
@@ -252,7 +252,7 @@ return new class extends clsCadastro {
     {
        
         MerendaCardapio::where('id', $_GET['id'])->delete(); 
-        CardapioProduto::where('cod_cardapio', $_GET['id'])->delete(); 
+        CardapioCurso::where('cod_cardapio', $_GET['id'])->delete(); 
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
         $this->simpleRedirect('educar_cardapio_lst.php');
     }

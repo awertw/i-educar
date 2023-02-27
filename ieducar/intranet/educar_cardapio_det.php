@@ -1,8 +1,8 @@
 <?php
 use iEducar\Legacy\Model;
 use App\Models\MerendaCardapio;
-use App\Models\CardapioProduto;
-use App\Models\Produto;
+use App\Models\CardapioCurso;
+use App\Models\Curso;
 
 return new class extends clsDetalhe {
     /**
@@ -27,22 +27,22 @@ return new class extends clsDetalhe {
             $this->simpleRedirect('educar_cardapio_lst.php');
         }
 
-        $lista_produtos = "<ul  style='list-style-type: none; '>";
-        $cardapioProdutos = CardapioProduto::where('cod_cardapio', $this->id)->get();
+        $lista_cursos = "<ul  style='list-style-type: none; '>";
+        $cardapioCursos = CardapioCurso::where('cod_cardapio', $this->id)->get();
         $contador_unidades= 0;
 
-        foreach($cardapioProdutos as $cardapioProduto){
+        foreach($cardapioCursos as $cardapioCurso){
 
-            $produtos = Produto::where('id', $cardapioProduto['cod_produto'])->get();
+            $cursos = Curso::where('cod_curso', $cardapioCurso['cod_curso'])->get();
 
-            foreach($produtos as $produto){
-                $lista_produtos .= "<li   style='border: 1px solid grey; padding: 5px;background:white;'><b> ".$produto['descricao']." </b></li>";
+            foreach($cursos as $curso){
+                $lista_cursos .= "<li   style='border: 1px solid grey; padding: 5px;background:white;'><b> ".$curso['nm_curso']." </b></li>";
             }
         
         
         }
         
-        $lista_produtos .= "</ul>";
+        $lista_cursos .= "</ul>";
   
   
 
@@ -52,7 +52,7 @@ return new class extends clsDetalhe {
            $this->addDetalhe([ 'Código', $cardapio->id]);
            $this->addDetalhe([ 'Dia da Semana', $cardapio->dia_semana]);
            $this->addDetalhe([ 'Descrição', $cardapio->descricao]);
-           $this->addDetalhe([ 'Produtos', $lista_produtos]);
+           $this->addDetalhe([ 'Cursos', $lista_cursos]);
            $this->addDetalhe([ 'Preparo', $cardapio->preparo]);
            
        

@@ -3,8 +3,8 @@ use iEducar\Legacy\Model;
 use App\Models\MerendaCardapio;
 use App\Models\Serie;
 use App\Models\ComponenteCurricular;
-use App\Models\Produto;
-use App\Models\CardapioProduto;
+use App\Models\Curso;
+use App\Models\CardapioCurso;
  
 return new class extends clsListagem {
   
@@ -66,7 +66,7 @@ return new class extends clsListagem {
            'Código do Cardápio',
            'Dia da Semana',
            'Descrição',
-           'Produtos',
+           'Cursos',
            'Preparo',
           
        ];
@@ -157,15 +157,15 @@ return new class extends clsListagem {
        foreach($cardapios as $cardapio){
 
         $lista_produtos = "<ul style='list-style-type: none;'>";
-        $cardapioProdutos = CardapioProduto::where('cod_cardapio', $cardapio['id'])->get();
+        $cardapioCursos = CardapioCurso::where('cod_cardapio', $cardapio['id'])->get();
         $contador_unidades= 0;
 
-        foreach($cardapioProdutos as $cardapioProduto){
+        foreach($cardapioCursos as $cardapioCurso){
 
-            $produtos = Produto::where('id', $cardapioProduto['cod_produto'])->get();
+            $produtos = Curso::where('cod_curso', $cardapioCurso['cod_curso'])->get();
 
             foreach($produtos as $produto){
-                $lista_produtos .= "<li  style='border: 1px solid grey; padding: 5px; background:white;'><b>".$produto['descricao']."</b></li>";
+                $lista_produtos .= "<li  style='border: 1px solid grey; padding: 5px; background:white;'><b>".$produto['nm_curso']."</b></li>";
             }
         
         
