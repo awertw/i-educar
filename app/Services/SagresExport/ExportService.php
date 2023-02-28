@@ -45,7 +45,7 @@ class ExportService
             $cpfResponsavel = $institution->accountingOfficer->individual->cpf;
         }
 
-        $codigoUnidGestora = $dom->createElement("edu:codigoUnidGestora", str_pad($institution['cod_unidade_gestora'], 6, '00'));
+        $codigoUnidGestora = $dom->createElement("edu:codigoUnidGestora", str_pad($institution['cod_unidade_gestora'], 6, '00', STR_PAD_LEFT));
         $nomeUnidGestora = $dom->createElement("edu:nomeUnidGestora", $institution['nm_responsavel']);
         $cpfResponsavel = $dom->createElement("edu:cpfResponsavel", $this->dataConverter->removeCharacters($cpfResponsavel));
         $cpfGestor = $dom->createElement("edu:cpfGestor", $this->dataConverter->removeCharacters($cpfGestor));
@@ -75,7 +75,7 @@ class ExportService
             $idEscola = $dom->createElement("edu:idEscola", $school['cod_escola']);
 
             //START TURMA
-            $schoolClasses = $school->schoolClasses()->active()->get();
+            $schoolClasses = $school->schoolClasses()->year($adapterFilters['year'])->active()->get();
 
             foreach ($schoolClasses as $schoolClass) {
                 $schoolClassesDom = $dom->createElement("edu:turma");
@@ -253,7 +253,7 @@ class ExportService
 
         //PROFISSIONAL
 
-        $employees = $institution->employees()->active()->notIsProfessor()->get();
+        $employees = $institution->employees()->active()->notIsProfessorAndDirector()->get();
 
         foreach ($employees as $employee) {
             $employeesDom = $dom->createElement("edu:profissional");
