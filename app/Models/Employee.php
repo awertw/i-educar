@@ -117,6 +117,13 @@ class Employee extends Model
             ->where('funcao.professor', 1);
     }
 
+    public function scopeNotIsProfessor(Builder $query): Builder
+    {
+        return $query->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
+            ->where('funcao.professor', 0);
+    }
+
     public function scopeLastYear(Builder $query): Builder
     {
         return $query->join('pmieducar.servidor_alocacao', 'servidor.cod_servidor', '=', 'servidor_alocacao.ref_cod_servidor')

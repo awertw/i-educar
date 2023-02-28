@@ -27,7 +27,7 @@ class SagresExportController extends Controller
 
         $headers = [
             'Content-type' => 'text/xml',
-            'Content-Disposition' => 'attachment; filename="exportacao_sagres.xml"',
+            'Content-Disposition' => 'attachment; filename="Educacao.xml"',
             'Content-Length' => strlen($exportContent),
         ];
 

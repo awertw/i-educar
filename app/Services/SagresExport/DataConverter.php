@@ -38,16 +38,12 @@ class DataConverter
         return $modalitySagres[$modalidade_id];
     }
 
-    public function cpfInstitutionConverter(?string $cpf): string
+    public function removeCharacters(?string $string): string
     {
-        if (strlen($cpf) > 11) {
-            return $cpf;
+        if (!empty($string)) {
+            preg_replace('/[0-9\@\.\;\" "]+/', '', $string);
         }
 
-        if (!empty($cpf)) {
-            return preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "\$1.\$2.\$3-\$4", $cpf);
-        }
-
-        return "000.000.000-00";
+        return $string;
     }
 }
