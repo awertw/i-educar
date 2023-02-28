@@ -45,10 +45,10 @@ class ExportService
             $cpfResponsavel = $institution->accountingOfficer->individual->cpf;
         }
 
-        $codigoUnidGestora = $dom->createElement("edu:codigoUnidGestora", $institution['cod_unidade_gestora']);
+        $codigoUnidGestora = $dom->createElement("edu:codigoUnidGestora", str_pad($institution['cod_unidade_gestora'], 6, '00'));
         $nomeUnidGestora = $dom->createElement("edu:nomeUnidGestora", $institution['nm_responsavel']);
-        $cpfResponsavel = $dom->createElement("edu:cpfResponsavel", $this->dataConverter->cpfInstitutionConverter($cpfResponsavel));
-        $cpfGestor = $dom->createElement("edu:cpfGestor", $this->dataConverter->cpfInstitutionConverter($cpfGestor));
+        $cpfResponsavel = $dom->createElement("edu:cpfResponsavel", $this->dataConverter->removeCharacters($cpfResponsavel));
+        $cpfGestor = $dom->createElement("edu:cpfGestor", $this->dataConverter->removeCharacters($cpfGestor));
         $anoReferencia = $dom->createElement("edu:anoReferencia", $adapterFilters['year']);
         $mesReferencia = $dom->createElement("edu:mesReferencia", $adapterFilters['month']);
         $versaoXml = $dom->createElement("edu:versaoXml", 0); //CONFIRMAR
@@ -89,7 +89,6 @@ class ExportService
                 $schoolClassesDom->appendChild($turno);
 
                 //SERIES
-                $duration = 4;
                 $finalYear = false;
                 if (empty($schoolClass->multiseriado)) {
                     $schoolGrade = $schoolClass->schoolGrade;
@@ -106,7 +105,10 @@ class ExportService
 
                     $schoolGradeRule = $schoolGrade->grade->evaluationRules()->first();
 
-                    $finalYear = $schoolGradeRule->tipo_presenca == 2;
+                    if ($schoolGradeRule) {
+                        $finalYear = $schoolGradeRule->tipo_presenca == 2;
+                    }
+
                 }
 
                 if ($schoolClass->multiseriado != 0) {
@@ -140,7 +142,9 @@ class ExportService
                         //ALUNO
                         $schoolStudentsDom = $dom->createElement("edu:aluno");
 
-                        $studentCpf = $dom->createElement("edu:cpfAluno", (!empty($schoolClassEnrollment->registration->student->person->individual->cpf) ? $schoolClassEnrollment->registration->student->person->individual->cpf : '000.000.000-00'));
+                        $personCpf =  $this->dataConverter->removeCharacters($schoolClassEnrollment->registration->student->person->individual->cpf);
+
+                        $studentCpf = $dom->createElement("edu:cpfAluno", (!empty($personCpf) ? $personCpf : '00000000000'));
                         $studenDateNascimento = $dom->createElement("edu:data_nascimento", $schoolClassEnrollment->registration->student->person->individual->data_nasc);
                         $studentName = $dom->createElement("edu:nome", $schoolClassEnrollment->registration->student->person->name);
                         $studentPcd = $dom->createElement("edu:pcd", ($schoolClassEnrollment->registration->student->person->deficiencies->isEmpty() ? 0 : 1));
@@ -179,12 +183,18 @@ class ExportService
                             $teachersTimeTable[] = $horaryTimeTable->ref_servidor;
                         }
 
+                        $nameCurricularComponent = 'EDUCAÇÃO INFANTIL';
+
+                        if ($horaryTimeTable->ref_cod_disciplina != 0) {
+                            $nameCurricularComponent = $horaryTimeTable->curricularComponent->nome;
+                        }
+
                         $schoolClassHoraryDom = $dom->createElement("edu:horario");
 
                         $horaryDayWeekend  = $dom->createElement("edu:dia_semana", $horaryTimeTable->dia_semana);
                         $horaryDuration  = $dom->createElement("edu:duracao", ($finalYear ? $horaryTimeTable->qtd_atulas : 4));
                         $horaryInitialHour  = $dom->createElement("edu:hora_inicio", $horaryTimeTable->hora_inicial);
-                        $horaryDiscipline  = $dom->createElement("edu:disciplina", $horaryTimeTable->ref_cod_disciplina);
+                        $horaryDiscipline  = $dom->createElement("edu:disciplina", $nameCurricularComponent);
                         $horaryServidor  = $dom->createElement("edu:cpfProfessor", $horaryTimeTable->employee->person->individual->cpf);
 
                         $schoolClassHoraryDom->appendChild($horaryDayWeekend);
@@ -214,11 +224,11 @@ class ExportService
                 $directorSchool = $school->schoolManagers()->where('role_id', 1)->first();
                 $directorSchoolDom = $dom->createElement("edu:diretor");
 
-                $cpfDirectorSchool = '000.000.000-00';
+                $cpfDirectorSchool = '00000000000';
                 $nrAto = '';
 
                 if ($directorSchool) {
-                    $cpfDirectorSchool = $directorSchool->employee->person->individual->cpf;
+                    $cpfDirectorSchool = $this->dataConverter->removeCharacters($directorSchool->employee->person->individual->cpf);
                     $nrAto = $directorSchool->employee->person->ato;
                 }
 
@@ -243,12 +253,18 @@ class ExportService
 
         //PROFISSIONAL
 
-        $employees = $institution->employees()->active()->notInTimeTable($teachersTimeTable)->get();
+        $employees = $institution->employees()->active()->notIsProfessor()->get();
 
         foreach ($employees as $employee) {
             $employeesDom = $dom->createElement("edu:profissional");
 
-            $cpfEmployee  = $dom->createElement("edu:cpfProfissional", $employee->person->individual->cpf);
+            $cpfEmployeeSchool = '00000000000';
+
+            if ($employee->person->individual) {
+                $cpfEmployeeSchool = $this->dataConverter->removeCharacters($employee->person->individual->cpf);
+            }
+
+            $cpfEmployee  = $dom->createElement("edu:cpfProfissional", $cpfEmployeeSchool);
             $specialtyEmployee  = $dom->createElement("edu:especialidade", $employee->employeeRoles()->first()->role->nm_funcao);
 
             $employeesDom->appendChild($cpfEmployee);
