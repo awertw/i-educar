@@ -38,7 +38,7 @@ class DataConverter
         return $modalitySagres[$modalidade_id];
     }
 
-    public function removeCharacters(?string $string): string
+    public function removeCharacters(?string $string): ?string
     {
         if (!empty($string)) {
             preg_replace('/[0-9\@\.\;\" "]+/', '', $string);
