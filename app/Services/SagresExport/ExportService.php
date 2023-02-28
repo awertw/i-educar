@@ -35,8 +35,8 @@ class ExportService
 
         $institution = $this->exportQuery->getInstitution($adapterFilters['institutionId']);
 
-        $cpfGestor = '';
-        $cpfResponsavel = '';
+        $cpfGestor = '00000000000';
+        $cpfResponsavel = '00000000000';
         if (!empty($institution->gestor)) {
             $cpfGestor = $institution->manager->individual->cpf;
         }
