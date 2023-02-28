@@ -183,5 +183,5 @@ INSERT INTO public.menus VALUES (321, 320, 'Validar Plano de Aula', NULL, '/intr
 INSERT INTO public.menus VALUES (322, 320, 'Validar Registro de Frequência', NULL, '/intranet/educar_professores_validacao_registro_de_frequencia_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (396, 13, 'Manutenção de Matrículas', 'Manutenção de Matrículas', '/intranet/educar_manutencao_matricula.php', NULL, 100, 1, 7797, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (397, 320, 'Faltas/Atrasos', NULL, '/intranet/educar_coordenacao_falta_atraso_professor_lst.php', NULL, 2, 2, 58, NULL, NULL, true, NULL, NULL);
-
 INSERT INTO public.menus VALUES (398, 233, 'Exportação para o Sagres', 'Exportação para o Sagres', '/exportacao-sagres', NULL, 100, 1, 4000, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (399, 81, 'Consulta de faltas', 'Consulta de faltas', '/intranet/educar_consulta_faltas.php', NULL, 4, 4, 9998911, NULL, NULL, true, NULL, NULL);
