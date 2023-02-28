@@ -501,4 +501,9 @@ class LegacySchoolClass extends Model
     {
         return $query->where('ativo', 1);
     }
+
+    public function scopeYear($query, int $year)
+    {
+        return $query->where('ano', $year);
+    }
 }
