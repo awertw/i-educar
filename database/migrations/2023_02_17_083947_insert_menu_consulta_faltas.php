@@ -15,7 +15,7 @@ class InsertMenuConsultaFaltas extends Migration
     {
         DB::table('public.menus')->insert(
             array(
-                'id' => 399,
+                'id' => 5200,
                 'parent_id' => 81,
                 'title' => 'Consulta de faltas',
                 'description' => 'Consulta de faltas',
@@ -40,6 +40,6 @@ class InsertMenuConsultaFaltas extends Migration
      */
     public function down()
     {
-        
+
     }
 }
