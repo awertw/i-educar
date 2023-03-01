@@ -68,7 +68,7 @@ return new class extends clsListagem {
         $this->inputsHelper()->turmaTurno(['required' => false, 'label' => 'Turno']);
         $this->inputsHelper()->dynamic('componenteCurricular', ['required' => false]);
         $this->inputsHelper()->dynamic('professorComponente', ['required' => false]);
-        
+
 
         $this->campoQuebra();
         $this->campoRotulo('filtros_periodo', '<b>Filtros por período</b>');
@@ -118,12 +118,10 @@ return new class extends clsListagem {
         $isCoordenador = $obj_servidor->isCoordenador();
 
         $escolasUsuario = [];
-        if ($isCoordenador) {
-            $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
+        $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
 
-            foreach ($escolasUser as $e) {
-                $escolasUsuario[] = $e['ref_cod_escola'];
-            }
+        foreach ($escolasUser as $e) {
+            $escolasUsuario[] = $e['ref_cod_escola'];
         }
 
         $lista = $obj_turma->lista(
