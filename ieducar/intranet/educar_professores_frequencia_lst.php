@@ -115,15 +115,12 @@ return new class extends clsListagem {
         );
 
         $eh_professor = $obj_servidor->isProfessor();
-        $isCoordenador = $obj_servidor->isCoordenador();
 
         $escolasUsuario = [];
-        if ($isCoordenador) {
-            $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
+        $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
 
-            foreach ($escolasUser as $e) {
-                $escolasUsuario[] = $e['ref_cod_escola'];
-            }
+        foreach ($escolasUser as $e) {
+            $escolasUsuario[] = $e['ref_cod_escola'];
         }
 
         $lista = $obj_turma->lista(
