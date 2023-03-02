@@ -167,7 +167,7 @@ return new class extends clsDetalhe {
 
             $registro['ddd_fax'] = $det_pessoa_fj['ddd_fax'] ?? null;
             $registro['fone_fax'] = $det_pessoa_fj['fone_fax'] ?? null;
- 
+
             $registro['ddd_mov'] = $det_pessoa_fj['ddd_mov'] ?? null;
             $registro['fone_mov'] = $det_pessoa_fj['fone_mov'] ?? null;
 
@@ -461,7 +461,7 @@ return new class extends clsDetalhe {
                         align=\'center\'>
                           <td>
                             <a href=\'' . $this->urlPresigner()->getPresignedUrl($documento->url) . '\'
-                               target=\'_blank\' > Visualizar documento ' . (count($documento) > 1 ? ($key + 1) : '') . '
+                               target=\'_blank\' > Visualizar documento ' . (count((array) $documento) > 1 ? ($key + 1) : '') . '
                             </a>
                           </td>
                     </tr>';
@@ -731,7 +731,7 @@ return new class extends clsDetalhe {
             if (trim($reg['desc_plano_saude']) != '') {
                 $this->addDetalhe(['Qual', $reg['desc_plano_saude']]);
             }
-            
+
             $this->addDetalhe(['Aluno Vacinado Covid-19?', ($reg['vacina_covid'] == 'S' ? 'Sim' : 'Não')]);
 
             if(trim($reg['desc_vacina_covid']) != '') {
@@ -921,7 +921,7 @@ return new class extends clsDetalhe {
             $tabela_projetos .= '</table>';
             $this->addDetalhe(['<span id="fprojeto"></span>Projetos', $tabela_projetos]);
         }
-       
+
         $this->url_cancelar = 'educar_aluno_lst.php';
         $this->largura = '100%';
         $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
@@ -943,7 +943,7 @@ return new class extends clsDetalhe {
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
-      
+
 
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
     }
