@@ -115,7 +115,6 @@ return new class extends clsListagem {
         );
 
         $eh_professor = $obj_servidor->isProfessor();
-        $isCoordenador = $obj_servidor->isCoordenador();
 
         $escolasUsuario = [];
         $escolasUser = App_Model_IedFinder::getEscolasUser($this->pessoa_logada);
@@ -146,21 +145,18 @@ return new class extends clsListagem {
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $bla++;
                 $data_formatada = dataToBrasil($registro['data']);
 
-                if (!$eh_professor && (!empty($registro['professor_registro']) && $registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador')) {
+                $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($registro['ref_cod_turma'], $this->pessoa_logada, null, true);
+
+                if ($eh_professor && count($quadroHorario) > 0 && $registro['professor_turma'] != $registro['professor_registro']) {
                     $totalRemover++;
                     continue;
                 }
 
-                if($eh_professor) {
-                    $quadroHorario = Portabilis_Business_Professor::quadroHorarioAlocado($registro['ref_cod_turma'], $this->pessoa_logada, null, true);
-
-                    if (count($quadroHorario) > 0 && $registro['professor_turma'] != $registro['professor_registro']) {
-                        $totalRemover++;
-                        continue;
-                    }
+                if (!empty($registro['professor_registro']) && $registro['professor_turma'] != $registro['professor_registro'] && $registro['professor_registro'] != 'Administrador' && $registro['professor_registro'] != 'Coordenador') {
+                    $totalRemover++;
+                    continue;
                 }
 
                 $lista_busca = [

@@ -82,6 +82,11 @@ class Employee extends Model
         return $this->hasMany(EmployeeGraduation::class, 'employee_id');
     }
 
+    public function employeeRoles()
+    {
+        return $this->hasMany(LegacyEmployeeRole::class, 'ref_cod_servidor');
+    }
+
     /**
      * @return BelongsToMany
      */
@@ -100,11 +105,24 @@ class Employee extends Model
         return $query->where('servidor.ativo', 1);
     }
 
+    public function scopeNotInTimeTable(Builder $query, array $servidoresTimeTable): Builder
+    {
+        return $query->whereNotIn('servidor.cod_servidor', $servidoresTimeTable);
+    }
+
     public function scopeProfessor(Builder $query): Builder
     {
         return $query->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
             ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
             ->where('funcao.professor', 1);
+    }
+
+    public function scopeNotIsProfessorAndDirector(Builder $query): Builder
+    {
+        return $query->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
+            ->where('funcao.professor', 0)
+            ->orWhere('funcao.nm_funcao', "!=",'Diretor');
     }
 
     public function scopeLastYear(Builder $query): Builder

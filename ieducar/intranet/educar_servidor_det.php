@@ -155,7 +155,7 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(
             [
-                'Recurso Fundeb',
+                'Recurso Fudeb',
                 dbBool($registro['recurso_fundeb']) ? 'Sim' : 'Não'
             ]
         );

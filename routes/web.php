@@ -22,7 +22,7 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth', 'ieducar.checkresetpassword']], function () {
-   
+
     Route::get('/intranet/educar_matricula_turma_manutencao_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_manutencao_lst.php')
         ->name('manutencao.indexmanutencao');
@@ -38,8 +38,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enroll.create');
     Route::post('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@enroll')
         ->name('enrollments.enroll');
-    
-   
+
+
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
 
@@ -64,7 +64,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('usertype.update');
     Route::delete('/usuarios/tipos/{userType}', 'AccessLevelController@delete')
         ->name('usertype.delete');
- 
+
     Route::get('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexCancelEnrollments')
         ->name('enrollments.batch.cancel.index');
     Route::post('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelEnrollments')
@@ -111,6 +111,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/exportacao-para-o-seb', 'SebExportController@index')->name('seb-export.index');
     Route::post('/exportacao-para-o-seb', 'SebExportController@export')->name('seb-export.export');
+
+    Route::get('/exportacao-sagres', 'SagresExportController@index')->name('sagres-export.index');
+    Route::post('/exportacao-sagres', 'SagresExportController@export')->name('sagres-export.export');
 
     Route::get('/abre-url-privada', 'OpenPrivateUrlController@open')->name('open_private_url.open');
 
