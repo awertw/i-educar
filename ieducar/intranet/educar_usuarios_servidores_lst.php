@@ -81,7 +81,14 @@ return new class extends clsListagem {
             isset($_GET['servidor_com_usuario']),
             date('Y')
         );
-        $total = count($lista);
+
+        if (is_countable($lista) && count($lista) > 0) {
+
+            $total = count($lista);
+        }else{
+            $total =0; 
+        }
+    
 
         // monta a lista
         if (is_array($lista) && count($lista)) {
