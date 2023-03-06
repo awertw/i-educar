@@ -454,7 +454,6 @@ function excluirAjax() {
 }
 
 function doAjax() {
-
   const settings = {
     url: "/turma",
     data: $j("#formcadastro").serialize(),

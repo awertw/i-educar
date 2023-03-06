@@ -180,6 +180,8 @@ return new class extends clsCadastro {
             }
         }
 
+        $this->acao_executa_submit_ajax = true;
+
         if (is_numeric($this->cod_turma)) {
             $obj_turma = new clsPmieducarTurma($this->cod_turma);
             $registro = $obj_turma->detalhe();
@@ -273,15 +275,15 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->dynamic(['curso', 'serie'], ['disabled' => $desabilitado]);
 
-        $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
-        asort($tiposBoletim);
-        $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
+//        $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
+//        asort($tiposBoletim);
+//        $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
         $this->campoTabelaInicio('turma_serie', 'Séries da turma', ['Curso', 'Série', 'Boletim', 'Boletim diferenciado'], $this->turma_serie);
         $this->campoLista('mult_curso_id', 'Curso', $opcoesCursos, $this->mult_curso_id, 'atualizaInformacoesComBaseNoCurso(this)');
         $this->campoLista('mult_serie_id', 'Série', ['Selecione uma série'], $this->mult_serie_id, 'atualizaInformacoesComBaseNaSerie()');
-        $this->campoLista('mult_boletim_id', 'Boletim', $tiposBoletim, $this->mult_boletim_id);
-        $this->campoLista('mult_boletim_diferenciado_id', 'Boletim diferenciado', $tiposBoletim, $this->mult_boletim_diferenciado_id, null, null, null, null, null, false);
+//        $this->campoLista('mult_boletim_id', 'Boletim', $tiposBoletim, $this->mult_boletim_id);
+//        $this->campoLista('mult_boletim_diferenciado_id', 'Boletim diferenciado', $tiposBoletim, $this->mult_boletim_diferenciado_id, null, null, null, null, null, false);
         $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
         $this->campoTabelaFim();
 
@@ -478,8 +480,8 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->turmaTurno();
 
-        $this->campoLista('tipo_boletim', 'Modelo relatório boletim', $tiposBoletim, $this->tipo_boletim, '', false, '', '', false, false);
-        $this->campoLista('tipo_boletim_diferenciado', 'Modelo relatório boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
+//        $this->campoLista('tipo_boletim', 'Modelo relatório boletim', $tiposBoletim, $this->tipo_boletim, '', false, '', '', false, false);
+//        $this->campoLista('tipo_boletim_diferenciado', 'Modelo relatório boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
 
         $this->montaListaComponentesSerieEscola();
 
