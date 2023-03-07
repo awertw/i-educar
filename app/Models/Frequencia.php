@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Frequencia extends Model
 {
- /**
+    /**
      * @var string
      */
     protected $table = 'modules.frequencia';
@@ -31,5 +31,12 @@ class Frequencia extends Model
      */
     public $timestamps = false;
 
-    
-    use HasFactory;}
+
+    use HasFactory;
+
+    public function studentAbsencesFrequency()
+    {
+        return $this->hasMany(FrequenciaAluno::class, 'ref_frequencia');
+    }
+
+}

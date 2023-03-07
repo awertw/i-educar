@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacySchoolClass
@@ -279,6 +280,18 @@ class LegacySchoolClass extends Model
     }
 
     /**
+     * @return HasOne
+     */
+    public function timeTable()
+    {
+        return $this->hasOne(LegacyTimeTable::class, 'ref_cod_turma');
+    }
+
+    public function getActiveTimeTable() {
+        return $this->timeTable()->where('ativo', '=', 1);
+    }
+
+    /**
      * Retorna os dias da semana em um array
      *
      * @param string $value
@@ -487,5 +500,10 @@ class LegacySchoolClass extends Model
     public function scopeActive($query)
     {
         return $query->where('ativo', 1);
+    }
+
+    public function scopeYear($query, int $year)
+    {
+        return $query->where('ano', $year);
     }
 }

@@ -217,7 +217,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         return null;
     }
-
+ 
     /**
      * @throws App_Model_Exception
      * @throws StudentNotEnrolledInSchoolClass

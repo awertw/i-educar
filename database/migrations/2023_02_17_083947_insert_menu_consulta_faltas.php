@@ -40,6 +40,6 @@ class InsertMenuConsultaFaltas extends Migration
      */
     public function down()
     {
-
+        
     }
 }
