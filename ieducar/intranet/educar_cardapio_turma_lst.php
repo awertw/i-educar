@@ -104,7 +104,12 @@ return new class extends clsListagem {
 
     }else{
         $total = 0;
-        $turma =  Turma::where('ref_ref_cod_escola', $_GET['ref_cod_escola'])->get();
+        if(!empty($_GET['ref_cod_escola'])){
+            $turma =  Turma::where('ref_ref_cod_escola', $_GET['ref_cod_escola'])->get();    
+        }else{
+            $turma =  Turma::get();
+        }
+       
         foreach($turma as $turma_total){
             $total ++;
         }
