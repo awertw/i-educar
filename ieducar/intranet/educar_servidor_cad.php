@@ -81,9 +81,9 @@ return new class extends clsCadastro {
                 foreach ($registro as $campo => $val) {
                     $this->$campo = $val;
                 }
-
-                $this->multi_seriado = dbBool($this->multi_seriado);
+                $this->multi_seriado  = dbBool($this->multi_seriado);
                 $this->recurso_fundeb = dbBool($this->recurso_fundeb);
+                $this->ativo          = dbBool($this->ativo);
 
                 $obj_permissoes = new clsPermissoes();
                 if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
@@ -348,7 +348,8 @@ return new class extends clsCadastro {
         );
 
         $this->inputsHelper()->checkbox('multi_seriado', ['label' => 'Multisseriado', 'value' => $this->multi_seriado]);
-        $this->inputsHelper()->checkbox('recurso_fundeb', ['label' => 'Recurso Fundeb', 'value' => $this->recurso_fundeb]);
+        $this->inputsHelper()->checkbox('recurso_fundeb', ['label' => 'Recursos Fundeb', 'value' => $this->recurso_fundeb]);
+        $this->inputsHelper()->checkbox('ativo', ['label' => 'Inativar Servidor', 'value' => $this->ativo ? 0 : 1]);
 
         // Dados do docente no Inep/Educacenso.
         if ($this->docente) {
@@ -498,6 +499,7 @@ JS;
             $obj = $this->addCamposCenso($obj);
             $obj->multi_seriado = !is_null($this->multi_seriado);
             $obj->recurso_fundeb = !is_null($this->recurso_fundeb);
+            $obj->ativo = !is_null($this->ativo);
 
             $editou = $obj->edita();
 
@@ -524,6 +526,7 @@ JS;
             $obj_2->multi_seriado = !is_null($this->multi_seriado);
             $obj_2->recurso_fundeb = !is_null($this->recurso_fundeb);
             $obj_2->cod_servidor = $this->cod_servidor;
+            $obj_2->ativo = $this->ativo;
 
             $cadastrou = $obj_2->cadastra();
 
@@ -567,6 +570,7 @@ JS;
             $obj = $this->addCamposCenso($obj);
             $obj->multi_seriado = !is_null($this->multi_seriado);
             $obj->recurso_fundeb = !is_null($this->recurso_fundeb);
+            $obj->ativo = !is_null($this->ativo);
             $editou = $obj->edita();
 
             if ($editou) {
@@ -645,7 +649,7 @@ JS;
                     $obj = $this->addCamposCenso($obj);
                     $obj->multi_seriado = !is_null($this->multi_seriado);
                     $obj->recurso_fundeb = !is_null($this->recurso_fundeb);
-                    
+                    $obj->ativo = !is_null($this->ativo);
                     $editou = $obj->edita();
 
                     if ($editou) {
