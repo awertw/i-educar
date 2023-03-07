@@ -119,7 +119,7 @@ return new class extends clsListagem {
 
                 $lista_busca[] = "<span>{$registro['nm_turma']}</span>";
 
-                if(!empty($_GET['ref_cod_cardapio_curso'])){
+                if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao'])){
 
                     $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
                     $turnos = TurmaTurno::find($cardapio->cod_turno);
@@ -134,7 +134,7 @@ return new class extends clsListagem {
 
                
 
-                if(!empty($_GET['data_aplicacao'])){
+                if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao'])){
 
                 $cardapioTurmas = CardapioTurma::where('cod_turma', $registro['cod_turma'])->where('cod_cardapio', $_GET['ref_cod_cardapio_curso'])->where('data', $_GET['data_aplicacao'])->get();
                 }
@@ -144,7 +144,7 @@ return new class extends clsListagem {
                     $contador++;
                     $id_cardapio = $cardapioTurma['id'];
                 }
-                if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso'])){
+                if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao']) ){
                 if($contador>0){
                     $lista_busca[] = "<span>Aplicado</span>";
                     $lista_busca[] = 
@@ -197,10 +197,12 @@ return new class extends clsListagem {
         ]);
 
         // CASO ALTERE O NOME DOS BOTÕES, DEVE CORRIGIR A LÓGICA EM SERVIDORUSUARIO.JS
+        if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao'])){
 
         $this->array_botao_url[] ="educar_aplicar_todos_cardapio.php?cod_curso=".$_GET['ref_cod_curso']."&cod_escola=".$_GET['ref_cod_escola']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso'];
 
         $this->array_botao[] = ['name' => 'Aplicar para todas as turmas', 'css-extra' => 'btn-green'];
+        }
       
     }
 
