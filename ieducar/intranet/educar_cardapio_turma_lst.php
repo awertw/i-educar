@@ -119,22 +119,32 @@ return new class extends clsListagem {
 
                 $lista_busca[] = "<span>{$registro['nm_turma']}</span>";
 
-                $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
-                $turnos = TurmaTurno::find($cardapio->cod_turno);
+                if(!empty($_GET['ref_cod_cardapio_curso'])){
+
+                    $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
+                    $turnos = TurmaTurno::find($cardapio->cod_turno);
+                    $lista_busca[] = "<span>{$cardapio['descricao']} ({$turnos['nome']})</span>";
+
+                }else{
+                    $lista_busca[] = "";
+                }
+                
     
        
 
-                $lista_busca[] = "<span>{$cardapio['descricao']} ({$turnos['nome']})</span>";
+               
+
+                if(!empty($_GET['data_aplicacao'])){
 
                 $cardapioTurmas = CardapioTurma::where('cod_turma', $registro['cod_turma'])->where('cod_cardapio', $_GET['ref_cod_cardapio_curso'])->where('data', $_GET['data_aplicacao'])->get();
-
+                }
                 $contador = 0;
                 $id_cardapio = 0;
                 foreach( $cardapioTurmas as  $cardapioTurma){
                     $contador++;
                     $id_cardapio = $cardapioTurma['id'];
                 }
-
+                if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso'])){
                 if($contador>0){
                     $lista_busca[] = "<span>Aplicado</span>";
                     $lista_busca[] = 
@@ -167,7 +177,7 @@ return new class extends clsListagem {
                     ";
 
                 }
-               
+            }else{ $lista_busca[] = ""; $lista_busca[] = "";}
 
                       
                   
