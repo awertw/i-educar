@@ -83,37 +83,41 @@ return new class extends clsListagem {
         $obj_turma = new clsModulesTurmaCardapio();
         $obj_turma->setOrderby('cod_turma ASC');
         $obj_turma->setLimite($limite, $this->offset);
+        $id_turno = "";
 
-
+        if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao'])){
+        
+            $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
+            $id_turno =  $cardapio->cod_turno;
+        
+        }
         $lista = $obj_turma->lista_turmas(
-         $_GET['ref_cod_curso']
+         $_GET['ref_cod_curso'],  $_GET['ano'], $id_turno, $_GET['ref_cod_escola']
         );
 
-        if (is_countable($lista) && count($lista) > 0) {
-
-         
-        }else{
-         
-        }
-    $total = 0;
-    if(!empty($_GET['ref_cod_curso'])){
-        $turma = Turma::where('ref_cod_curso', $_GET['ref_cod_curso'])->where('ref_ref_cod_escola', $_GET['ref_cod_escola'])->get();
-        foreach($turma as $turma_total){
-            $total ++;
-        }
-
-    }else{
-        $total = 0;
-        if(!empty($_GET['ref_cod_escola'])){
-            $turma =  Turma::where('ref_ref_cod_escola', $_GET['ref_cod_escola'])->get();    
-        }else{
-            $turma =  Turma::get();
-        }
        
-        foreach($turma as $turma_total){
+        $total = 0;
+        if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao'])){
+            $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
+            $turma =  Turma::where('ref_ref_cod_escola', $_GET['ref_cod_escola'])->where('ano', $_GET['ano'])->where('ref_cod_curso', $_GET['ref_cod_curso'])->where('turma_turno_id', $cardapio->cod_turno)->get();    
+            foreach($turma as $turma_total){
             $total ++;
+           
         }
-    }
+
+        }else{
+            $total = 0;
+           if(!empty($_GET['ref_cod_escola'])){
+
+                $turma =  Turma::where('ref_ref_cod_escola', $_GET['ref_cod_escola'])->where('ano', $_GET['ano'])->get();    
+            }else{
+                $turma =  Turma::where('ano', $_GET['ano'])->get();
+            }
+        
+            foreach($turma as $turma_total){
+                $total ++;
+            }
+        }
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
@@ -203,8 +207,10 @@ return new class extends clsListagem {
 
         // CASO ALTERE O NOME DOS BOTÕES, DEVE CORRIGIR A LÓGICA EM SERVIDORUSUARIO.JS
         if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao'])){
+            $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
+          
 
-        $this->array_botao_url[] ="educar_aplicar_todos_cardapio.php?cod_curso=".$_GET['ref_cod_curso']."&cod_escola=".$_GET['ref_cod_escola']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso'];
+        $this->array_botao_url[] ="educar_aplicar_todos_cardapio.php?cod_curso=".$_GET['ref_cod_curso']."&cod_escola=".$_GET['ref_cod_escola']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso']."&cod_turno=".$cardapio->cod_turno;
 
         $this->array_botao[] = ['name' => 'Aplicar para todas as turmas', 'css-extra' => 'btn-green'];
         }

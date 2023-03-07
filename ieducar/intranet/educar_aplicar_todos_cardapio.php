@@ -7,7 +7,7 @@ use App\Models\CardapioTurma;
 
 
 
-        $turma =  Turma::where('ref_ref_cod_escola', $_GET['cod_escola'])->where('ref_cod_curso', $_GET['cod_curso'])->get();
+        $turma =  Turma::where('ref_ref_cod_escola', $_GET['cod_escola'])->where('ref_cod_curso', $_GET['cod_curso'])->where('ano', $_GET['ano'])->where('turma_turno_id', $_GET['cod_turno'])->get();
         foreach($turma as $turma_registro){
             
             $cardapioTurmas = CardapioTurma::where('cod_turma', $turma_registro['cod_turma'])->where('cod_cardapio', $_GET['cod_cardapio'])->where('data', $_GET['data_aplicacao'])->get();

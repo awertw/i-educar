@@ -172,13 +172,45 @@ class clsModulesTurmaCardapio extends Model
 
 
 
-    public function lista_turmas(  $ref_cod_curso = null)
+    public function lista_turmas(  $ref_cod_curso = null,  $ano = null,  $turno_id = null, $ref_cod_escola = null)
     {
+        $condicional = "";
+        $contador_condicional =0;
         if(is_numeric( $ref_cod_curso)){
-            $condicional = " WHERE ref_cod_curso = ".$ref_cod_curso." ";
-        }else{
-            $condicional = "";
+            $condicional .= " WHERE ref_cod_curso = ".$ref_cod_curso." ";
+            $contador_condicional++;
         }
+        if(is_numeric( $ano)){
+            if($contador_condicional>0){
+                $condicional .= " AND ano = ".$ano." ";
+            }else{
+
+                $condicional .= " WHERE ano = ".$ano." ";
+            }
+            $contador_condicional++;
+        }
+        if(is_numeric( $turno_id)){
+            if($contador_condicional>0){
+                $condicional .= " AND turma_turno_id = ".$turno_id." ";
+            }else{
+
+                $condicional .= " WHERE turma_turno_id = ".$turno_id." ";
+            }
+            $contador_condicional++;
+        }
+        if(is_numeric( $ref_cod_escola)){
+            if($contador_condicional>0){
+                $condicional .= " AND ref_ref_cod_escola = ".$ref_cod_escola." ";
+            }else{
+
+                 $condicional .= " WHERE ref_ref_cod_escola = ".$ref_cod_escola." ";
+            }
+            $contador_condicional++;
+        }
+        
+    
+        
+        
         $sql = "SELECT * FROM pmieducar.turma ".$condicional;
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
