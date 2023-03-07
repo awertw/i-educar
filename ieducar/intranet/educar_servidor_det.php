@@ -155,8 +155,14 @@ return new class extends clsDetalhe {
 
         $this->addDetalhe(
             [
-                'Recurso Fudeb',
+                'Recursos Fundeb',
                 dbBool($registro['recurso_fundeb']) ? 'Sim' : 'Não'
+            ]
+        );
+        $this->addDetalhe(
+            [
+                'Servidor Ativo',
+                dbBool($registro['ativo']) ? 'Sim' : 'Não'
             ]
         );
 
