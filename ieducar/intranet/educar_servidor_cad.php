@@ -349,7 +349,7 @@ return new class extends clsCadastro {
 
         $this->inputsHelper()->checkbox('multi_seriado', ['label' => 'Multisseriado', 'value' => $this->multi_seriado]);
         $this->inputsHelper()->checkbox('recurso_fundeb', ['label' => 'Recursos Fundeb', 'value' => $this->recurso_fundeb]);
-        $this->inputsHelper()->checkbox('ativo', ['label' => 'Inativar Servidor', 'value' => $this->ativo ? 0 : 1]);
+        $this->inputsHelper()->checkbox('ativo', ['label' => 'Inativar Cadastro', 'value' => $this->ativo ? 0 : 1]);
 
         // Dados do docente no Inep/Educacenso.
         if ($this->docente) {
