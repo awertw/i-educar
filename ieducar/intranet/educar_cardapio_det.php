@@ -3,6 +3,7 @@ use iEducar\Legacy\Model;
 use App\Models\MerendaCardapio;
 use App\Models\CardapioCurso;
 use App\Models\Curso;
+use App\Models\TurmaTurno;
 
 return new class extends clsDetalhe {
     /**
@@ -14,6 +15,7 @@ return new class extends clsDetalhe {
     public $id;
     public $unidade;
     public $descricao;
+    public $cod_turno;
     public $ativo;
     public $pessoa_logada;
 
@@ -46,7 +48,12 @@ return new class extends clsDetalhe {
   
   
 
+        $turnos = TurmaTurno::where('id', $cardapio->cod_turno)->get();
     
+        $det_turno = "";
+        foreach($turnos as $turno){
+          $det_turno = $turno['nome'];  
+        }
 
 
            $this->addDetalhe([ 'Código', $cardapio->id]);
@@ -54,6 +61,7 @@ return new class extends clsDetalhe {
            $this->addDetalhe([ 'Descrição', $cardapio->descricao]);
            $this->addDetalhe([ 'Cursos', $lista_cursos]);
            $this->addDetalhe([ 'Preparo', $cardapio->preparo]);
+           $this->addDetalhe([ 'Turno', $det_turno]);
            
        
 

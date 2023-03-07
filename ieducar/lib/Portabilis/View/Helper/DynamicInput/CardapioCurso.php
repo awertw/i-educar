@@ -2,7 +2,7 @@
 
 use App\Models\MerendaCardapio;
 use App\Models\CardapioCurso;
-use App\Models\Curso;
+use App\Models\TurmaTurno;
 
 class Portabilis_View_Helper_DynamicInput_CardapioCurso extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
@@ -14,42 +14,35 @@ class Portabilis_View_Helper_DynamicInput_CardapioCurso extends Portabilis_View_
     protected function inputOptions($options)
     {
         $resources = $options['resources'];
-        $cursoId = $this->getTurmaId($options['cursoId'] ?? null);
+        $cursoId = $this->getCursoId($options['cursoId'] ?? null);
        
 
         if(!empty($cursoId)){
             $cardapio_curso = CardapioCurso::where('cod_curso', $cursoId)->get();
             foreach($cardapio_curso as $cardapio_cs){
+              
 
-            $cardapio = MerendaCardapio::where('id', $cardapio_cs->servidor_id)->get();
+            $cardapio = MerendaCardapio::where('id', $cardapio_cs->cod_cardapio)->get();
                 foreach($cardapio as $cardapios){
 
-                    $options[
-                        '__' . $cardapios->id
-                    ] = [
-                        'value' => mb_strtoupper($cardapios->id." - ".$cardapios->descricao, 'UTF-8'),
-                        'checked' => "checked",
-                        'group' => ''
-                    ];
+                    $turnos = TurmaTurno::where('id', $cardapios->cod_turno)->get();
+    
+                    $det_turno = "";
+                    foreach($turnos as $turno){
+                    $det_turno = $turno['nome'];  
+                    }
 
+                    $resources[$cardapios->id] = $cardapios->id.' - '.$cardapios->descricao." - ". $det_turno;
+
+              
                 }
 
             }
 
-        } else{
-
-           
-
-                    $cardapio = MerendaCardapio::get();
-                    foreach($cardapio as $cardapios){
-
-                        $resources[$cardapios->id] = $cardapios->id.' - '.$cardapios->descricao;
-
-
-                    }
-
-
         }
+            
+
+        
        
         $ultimo_descricao = 'Selecione um cardápio';
 

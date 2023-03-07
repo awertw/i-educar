@@ -2,6 +2,11 @@
 
 use App\Models\LegacyIndividual;
 use App\Models\Turma;
+use App\Models\CardapioTurma;
+use App\Models\MerendaCardapio;
+use App\Models\TurmaTurno;
+
+
 return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -43,7 +48,9 @@ return new class extends clsListagem {
 
         $this->campoOculto("pessoaLogada", $this->pessoa_logada);
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'anoLetivo', 'curso', 'cardapioCurso'], ['required' => false]);
+        $this->inputsHelper()->input('ano', 'ano');
+
+        $this->inputsHelper()->dynamic(['instituicao', 'escola',  'curso', 'cardapioCurso'], ['required' => true]);
           // data nascimento
 
      
@@ -60,8 +67,10 @@ return new class extends clsListagem {
         // Paginador
        
         $this->addCabecalhos([
-            "<input type='checkbox' id='cod_turma_checkbox[]' style='margin-left: 0px;'></input>",
+           
             'Nome da turma ',
+            'Cardápio ',
+            'Status',
             'Ação',
         ]);
 
@@ -107,25 +116,60 @@ return new class extends clsListagem {
                
                 $lista_busca = [];
 
-                $lista_busca[] = "<input type='checkbox' id='cod_turma_checkbox[{$registro['cod_turma']}]' name='servidor_usuario_checkbox[]'></input>";
 
                 $lista_busca[] = "<span>{$registro['nm_turma']}</span>";
 
+                $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
+                $turnos = TurmaTurno::find($cardapio->cod_turno);
+    
+       
+
+                $lista_busca[] = "<span>{$cardapio['descricao']} ({$turnos['nome']})</span>";
+
+                $cardapioTurmas = CardapioTurma::where('cod_turma', $registro['cod_turma'])->where('cod_cardapio', $_GET['ref_cod_cardapio_curso'])->where('data', $_GET['data_aplicacao'])->get();
+
+                $contador = 0;
+                $id_cardapio = 0;
+                foreach( $cardapioTurmas as  $cardapioTurma){
+                    $contador++;
+                    $id_cardapio = $cardapioTurma['id'];
+                }
+
+                if($contador>0){
+                    $lista_busca[] = "<span>Aplicado</span>";
+                    $lista_busca[] = 
+                    "
+                        <a
+                            id='turma_cardapio[{$registro['cod_turma']}]'
+                            
+                            style='width: 120px;'
+                            class='btn btn-danger'
+                            href='educar_desfazer_cardapio.php?cod_cardapio_turma=".$id_cardapio."'
+
+
+                        >
+                         <b>x</b> ".$_GET['data_aplicacao']."  Desfazer 
+                        </a>
+                    ";
+                }else{
+                    $lista_busca[] = "<span>Não Aplicado</span>";
+                    $lista_busca[] = 
+                    "
+                        <a
+                            id='turma_cardapio[{$registro['cod_turma']}]'
+                            style='width: 120px;'
+                            class='btn btn-success'
+                            href='educar_aplicar_cardapio.php?cod_turma=".$registro['cod_turma']."&cod_escola=".$_GET['ref_cod_escola']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso']."'
+
+                        >
+                            Aplicar cardápio
+                        </a>
+                    ";
+
+                }
                
 
-                
-                        $lista_busca[] = 
-                        "
-                            <button
-                                id='servidor_usuario_btn[{$registro['cod_turma']}]'
-                                name='servidor_usuario_btn[]'
-                                style='width: 120px;'
-                                class='btn btn-danger'
-                                onclick='(function(e){iniciaAtivacaoUsuarioServidor(e, {$registro['cod_turma']})})(event)'
-                            >
-                                Remover Cardápio
-                            </button>
-                        ";
+                      
                   
                 
 
@@ -143,8 +187,11 @@ return new class extends clsListagem {
         ]);
 
         // CASO ALTERE O NOME DOS BOTÕES, DEVE CORRIGIR A LÓGICA EM SERVIDORUSUARIO.JS
-        $this->array_botao[] = ['name' => 'Aplicar cardápio', 'css-extra' => 'botoes-selecao-usuarios-servidores'];
-        $this->array_botao[] = ['name' => 'Aplicar para todas as turmas', 'css-extra' => 'botoes-selecao-usuarios-servidores'];
+
+        $this->array_botao_url[] ="educar_aplicar_todos_cardapio.php?cod_curso=".$_GET['ref_cod_curso']."&cod_escola=".$_GET['ref_cod_escola']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso'];
+
+        $this->array_botao[] = ['name' => 'Aplicar para todas as turmas', 'css-extra' => 'btn-green'];
+      
     }
 
     public function __construct () {
@@ -154,7 +201,7 @@ return new class extends clsListagem {
 
     public function loadAssets () {
         $scripts = [
-            '/modules/Cadastro/Assets/Javascripts/ServidorUsuario.js',
+            '/modules/Cadastro/Assets/Javascripts/CardapioTurma.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);

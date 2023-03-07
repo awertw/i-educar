@@ -4,6 +4,7 @@ use iEducar\Legacy\Model;
 use App\Models\MerendaCardapio;
 use App\Models\CardapioCurso;
 use App\Models\Curso;
+use App\Models\TurmaTurno;
 
 return new class extends clsCadastro {
 
@@ -15,6 +16,7 @@ return new class extends clsCadastro {
     public $curso_ids;
     public $dia_semana;
     public $preparo;
+    public $turno;
     
 
    
@@ -134,8 +136,29 @@ return new class extends clsCadastro {
 
   
     $this->campoLista('dia_semana', 'Dia da Semana', $selectOptionsdiaSemana, $this->dia_semana, '', true, '', '', '', true);
-       
+      
+
+
+
+    $selectOptionsTurno = [];
+    
+    $turnos =   TurmaTurno::where('ativo', 1)->get();
+
+    foreach($turnos as $turno){
+   
+        $selectOptionsTurno[$turno['id']] = $turno['id']." - ".$turno['nome'];
+
+
+      
+     }
      
+     $selectOptionsTurno = array_replace([null => 'Selecione'], $selectOptionsTurno);
+
+  
+    $this->campoLista('turno', 'Turno', $selectOptionsTurno, $this->turno, '', true, '', '', '', true);
+      
+
+
  
     }
 
@@ -163,7 +186,8 @@ return new class extends clsCadastro {
                 'id' => $id_cardapio,
                 'descricao' => $this->descricao,
                 'dia_semana' => $dia,
-                'preparo' => $this->preparo
+                'preparo' => $this->preparo,
+                'cod_turno' => $this->turno
                
               ]);
        
@@ -222,7 +246,8 @@ return new class extends clsCadastro {
         MerendaCardapio::where('id', $_GET['id'])->update([
             'descricao' => $this->descricao,
             'dia_semana' => $dia,
-            'preparo' => $this->preparo
+            'preparo' => $this->preparo,
+            'cod_turno' => $this->turno
            
           
           

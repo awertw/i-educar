@@ -2,6 +2,7 @@
 use App\Models\MerendaCardapio;
 use App\Models\CardapioCurso;
 use App\Models\Curso;
+use App\Models\TurmaTurno;
 
 
 
@@ -29,10 +30,18 @@ class CardapioCursoController extends ApiCoreController
             $cardapio = MerendaCardapio::where('id', $cardapios_curso->cod_cardapio)->get(); 
             foreach($cardapio as $cardapios){
 
+
+                $turnos = TurmaTurno::where('id', $cardapios->cod_turno)->get();
+    
+                $det_turno = "";
+                foreach($turnos as $turno){
+                $det_turno = $turno['nome'];  
+                }
+
                 $options[
                     '__' . $cardapios->id
                 ] = [
-                    'value' => mb_strtoupper($cardapios->id." - ".$cardapios->descricao, 'UTF-8'),
+                    'value' => mb_strtoupper($cardapios->id." - ".$cardapios->descricao." - ".$det_turno, 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];
