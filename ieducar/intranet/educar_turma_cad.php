@@ -689,6 +689,11 @@ return new class extends clsCadastro {
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Turma.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+
+        if ($this->retorno === 'Editar') {
+            $this->array_botao[] = 'Atualizar etapas';
+            $this->array_botao_url_script[] = sprintf('atualizarEtapas()');
+        }
     }
 
     protected function obrigaCamposHorario()
