@@ -108,9 +108,15 @@ class clsPmieducarServidor extends Model
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
             $gruda = ', ';
-            $campos .= "{$gruda}ativo";
-            $valores .= "{$gruda}'1'";
-            $gruda = ', ';
+            if (dbBool($this->ativo)) {
+                $campos .= "{$gruda}ativo";
+                $valores .= "{$gruda} FALSE ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}ativo";
+                $valores .= "{$gruda} TRUE ";
+                $gruda = ', ';
+            }
             if (is_numeric($this->ref_cod_instituicao)) {
                 $campos .= "{$gruda}ref_cod_instituicao";
                 $valores .= "{$gruda}'{$this->ref_cod_instituicao}'";
@@ -143,11 +149,11 @@ class clsPmieducarServidor extends Model
 
             if (dbBool($this->recurso_fundeb)) {
                 $campos .= "{$gruda}recurso_fundeb";
-                $valores .= "{$gruda} TRUE ";
+                $valores .= "{$gruda} FALSE ";
                 $gruda = ', ';
             } else {
                 $campos .= "{$gruda}recurso_fundeb";
-                $valores .= "{$gruda} FALSE ";
+                $valores .= "{$gruda} TRUE ";
                 $gruda = ', ';
             }
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
@@ -188,8 +194,11 @@ class clsPmieducarServidor extends Model
             }
             $set .= "{$gruda}data_exclusao = NOW()";
             $gruda = ', ';
-            if (is_numeric($this->ativo)) {
-                $set .= "{$gruda}ativo = '{$this->ativo}'";
+            if (dbBool($this->ativo)) {
+                $set .= "{$gruda}ativo = 0";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}ativo = 1";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_subnivel)) {
