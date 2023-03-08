@@ -4,7 +4,21 @@ use App\Models\LegacyIndividual;
 use App\Models\Turma;
 use App\Models\CardapioTurma;
 
-$data = CardapioTurma::latest('id')->first();
+
+
+    $cardapioTurmas = CardapioTurma::where('cod_turma', $_GET['cod_turma'])->where('cod_cardapio', $_GET['cod_cardapio'])->where('data', $_GET['data_aplicacao'])->get();
+
+    $contador = 0;
+    $id_cardapio = 0;
+    foreach( $cardapioTurmas as  $cardapioTurma){
+        $contador++;
+        $id_cardapio = $cardapioTurma['id'];
+    }
+
+    if($contador>0){
+
+    }else{
+        $data = CardapioTurma::latest('id')->first();
         $id_cardapio = $data->id + 1;
 
        
@@ -13,9 +27,14 @@ $data = CardapioTurma::latest('id')->first();
                 'cod_escola'=>$_GET['cod_escola'],
                 'cod_turma'=>$_GET['cod_turma'],
                 'data'=>$_GET['data_aplicacao'],
-                'cod_cardapio'=>$_GET['cod_cardapio']
+                'cod_cardapio'=>$_GET['cod_cardapio'],
+                'turno'=>$_GET['cod_turno']
                
               ]);
+
+    }
+
+       
        
 
 echo"<script> window.location.replace('educar_cardapio_turma_lst.php');</script>";

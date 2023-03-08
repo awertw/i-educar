@@ -65,14 +65,32 @@ return new class extends clsListagem {
         $this->inputsHelper()->date('data_aplicacao', $options);
 
         // Paginador
+
+        
+
+
+        $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
+        $diasemana = array("Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado");
+
+        $dia_sem= date('d/m/Y',  strtotime($_GET['data_aplicacao']));               
+  
+        $diasemana_numero = date('w', strtotime($dia_sem));
+
+    if($diasemana[$diasemana_numero]!=$cardapio['dia_semana']){
+        $acao = "Ação <br> <br>
+        <b style='color:red'>Não é possivel aplicar o cardápio na data selecionada <br> dia disponível: {$cardapio['dia_semana']} </b>";
+    }else{
+        $acao =   "Ação";  
+    }
        
         $this->addCabecalhos([
            
             'Nome da turma ',
             'Cardápio ',
             'Status',
-            'Ação',
+            $acao,
         ]);
+        
 
         $limite = 20;
         $this->limite = 20;
@@ -128,6 +146,9 @@ return new class extends clsListagem {
 
                 $lista_busca[] = "<span>{$registro['nm_turma']}</span>";
 
+                            
+              
+
                 if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao'])){
 
                     $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
@@ -154,6 +175,14 @@ return new class extends clsListagem {
                     $id_cardapio = $cardapioTurma['id'];
                 }
                 if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao']) ){
+
+                    $diasemana = array("Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado");
+
+                    $dia_sem= date('d/m/Y',  strtotime($_GET['data_aplicacao']));               
+              
+                    $diasemana_numero = date('w', strtotime($dia_sem));
+                    
+    
                 if($contador>0){
                     $lista_busca[] = "<span>Aplicado</span>";
                     $lista_busca[] = 
@@ -169,21 +198,29 @@ return new class extends clsListagem {
                         >
                          <b>x</b> ".$_GET['data_aplicacao']."  Desfazer 
                         </a>
-                    ";
+                         ";
                 }else{
                     $lista_busca[] = "<span>Não Aplicado</span>";
-                    $lista_busca[] = 
-                    "
-                        <a
-                            id='turma_cardapio[{$registro['cod_turma']}]'
-                            style='width: 120px;'
-                            class='btn btn-success'
-                            href='educar_aplicar_cardapio.php?cod_turma=".$registro['cod_turma']."&cod_escola=".$_GET['ref_cod_escola']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso']."'
+                    $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
 
-                        >
-                            Aplicar cardápio
-                        </a>
-                    ";
+                    if($diasemana[$diasemana_numero]!=$cardapio['dia_semana']){
+                        $lista_busca[] = 
+                        "";
+                    }else{
+                        $lista_busca[] = 
+                        "
+                        <a
+                                id='turma_cardapio[{$registro['cod_turma']}]'
+                                style='width: 120px;'
+                                class='btn btn-success'
+                                href='educar_aplicar_cardapio.php?cod_turma=".$registro['cod_turma']."&cod_escola=".$_GET['ref_cod_escola']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso']."&cod_turno=".$cardapio->cod_turno."'
+    
+                            >
+                                Aplicar cardápio
+                            </a>
+                        ";
+                    }
+                  
 
                 }
             }else{ $lista_busca[] = ""; $lista_busca[] = "";}

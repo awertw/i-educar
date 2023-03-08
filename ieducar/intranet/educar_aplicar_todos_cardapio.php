@@ -32,7 +32,8 @@ use App\Models\CardapioTurma;
                         'cod_escola'=> $_GET['cod_escola'],
                         'cod_turma'=> $turma_registro['cod_turma'],
                         'data'=> $_GET['data_aplicacao'],
-                        'cod_cardapio'=> $_GET['cod_cardapio']
+                        'cod_cardapio'=> $_GET['cod_cardapio'],
+                        'turno'=> $_GET['cod_turno']
                        
                       ]);
 
@@ -41,6 +42,6 @@ use App\Models\CardapioTurma;
 
         }
        
-       
+        
 
 echo"<script> window.location.replace('educar_cardapio_turma_lst.php');</script>";
