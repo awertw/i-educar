@@ -5,8 +5,9 @@ use App\Models\Turma;
 use App\Models\CardapioTurma;
 
 
-
-    $cardapioTurmas = CardapioTurma::where('cod_turma', $_GET['cod_turma'])->where('cod_cardapio', $_GET['cod_cardapio'])->where('data', $_GET['data_aplicacao'])->get();
+$dia_sem = str_replace("/", "-", $_GET['data_aplicacao']);
+$dia_sem= date('Y-m-d',  strtotime( $dia_sem));        
+    $cardapioTurmas = CardapioTurma::where('cod_turma', $_GET['cod_turma'])->where('cod_cardapio', $_GET['cod_cardapio'])->where('data', $dia_sem)->get();
 
     $contador = 0;
     $id_cardapio = 0;
@@ -26,7 +27,7 @@ use App\Models\CardapioTurma;
                 'id' => $id_cardapio,
                 'cod_escola'=>$_GET['cod_escola'],
                 'cod_turma'=>$_GET['cod_turma'],
-                'data'=>$_GET['data_aplicacao'],
+                'data'=>$dia_sem,
                 'cod_cardapio'=>$_GET['cod_cardapio'],
                 'turno'=>$_GET['cod_turno']
                

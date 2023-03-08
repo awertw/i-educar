@@ -72,13 +72,15 @@ return new class extends clsListagem {
         $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
         $diasemana = array("Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado");
 
-        $dia_sem= date('d/m/Y',  strtotime($_GET['data_aplicacao']));               
+        $dia_sem = str_replace("/", "-", $_GET['data_aplicacao']);
+
+        $dia_sem= date('Y-m-d',  strtotime( $dia_sem));               
   
         $diasemana_numero = date('w', strtotime($dia_sem));
 
     if($diasemana[$diasemana_numero]!=$cardapio['dia_semana']){
         $acao = "Ação <br> <br>
-        <b style='color:red'>Não é possivel aplicar o cardápio na data selecionada <br> dia disponível: {$cardapio['dia_semana']} </b>";
+        <b style='color:red'>Não é possivel aplicar o cardápio na data selecionada <br> dia disponível: {$cardapio['dia_semana']}<br>dia especificado: {$diasemana[$diasemana_numero]} </b>";
     }else{
         $acao =   "Ação";  
     }
@@ -163,10 +165,12 @@ return new class extends clsListagem {
        
 
                
-
+               
                 if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao'])){
+                    $dia_sem = str_replace("/", "-", $_GET['data_aplicacao']);
+                    $dia_sem= date('Y-m-d',  strtotime( $dia_sem));   
 
-                $cardapioTurmas = CardapioTurma::where('cod_turma', $registro['cod_turma'])->where('cod_cardapio', $_GET['ref_cod_cardapio_curso'])->where('data', $_GET['data_aplicacao'])->get();
+                   $cardapioTurmas = CardapioTurma::where('cod_turma', $registro['cod_turma'])->where('cod_cardapio', $_GET['ref_cod_cardapio_curso'])->where('data', $dia_sem)->get();
                 }
                 $contador = 0;
                 $id_cardapio = 0;
@@ -202,6 +206,12 @@ return new class extends clsListagem {
                 }else{
                     $lista_busca[] = "<span>Não Aplicado</span>";
                     $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
+
+                    $dia_sem = str_replace("/", "-", $_GET['data_aplicacao']);
+
+                    $dia_sem= date('Y-m-d',  strtotime( $dia_sem));               
+            
+                    $diasemana_numero = date('w', strtotime($dia_sem));
 
                     if($diasemana[$diasemana_numero]!=$cardapio['dia_semana']){
                         $lista_busca[] = 
