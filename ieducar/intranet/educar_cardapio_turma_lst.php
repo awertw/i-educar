@@ -56,7 +56,7 @@ return new class extends clsListagem {
      
           $options = [
             'required' => true,
-            'label' => 'Data aplicação',
+            'label' => 'Data',
             'placeholder' => '',
             'value' => $this->data_aplicacao,
             'size' => 19
