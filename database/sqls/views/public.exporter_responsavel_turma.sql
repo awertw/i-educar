@@ -181,20 +181,20 @@ SELECT p.id,
     COALESCE( ci."name"||' - '||st.abbreviation , 'Não informado') as birthplace_mae
 
    FROM exporter_person p
-     JOIN fisica fs ON p.id = fs.idpes
-     JOIN aluno a ON p.id = a.ref_idpes::numeric
-     LEFT JOIN matricula m ON m.ref_cod_aluno = a.cod_aluno
-     JOIN escola e ON e.cod_escola = m.ref_ref_cod_escola
-     LEFT JOIN pessoa ep ON ep.idpes = e.ref_idpes::numeric
-     JOIN serie s ON s.cod_serie = m.ref_ref_cod_serie
-     JOIN curso c ON c.cod_curso = m.ref_cod_curso
-     LEFT JOIN matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula
+     JOIN cadastro.fisica fs ON p.id = fs.idpes
+     JOIN pmieducar.aluno a ON p.id = a.ref_idpes::numeric
+     LEFT JOIN pmieducar.matricula m ON m.ref_cod_aluno = a.cod_aluno
+     JOIN pmieducar.escola e ON e.cod_escola = m.ref_ref_cod_escola
+     LEFT JOIN cadastro.pessoa ep ON ep.idpes = e.ref_idpes::numeric
+     JOIN pmieducar.serie s ON s.cod_serie = m.ref_ref_cod_serie
+     JOIN pmieducar.curso c ON c.cod_curso = m.ref_cod_curso
+     LEFT JOIN pmieducar.matricula_turma mt ON mt.ref_cod_matricula = m.cod_matricula
      JOIN relatorio.view_situacao vs ON vs.cod_matricula = m.cod_matricula AND vs.cod_turma = mt.ref_cod_turma AND vs.sequencial = mt.sequencial
-     JOIN turma t ON t.cod_turma = mt.ref_cod_turma
-     LEFT JOIN educacenso_cod_escola ece ON e.cod_escola = ece.cod_escola
-     LEFT JOIN turma_turno tt ON tt.id = t.turma_turno_id
-     LEFT JOIN turma_turno tm ON tm.id = mt.turno_id
-     LEFT JOIN moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
+     JOIN pmieducar.turma t ON t.cod_turma = mt.ref_cod_turma
+     LEFT JOIN modules.educacenso_cod_escola ece ON e.cod_escola = ece.cod_escola
+     LEFT JOIN pmieducar.turma_turno tt ON tt.id = t.turma_turno_id
+     LEFT JOIN pmieducar.turma_turno tm ON tm.id = mt.turno_id
+     LEFT JOIN modules.moradia_aluno ma ON ma.ref_cod_aluno = a.cod_aluno
 
      LEFT JOIN cadastro.fisica f ON f.idpes = guardian_id
      LEFT JOIN cadastro.pessoa pr ON pr.idpes = guardian_id
