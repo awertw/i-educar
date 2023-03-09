@@ -1452,6 +1452,7 @@ return new class extends clsCadastro {
         }
     }
 
+
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
@@ -2094,7 +2095,7 @@ return new class extends clsCadastro {
             'resources' => SelectOptions::schoolManagerRoles(),
             'required' => false,
         ];
-        
+
         $this->inputsHelper()->select('managers_role_id', $options);
         $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do(a) gestor(a)</a>');
         $this->campoOculto('managers_access_criteria_id', null);
