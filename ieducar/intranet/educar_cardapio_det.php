@@ -4,6 +4,7 @@ use App\Models\MerendaCardapio;
 use App\Models\CardapioCurso;
 use App\Models\Curso;
 use App\Models\TurmaTurno;
+use App\Models\CardapioTurma;
 
 return new class extends clsDetalhe {
     /**
@@ -62,13 +63,34 @@ return new class extends clsDetalhe {
            $this->addDetalhe([ 'Cursos', $lista_cursos]);
            $this->addDetalhe([ 'Preparo', $cardapio->preparo]);
            $this->addDetalhe([ 'Turno', $det_turno]);
+           $status= '';
+           if($cardapio->inativo){
+            $status = 'Inativo';
+           }else{
+            $status = 'Ativo';
+           }
+           
+           $this->addDetalhe([ 'Status', $status]);
+           $cardapioTurmas = CardapioTurma::where('cod_cardapio', $cardapio->id)->get();
+            $contador = 0;
+            foreach( $cardapioTurmas as  $cardapioTurma){
+                $contador++;
+               
+            }
+            if($contador>0){
+                
+                $this->addDetalhe([ '<b style="color:red">AVISO</b>', "<div style='color:red'>O caradapio não pode ser excluido ou editado porque ele foi aplicado em turmas.</div>"]);
+            }
+
            
        
 
         $obj_permissao = new clsPermissoes();
         if ($obj_permissao->permissao_cadastra(9212, $this->pessoa_logada, 7)) {
             $this->url_novo = 'educar_cardapio_cad.php';
+            if($contador==0){
             $this->url_editar = "educar_cardapio_cad.php?id={$this->id}";
+            }
         }
 
         $this->url_cancelar = 'educar_cardapio_lst.php';

@@ -17,6 +17,7 @@ return new class extends clsCadastro {
     public $dia_semana;
     public $preparo;
     public $turno;
+    public $inativo;
     
 
    
@@ -42,7 +43,26 @@ return new class extends clsCadastro {
                     $this->descricao = $cardapio->descricao;
                     $this->unidade = $cardapio->unidade;
                     $this->preparo = $cardapio->preparo;
-                    $this->dia_semana = $cardapio->dia_semana;
+
+                    if($cardapio->dia_semana=='Segunda-Feira'){
+                       $this->dia_semana=1;
+                    }elseif($cardapio->dia_semana=="Terça-Feira"){
+                        $this->dia_semana=2;
+                    }elseif($cardapio->dia_semana=="Quarta-Feira"){
+                        $this->dia_semana=3;
+                    }elseif($cardapio->dia_semana=="Quinta-Feira"){
+                        $this->dia_semana=4;
+                    }elseif($cardapio->dia_semana=="Sexta-Feira"){
+                        $this->dia_semana=5;
+                    }elseif($cardapio->dia_semana=="Sábado"){
+                        $this->dia_semana=6;
+                    }elseif($cardapio->dia_semana=="Domingo"){
+                        $this->dia_semana=7;
+                    }
+
+                    
+                    $this->turno = $cardapio->cod_turno;
+                    $this->inativo = $cardapio->inativo;
                  
            }
          
@@ -76,7 +96,16 @@ return new class extends clsCadastro {
         $this->campoTexto('descricao', 'Descrição', $this->descricao, '50', '255', true);
            
 
+          
+     
        
+        $obs_options = [
+            'required' => false,
+            'label' => 'Preparo',
+            'value' => $this->preparo
+        ];
+        $this->inputsHelper()->textArea('preparo', $obs_options);
+
         $selectOptionsCurso = [];
  
         $cursos = Curso::all();
@@ -104,16 +133,7 @@ return new class extends clsCadastro {
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
       
-        
      
-       
-        $obs_options = [
-            'required' => false,
-            'label' => 'Preparo',
-            'value' => $this->preparo
-        ];
-        $this->inputsHelper()->textArea('preparo', $obs_options);
-
        
         $selectOptionsdiaSemana = [];
 
@@ -135,7 +155,7 @@ return new class extends clsCadastro {
     $selectOptionsdiaSemana = array_replace([null => 'Selecione'], $selectOptionsdiaSemana);
 
   
-    $this->campoLista('dia_semana', 'Dia da Semana', $selectOptionsdiaSemana, $this->dia_semana, '', true, '', '', '', true);
+    $this->campoLista('dia_semana', 'Dia da Semana', $selectOptionsdiaSemana, $this->dia_semana, '', false, '', '', '', true);
       
 
 
@@ -155,8 +175,14 @@ return new class extends clsCadastro {
      $selectOptionsTurno = array_replace([null => 'Selecione'], $selectOptionsTurno);
 
   
-    $this->campoLista('turno', 'Turno', $selectOptionsTurno, $this->turno, '', true, '', '', '', true);
+    $this->campoLista('turno', 'Turno', $selectOptionsTurno, $this->turno, '', false, '', '', '', true);
       
+
+    //inativo
+    $options = ['label' => 'Inativo', 'required' => false, 'value' => dbBool($this->inativo)];
+
+    $this->inputsHelper()->checkbox('inativo', $options);
+
 
 
  
@@ -187,7 +213,8 @@ return new class extends clsCadastro {
                 'descricao' => $this->descricao,
                 'dia_semana' => $dia,
                 'preparo' => $this->preparo,
-                'cod_turno' => $this->turno
+                'cod_turno' => $this->turno,
+                'inativo' => $this->inativo
                
               ]);
        
@@ -247,7 +274,8 @@ return new class extends clsCadastro {
             'descricao' => $this->descricao,
             'dia_semana' => $dia,
             'preparo' => $this->preparo,
-            'cod_turno' => $this->turno
+            'cod_turno' => $this->turno,
+            'inativo' => $this->inativo
            
           
           

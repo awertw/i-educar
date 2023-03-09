@@ -22,7 +22,7 @@ class Portabilis_View_Helper_DynamicInput_CardapioCurso extends Portabilis_View_
             foreach($cardapio_curso as $cardapio_cs){
               
 
-            $cardapio = MerendaCardapio::where('id', $cardapio_cs->cod_cardapio)->get();
+            $cardapio = MerendaCardapio::where('id', $cardapio_cs->cod_cardapio)->where('inativo', null)->get();
                 foreach($cardapio as $cardapios){
 
                     $turnos = TurmaTurno::where('id', $cardapios->cod_turno)->get();
