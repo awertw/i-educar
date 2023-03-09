@@ -22,6 +22,8 @@ class QuadroHorarioHorarios extends Model
         'ref_cod_disciplina',
         'ref_cod_serie',
         'ref_servidor',
+        'ref_cod_servidor_substituto_1',
+        'ref_cod_servidor_substituto_2',
         'ativo'
     ];
 
@@ -37,6 +39,16 @@ class QuadroHorarioHorarios extends Model
     public function employee()
     {
         return $this->hasOne(Employee::class, 'cod_servidor', 'ref_servidor');
+    }
+
+    public function employeeSubstitutoOne()
+    {
+        return $this->hasOne(Employee::class, 'cod_servidor', 'ref_cod_servidor_substituto_1');
+    }
+
+    public function employeeSubstitutoTwo()
+    {
+        return $this->hasOne(Employee::class, 'cod_servidor', 'ref_cod_servidor_substituto_2');
     }
 
     public function curricularComponent()

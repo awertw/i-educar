@@ -18,6 +18,7 @@ class ExportService
         $this->dataConverter = $dataConverter;
     }
 
+    //REFACTOR
     public function export(array $filters)
     {
         $export = '';
@@ -47,8 +48,8 @@ class ExportService
 
         $codigoUnidGestora = $dom->createElement("edu:codigoUnidGestora", str_pad($institution['cod_unidade_gestora'], 6, '00', STR_PAD_LEFT));
         $nomeUnidGestora = $dom->createElement("edu:nomeUnidGestora", $institution['nm_responsavel']);
-        $cpfResponsavel = $dom->createElement("edu:cpfResponsavel", $this->dataConverter->removeCharacters($cpfResponsavel));
-        $cpfGestor = $dom->createElement("edu:cpfGestor", $this->dataConverter->removeCharacters($cpfGestor));
+        $cpfResponsavel = $dom->createElement("edu:cpfResponsavel", str_pad($this->dataConverter->removeCharacters($cpfResponsavel), 11, '0', STR_PAD_LEFT));
+        $cpfGestor = $dom->createElement("edu:cpfGestor", str_pad($this->dataConverter->removeCharacters($cpfGestor), 11, '0', STR_PAD_LEFT));
         $anoReferencia = $dom->createElement("edu:anoReferencia", $adapterFilters['year']);
         $mesReferencia = $dom->createElement("edu:mesReferencia", $adapterFilters['month']);
         $versaoXml = $dom->createElement("edu:versaoXml", 0); //CONFIRMAR
@@ -149,7 +150,7 @@ class ExportService
 
                         $personCpf =  $this->dataConverter->removeCharacters($schoolClassEnrollment->registration->student->person->individual->cpf);
 
-                        $studentCpf = $dom->createElement("edu:cpfAluno", (!empty($personCpf) ? $personCpf : '00000000000'));
+                        $studentCpf = $dom->createElement("edu:cpfAluno", (!empty($personCpf) ? str_pad($personCpf, 11, '0', STR_PAD_LEFT) : '00000000000'));
                         $studenDateNascimento = $dom->createElement("edu:data_nascimento", $schoolClassEnrollment->registration->student->person->individual->data_nasc);
                         $studentName = $dom->createElement("edu:nome", $schoolClassEnrollment->registration->student->person->name);
                         $studentPcd = $dom->createElement("edu:pcd", ($schoolClassEnrollment->registration->student->person->deficiencies->isEmpty() ? 0 : 1));
@@ -200,7 +201,7 @@ class ExportService
                         $horaryDuration  = $dom->createElement("edu:duracao", ($finalYear ? $horaryTimeTable->qtd_atulas : 4));
                         $horaryInitialHour  = $dom->createElement("edu:hora_inicio", $horaryTimeTable->hora_inicial);
                         $horaryDiscipline  = $dom->createElement("edu:disciplina", $nameCurricularComponent);
-                        $horaryServidor  = $dom->createElement("edu:cpfProfessor", $horaryTimeTable->employee->person->individual->cpf);
+                        $horaryServidor  = $dom->createElement("edu:cpfProfessor", str_pad($horaryTimeTable->employee->person->individual->cpf, 11, '0', STR_PAD_LEFT));
 
                         $schoolClassHoraryDom->appendChild($horaryDayWeekend);
                         $schoolClassHoraryDom->appendChild($horaryDuration);
@@ -210,12 +211,12 @@ class ExportService
 
 
                         if (!empty($horaryTimeTable->ref_cod_servidor_substituto_1)) {
-                            $horaryServidorSubstituto  = $dom->createElement("edu:cpfProfessor", $horaryTimeTable->ref_cod_servidor_substituto_1);
+                            $horaryServidorSubstituto  = $dom->createElement("edu:cpfProfessor", str_pad($horaryTimeTable->employeeSubstitutoOne->person->individual->cpf, 11, '0', STR_PAD_LEFT));
                             $schoolClassHoraryDom->appendChild($horaryServidorSubstituto);
                         }
 
                         if (!empty($horaryTimeTable->ref_cod_servidor_substituto_2)) {
-                            $horaryServidorSubstituto2  = $dom->createElement("edu:cpfProfessor", $horaryTimeTable->ref_cod_servidor_substituto_2);
+                            $horaryServidorSubstituto2  = $dom->createElement("edu:cpfProfessor", str_pad($horaryTimeTable->employeeSubstitutoTwo->person->individual->cpf, 11, '0', STR_PAD_LEFT));
                             $schoolClassHoraryDom->appendChild($horaryServidorSubstituto2);
                         }
 
@@ -237,7 +238,7 @@ class ExportService
                     $nrAto = $directorSchool->employee->person->ato;
                 }
 
-                $cpfDirector  = $dom->createElement("edu:cpfDiretor", $cpfDirectorSchool);
+                $cpfDirector  = $dom->createElement("edu:cpfDiretor", str_pad($cpfDirectorSchool, 11, '0', STR_PAD_LEFT));
                 $nrAtoDirector  = $dom->createElement("edu:nrAto", $nrAto);
 
                 $directorSchoolDom->appendChild($cpfDirector);
@@ -269,7 +270,7 @@ class ExportService
                 $cpfEmployeeSchool = $this->dataConverter->removeCharacters($employee->person->individual->cpf);
             }
 
-            $cpfEmployee  = $dom->createElement("edu:cpfProfissional", $cpfEmployeeSchool);
+            $cpfEmployee  = $dom->createElement("edu:cpfProfissional", str_pad($cpfEmployeeSchool, 11, '0', STR_PAD_LEFT));
             $specialtyEmployee  = $dom->createElement("edu:especialidade", $employee->employeeRoles()->first()->role->nm_funcao);
 
             $employeesDom->appendChild($cpfEmployee);
