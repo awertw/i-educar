@@ -27,7 +27,7 @@ class CardapioCursoController extends ApiCoreController
             foreach($cardapio_curso as $cardapios_curso){
 
             
-            $cardapio = MerendaCardapio::where('id', $cardapios_curso->cod_cardapio)->get(); 
+            $cardapio = MerendaCardapio::where('id', $cardapios_curso->cod_cardapio)->where('inativo', null)->get(); 
             foreach($cardapio as $cardapios){
 
 
