@@ -78,6 +78,12 @@ class ExportService
             $schoolClasses = $school->schoolClasses()->year($adapterFilters['year'])->active()->get();
 
             foreach ($schoolClasses as $schoolClass) {
+                $schoolClassEnrollments = $schoolClass->enrollments;
+
+                if (empty($schoolClassEnrollments)) {
+                    continue;
+                }
+
                 $schoolClassesDom = $dom->createElement("edu:turma");
 
                 $periodo = $dom->createElement("edu:periodo", 0); //VERIFICAR
@@ -128,7 +134,6 @@ class ExportService
                 }
 
                 //START MATRICULA
-                $schoolClassEnrollments = $schoolClass->enrollments;
 
                 foreach ($schoolClassEnrollments as $schoolClassEnrollment) {
                     if ($schoolClassEnrollment->registration) {
@@ -274,8 +279,13 @@ class ExportService
 
             $schoolIdExist = [];
             foreach ($schoolsEmployee as $schoolEmployee) {
+                if (empty($schoolEmployee->cod_escola)) {
+                    continue;
+                }
+
                 if (!in_array($schoolEmployee->cod_escola, $schoolIdExist)) {
                     $schoolIdExist[] = $schoolEmployee->cod_escola;
+
                     $schoolEmployee  = $dom->createElement("edu:idEscola", $schoolEmployee->cod_escola);
                     $employeesDom->appendChild($schoolEmployee);
                 }
