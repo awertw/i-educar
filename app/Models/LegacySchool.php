@@ -148,6 +148,11 @@ class LegacySchool extends Model
         return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_escola');
     }
 
+    public function menu()
+    {
+        return $this->hasMany(SchoolClassMenu::class, 'cod_escola', 'cod_escola');
+    }
+
     /**
      * @return HasMany
      */
@@ -164,5 +169,13 @@ class LegacySchool extends Model
     public function scopeActive(Builder $builder)
     {
         return $builder->where('escola.ativo', 1);
+    }
+
+    public function getSnackMenu()
+    {
+        return $this->menu()
+            ->with('snackMenu', function ($query) {
+                $query->whereNull('inativo');
+            })->get();
     }
 }

@@ -122,7 +122,7 @@ class Employee extends Model
         return $query->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
             ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
             ->where('funcao.professor', 0)
-            ->orWhere('funcao.nm_funcao', "!=",'Diretor');
+            ->where('funcao.nm_funcao', "!=",'Diretor');
     }
 
     public function scopeLastYear(Builder $query): Builder
