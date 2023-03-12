@@ -3,6 +3,7 @@
 use App\Models\City;
 use App\Models\State;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 return new class () extends Migration {
     public function up()
@@ -64,7 +65,18 @@ return new class () extends Migration {
 
         //cria a cidade
         if ($state_id = State::where('abbreviation', $state_abbreviation)->value('id')) {
-            City::create(compact('state_id', 'name', 'ibge_code'));
+            //fix id duplicado
+            $citiesSeq = DB::select('SELECT * FROM public.cities_id_seq;');
+
+            $id = 0;
+
+            if ($citiesSeq[0]) {
+                $id = $citiesSeq[0]->last_value;
+            }
+
+            $id++;
+
+            City::create(compact('id','state_id', 'name', 'ibge_code'));
         }
     }
 
