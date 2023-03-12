@@ -18,7 +18,7 @@ class ExportService
         $this->dataConverter = $dataConverter;
     }
 
-    //REFACTOR
+    //TODO: REFACTOR
     public function export(array $filters)
     {
         $export = '';
@@ -226,30 +226,49 @@ class ExportService
 
                 //END TURMA
 
-                //DIRETOR
-                $directorSchool = $school->schoolManagers()->where('role_id', 1)->first();
-                $directorSchoolDom = $dom->createElement("edu:diretor");
-
-                $cpfDirectorSchool = '00000000000';
-                $nrAto = '';
-
-                if ($directorSchool) {
-                    $cpfDirectorSchool = $this->dataConverter->removeCharacters($directorSchool->employee->person->individual->cpf);
-                    $nrAto = $directorSchool->employee->person->ato;
-                }
-
-                $cpfDirector  = $dom->createElement("edu:cpfDiretor", str_pad($cpfDirectorSchool, 11, '0', STR_PAD_LEFT));
-                $nrAtoDirector  = $dom->createElement("edu:nrAto", $nrAto);
-
-                $directorSchoolDom->appendChild($cpfDirector);
-                $directorSchoolDom->appendChild($nrAtoDirector);
-
                 $schoolsDom->appendChild($idEscola);
                 $schoolsDom->appendChild($schoolClassesDom);
-                $schoolsDom->appendChild($directorSchoolDom);
              }
 
+            //DIRETOR
+            $directorSchool = $school->schoolManagers()->where('role_id', 1)->first();
+            $directorSchoolDom = $dom->createElement("edu:diretor");
+
+            $cpfDirectorSchool = '00000000000';
+            $nrAto = '';
+
+            if ($directorSchool) {
+                $cpfDirectorSchool = $this->dataConverter->removeCharacters($directorSchool->employee->person->individual->cpf);
+                $nrAto = $directorSchool->employee->person->ato;
+            }
+
+            $cpfDirector  = $dom->createElement("edu:cpfDiretor", str_pad($cpfDirectorSchool, 11, '0', STR_PAD_LEFT));
+            $nrAtoDirector  = $dom->createElement("edu:nrAto", $nrAto);
+
+            $directorSchoolDom->appendChild($cpfDirector);
+            $directorSchoolDom->appendChild($nrAtoDirector);
+
+            $schoolsDom->appendChild($directorSchoolDom);
+
             //CARDAPIO
+            $schoolMenu = $school->getSnackMenu();
+
+            if ($schoolMenu) {
+                foreach ($schoolMenu as $menu) {
+                    $menuSchoolClassDom = $dom->createElement("edu:cardapio");
+                    $dataMenu  = $dom->createElement("edu:data", $menu->data);
+                    $turnoMenu  = $dom->createElement("edu:turno", $menu->turno);
+                    $descricaoMerendaMenu  = $dom->createElement("edu:descricao_merenda", $menu->snackMenu->descricao);
+                    $ajustadoMenu  = $dom->createElement("edu:ajustado", 0);
+
+                    $menuSchoolClassDom->appendChild($dataMenu);
+                    $menuSchoolClassDom->appendChild($turnoMenu);
+                    $menuSchoolClassDom->appendChild($descricaoMerendaMenu);
+                    $menuSchoolClassDom->appendChild($ajustadoMenu);
+
+                    $schoolsDom->appendChild($menuSchoolClassDom);
+                }
+            }
 
             //END ESCOLAS
         }

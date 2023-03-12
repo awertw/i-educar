@@ -279,6 +279,11 @@ class LegacySchoolClass extends Model
         return $this->hasMany(LegacySchoolClassGrade::class, 'turma_id');
     }
 
+    public function menu()
+    {
+        return $this->hasMany(SchoolClassMenu::class, 'cod_turma', 'cod_turma');
+    }
+
     /**
      * @return HasOne
      */
@@ -505,5 +510,13 @@ class LegacySchoolClass extends Model
     public function scopeYear($query, int $year)
     {
         return $query->where('ano', $year);
+    }
+
+    public function getSnackMenu()
+    {
+        return $this->menu()
+            ->with('snackMenu', function ($query) {
+                $query->whereNull('inativo');
+            })->get();
     }
 }

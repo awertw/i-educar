@@ -123,6 +123,16 @@ return new class extends clsListagem {
             }
         }
 
+        $servidor_id = null;
+
+        if ($eh_professor) {
+            $servidor_id = $this->pessoa_logada;
+        }
+
+        if (!empty($this->ref_cod_professor_componente)) {
+            $servidor_id = $this->ref_cod_professor_componente;
+        }
+
 
         $lista = $obj_plano->lista(
             $this->ano,
@@ -136,7 +146,7 @@ return new class extends clsListagem {
             $this->data_inicial,
             $this->data_final,
             $this->fase_etapa,
-            $this->ref_cod_professor_componente,
+            $servidor_id,
             null,
             empty($this->ref_cod_escola) ? $escolasUsuario : null
         );

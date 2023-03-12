@@ -217,7 +217,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         return null;
     }
- 
+
     /**
      * @throws App_Model_Exception
      * @throws StudentNotEnrolledInSchoolClass
@@ -1083,7 +1083,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $etapa = $mediaComponente->etapa;
             $qtdComponentes++;
             $media = $this->valorMediaSituacao($mediaComponente);
-            $somaMedias += $media;
+            $somaMedias += (int) $media;
 
             $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
