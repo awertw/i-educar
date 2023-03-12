@@ -25,7 +25,6 @@ $dia_sem= date('Y-m-d',  strtotime( $dia_sem));
        
             $cadastrou =   CardapioTurma::create( [
                 'id' => $id_cardapio,
-                'cod_escola'=>$_GET['cod_escola'],
                 'cod_turma'=>$_GET['cod_turma'],
                 'data'=>$dia_sem,
                 'cod_cardapio'=>$_GET['cod_cardapio'],

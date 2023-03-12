@@ -172,7 +172,7 @@ class clsModulesTurmaCardapio extends Model
 
 
 
-    public function lista_turmas(  $ref_cod_curso = null,  $ano = null,  $turno_id = null, $ref_cod_escola = null)
+    public function lista_turmas(  $ref_cod_curso = null,  $ano = null,  $turno_id = null)
     {
         $condicional = "";
         $contador_condicional =0;
@@ -198,15 +198,7 @@ class clsModulesTurmaCardapio extends Model
             }
             $contador_condicional++;
         }
-        if(is_numeric( $ref_cod_escola)){
-            if($contador_condicional>0){
-                $condicional .= " AND ref_ref_cod_escola = ".$ref_cod_escola." ";
-            }else{
-
-                 $condicional .= " WHERE ref_ref_cod_escola = ".$ref_cod_escola." ";
-            }
-            $contador_condicional++;
-        }
+       
         
     
         

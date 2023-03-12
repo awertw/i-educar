@@ -50,7 +50,7 @@ return new class extends clsListagem {
 
         $this->inputsHelper()->input('ano', 'ano');
 
-        $this->inputsHelper()->dynamic(['instituicao', 'escola',  'curso', 'cardapioCurso'], ['required' => true]);
+        $this->inputsHelper()->dynamic(['instituicao','escola',  'curso', 'cardapioCurso'], ['required' => true]);
           // data nascimento
 
      
@@ -69,21 +69,29 @@ return new class extends clsListagem {
         
 
 
-        $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
-        $diasemana = array("Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado");
+        if(!empty($_GET['ref_cod_cardapio_curso'])){
 
-        $dia_sem = str_replace("/", "-", $_GET['data_aplicacao']);
+            $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
+            $diasemana = array("Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado");
 
-        $dia_sem= date('Y-m-d',  strtotime( $dia_sem));               
-  
-        $diasemana_numero = date('w', strtotime($dia_sem));
+            $dia_sem = str_replace("/", "-", $_GET['data_aplicacao']);
+    
+            $dia_sem= date('Y-m-d',  strtotime( $dia_sem));               
+      
+            $diasemana_numero = date('w', strtotime($dia_sem));
+    
+                if($diasemana[$diasemana_numero]!=$cardapio['dia_semana']){
+                    $acao = "Ação <br> <br>
+                    <b style='color:red'>Não é possivel aplicar o cardápio na data selecionada <br> dia disponível: {$cardapio['dia_semana']}<br>dia especificado: {$diasemana[$diasemana_numero]} </b>";
+                }else{
+                    $acao =   "Ação";  
+                }
 
-    if($diasemana[$diasemana_numero]!=$cardapio['dia_semana']){
-        $acao = "Ação <br> <br>
-        <b style='color:red'>Não é possivel aplicar o cardápio na data selecionada <br> dia disponível: {$cardapio['dia_semana']}<br>dia especificado: {$diasemana[$diasemana_numero]} </b>";
-    }else{
-        $acao =   "Ação";  
-    }
+        }else{
+            $acao =   "Ação";  
+ 
+        }
+      
        
         $this->addCabecalhos([
            
@@ -112,14 +120,14 @@ return new class extends clsListagem {
         
         }
         $lista = $obj_turma->lista_turmas(
-         $_GET['ref_cod_curso'],  $_GET['ano'], $id_turno, $_GET['ref_cod_escola']
+         $_GET['ref_cod_curso'],  $_GET['ano'], $id_turno
         );
 
        
         $total = 0;
         if(!empty($_GET['ref_cod_cardapio_curso']) and !empty($_GET['ref_cod_curso']) and !empty($_GET['data_aplicacao'])){
             $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
-            $turma =  Turma::where('ref_ref_cod_escola', $_GET['ref_cod_escola'])->where('ano', $_GET['ano'])->where('ref_cod_curso', $_GET['ref_cod_curso'])->where('turma_turno_id', $cardapio->cod_turno)->get();    
+            $turma =  Turma::where('ano', $_GET['ano'])->where('ref_cod_curso', $_GET['ref_cod_curso'])->where('turma_turno_id', $cardapio->cod_turno)->get();    
             foreach($turma as $turma_total){
             $total ++;
            
@@ -129,7 +137,7 @@ return new class extends clsListagem {
             $total = 0;
            if(!empty($_GET['ref_cod_escola'])){
 
-                $turma =  Turma::where('ref_ref_cod_escola', $_GET['ref_cod_escola'])->where('ano', $_GET['ano'])->get();    
+                $turma =  Turma::where('ano', $_GET['ano'])->get();    
             }else{
                 $turma =  Turma::where('ano', $_GET['ano'])->get();
             }
@@ -223,7 +231,7 @@ return new class extends clsListagem {
                                 id='turma_cardapio[{$registro['cod_turma']}]'
                                 style='width: 120px;'
                                 class='btn btn-success'
-                                href='educar_aplicar_cardapio.php?cod_turma=".$registro['cod_turma']."&cod_escola=".$_GET['ref_cod_escola']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso']."&cod_turno=".$cardapio->cod_turno."'
+                                href='educar_aplicar_cardapio.php?cod_turma=".$registro['cod_turma']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso']."&cod_turno=".$cardapio->cod_turno."'
     
                             >
                                 Aplicar cardápio
@@ -257,7 +265,7 @@ return new class extends clsListagem {
             $cardapio = MerendaCardapio::find($_GET['ref_cod_cardapio_curso']);
           
 
-        $this->array_botao_url[] ="educar_aplicar_todos_cardapio.php?cod_curso=".$_GET['ref_cod_curso']."&cod_escola=".$_GET['ref_cod_escola']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso']."&cod_turno=".$cardapio->cod_turno;
+        $this->array_botao_url[] ="educar_aplicar_todos_cardapio.php?cod_curso=".$_GET['ref_cod_curso']."&ano=".$_GET['ano']."&data_aplicacao=".$_GET['data_aplicacao']."&cod_cardapio=".$_GET['ref_cod_cardapio_curso']."&cod_turno=".$cardapio->cod_turno;
 
         $this->array_botao[] = ['name' => 'Aplicar para todas as turmas', 'css-extra' => 'btn-green'];
         }

@@ -27,7 +27,18 @@ return new class extends clsListagem {
        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
            $this->$var = ($val === '') ? null: $val;
        }
-       $this->campoTexto('descricao', 'Descrição', $this->descricao, '50', '255', false);
+
+       if($_GET['inativo']=="on"){
+        $inativo = 1;
+       }else{
+        $inativo = null;
+
+       }
+       $options = ['label' => 'Inativo', 'required' => false, 'value' => dbBool($inativo)];
+
+       $this->inputsHelper()->checkbox('inativo', $options);
+
+       $this->campoTexto('descricao', 'Descrição', $_GET['descricao'], '50', '255', false);
      
       
        $selectOptionsdiaSemana = [];
@@ -51,6 +62,9 @@ return new class extends clsListagem {
 
  
    $this->campoLista('dia_semana', 'Dia da Semana', $selectOptionsdiaSemana, $_GET['dia_semana'], '', true, '', '', '', '');
+
+
+   
 
  
       
@@ -98,7 +112,7 @@ return new class extends clsListagem {
      
  
         if(!empty($_GET['descricao']) and empty($_GET['dia_semana'])){
-               $cardapios = MerendaCardapio::where('descricao', $_GET['descricao'])->get();
+               $cardapios = MerendaCardapio::where('descricao', $_GET['descricao'])->where('inativo', $inativo)->get();
               
        }elseif(!empty($_GET['dia_semana']) and empty($_GET['descricao'])  ){
         $dia = "";
@@ -117,7 +131,7 @@ return new class extends clsListagem {
         }elseif($_GET['dia_semana']==7){
             $dia = "Domingo";
         } 
-        $cardapios = MerendaCardapio::where('dia_semana', $dia)->get();
+        $cardapios = MerendaCardapio::where('dia_semana', $dia)->where('inativo', $inativo)->get();
        
         }elseif(!empty($_GET['dia_semana']) and !empty($_GET['descricao'])  ){
             $dia = "";
@@ -136,12 +150,12 @@ return new class extends clsListagem {
             }elseif($_GET['dia_semana']==7){
                 $dia = "Domingo";
             } 
-            $cardapios = MerendaCardapio::where('dia_semana', $dia)->where('descricao', $_GET['descricao'])->get();
+            $cardapios = MerendaCardapio::where('dia_semana', $dia)->where('descricao', $_GET['descricao'])->where('inativo', $inativo)->get();
            
             }
        else{
            $total = 0;
-           $cardapios_total =  MerendaCardapio::all();
+           $cardapios_total =  MerendaCardapio::where('inativo', $inativo)->get();
            foreach($cardapios_total as $cardapio_total){
                $total ++;
            }

@@ -24,7 +24,6 @@ return new class () extends Migration {
         $this->createOrUpdate('MS', 'Batayporã', '5002001', 'Bataipora');
 
         //Novos
-        $this->createOrUpdate('AM', 'Itacoatiara', '1301902');
         $this->createOrUpdate('BA', 'Barro Preto', '2903300');
         $this->createOrUpdate('CE', 'Itapajé', '2306306');
         $this->createOrUpdate('MS', 'Paraíso das Águas', '5006275');
