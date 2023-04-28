@@ -32,7 +32,7 @@ class Portabilis_View_Helper_DynamicInput_CardapioCurso extends Portabilis_View_
                     $det_turno = $turno['nome'];  
                     }
 
-                    $resources[$cardapios->id] = $cardapios->id.' - '.$cardapios->descricao." - ". $det_turno;
+                    $resources[$cardapios->id] = $cardapios->id.' - '.$cardapios->descricao." - ".substr($cardapios->dia_semana, 0, 3)." - ". $det_turno;
 
               
                 }

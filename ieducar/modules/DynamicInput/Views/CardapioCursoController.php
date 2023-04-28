@@ -41,7 +41,7 @@ class CardapioCursoController extends ApiCoreController
                 $options[
                     '__' . $cardapios->id
                 ] = [
-                    'value' => mb_strtoupper($cardapios->id." - ".$cardapios->descricao." - ".$det_turno, 'UTF-8'),
+                    'value' => mb_strtoupper($cardapios->id." - ".$cardapios->descricao." - ".substr($cardapios->dia_semana, 0, 3)." - ".$det_turno, 'UTF-8'),
                     'checked' => "checked",
                     'group' => ''
                 ];
